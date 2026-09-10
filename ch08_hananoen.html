@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第8帖 花宴 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{max-width:60ch; color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:560px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:14px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:11px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.love line{stroke:var(--suou);}
+  .edge.blood line{stroke:var(--koke);}
+  .edge.pol line{stroke:var(--murasaki);}
+  .edge.riv line{stroke:#a35c2b; stroke-dasharray:5,3;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:14px; height:3px; display:inline-block;}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .disclaimer{font-size:.78rem; color:#9a9280; margin-top:10px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:11px; height:11px; border-radius:50%;
+    background:var(--paper); border:2px solid var(--suou);
+  }
+  .tl-item h3{margin:0 0 6px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6. analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:16px; border-left:3px solid var(--murasaki);}
+  .analysis-card .tag{font-size:.72rem; color:var(--murasaki); letter-spacing:.04em; margin-bottom:8px; font-weight:700;}
+  .analysis-card h3{margin:0 0 8px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 7. notes ---- */
+  .note-card{background:#f4ead6; padding:18px 20px; margin-bottom:14px; border-left:3px solid var(--yamabuki);}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  #toTop{
+    position:fixed; right:18px; bottom:18px;
+    width:42px; height:42px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; font-size:1.1rem; cursor:pointer;
+    box-shadow:0 3px 10px rgba(0,0,0,.25);
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">&#10022;</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第8帖</div>
+    <h1>花宴</h1>
+    <div class="kana">はなのえん</div>
+    <p class="lead">南殿の桜の宴で光源氏が舞を披露し、その夜、名も知らぬ女君と偶然の契りを結ぶ帖。二人は互いに素性を明かさぬまま扇だけを取り交わして別れるが、後日その相手が右大臣家の姫君であったと判明する。恋の高揚と、政敵の娘に手を出したことによる不穏な伏線が同時に描かれる一帖。</p>
+  </div>
+
+  <!-- 1. 主な登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person">
+        <div class="row"><span class="name">光源氏</span><span class="age">20歳</span></div>
+        <p>桜の宴で「春鶯囀」を舞い、居並ぶ人々を感嘆させる。宴のあと藤壺への断ちがたい思いを抱えたまま夜歩きし、思いがけず名も知らぬ女君と契りを結ぶ。</p>
+      </div>
+      <div class="person">
+        <div class="row"><span class="name">朧月夜（六の君）</span><span class="age">―</span></div>
+        <p>右大臣の六女で、弘徽殿女御の妹。東宮（後の朱雀帝）への入内が内定していた身でありながら、桜の宴の夜に源氏と契る。この帖の時点では素性・名前とも明かされない。</p>
+      </div>
+      <div class="person">
+        <div class="row"><span class="name">弘徽殿女御</span><span class="age">―</span></div>
+        <p>右大臣の娘で東宮（後の朱雀帝）の母。以前から源氏・藤壺母子に対して敵意を抱いており、この帖でも桜の宴の後の様子から不快感をあらわにする。</p>
+      </div>
+      <div class="person">
+        <div class="row"><span class="name">右大臣</span><span class="age">―</span></div>
+        <p>弘徽殿女御・朧月夜の父。藤の宴を催し、期せずして源氏と娘・朧月夜の関係が明るみに出るきっかけを作る。左大臣家（源氏の妻方）と対立する政治勢力の中心人物。</p>
+      </div>
+      <div class="person">
+        <div class="row"><span class="name">藤壺</span><span class="age">―</span></div>
+        <p>桜の宴に同席する。源氏の断ちがたい思慕の対象であり続けており、宴の夜に源氏が思わず藤壺の御殿の方へ足を向けてしまう動機になっている。</p>
+      </div>
+      <div class="person">
+        <div class="row"><span class="name">頭中将</span><span class="age">―</span></div>
+        <p>源氏の親友であり義兄。桜の宴では「柳花苑」を舞い、源氏の舞に劣らぬ評判を得る。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 人物関係図 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図・関係図</h2></div>
+    <div class="filters">
+      <button class="active" data-f="all" onclick="">すべて</button>
+      <button data-f="love">恋愛・契り</button>
+      <button data-f="blood">血縁</button>
+      <button data-f="pol">政治的立場</button>
+      <button data-f="riv">対立・警戒</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 720 340"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--suou);"></i>恋愛・契り</span>
+      <span><i style="background:var(--koke);"></i>血縁</span>
+      <span><i style="background:var(--murasaki);"></i>政治的立場</span>
+      <span><i style="background:#a35c2b;"></i>対立・警戒</span>
+    </div>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="space">
+    <div class="block-head"><span class="idx">3</span><h2>空間・地理構造（宮中の舞台）</h2></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
+        <g class="scene-room" onclick="showScenePopup('南殿（紫宸殿）― 桜の宴の舞台','帝主催の桜の宴が催された表舞台。源氏は「春鶯囀」、頭中将は「柳花苑」を舞い、居並ぶ公卿たちが感嘆する晴れの場。')">
+        <rect x="60" y="30" width="180" height="60" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.4" rx="4"/>
+        <text x="150" y="58" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">南殿（紫宸殿）</text>
+        <text x="150" y="76" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（桜の宴・公の場）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('弘徽殿の細殿 ― 出会いの場','宴のあと、藤壺の御殿に近づけず彷徨っていた源氏が、「朧月夜に似るものぞなき」と口ずさむ声を聞きつけた場所。弘徽殿女御の住まいに近い、本来は源氏にとって危うい場所でもある。')">
+        <rect x="290" y="30" width="180" height="60" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.4" rx="4"/>
+        <text x="380" y="58" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">弘徽殿の細殿</text>
+        <text x="380" y="76" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（名も知らぬ女君との契り）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('藤壺の御殿 ― 閉ざされた戸','源氏が桜の宴の夜、酔いにまかせて足を向けた先。藤壺への思いは変わらず断ちがたいが、戸は固く閉ざされており近づくことができない。')">
+        <rect x="520" y="30" width="130" height="60" fill="#efe4f0" stroke="var(--murasaki)" stroke-width="1.4" rx="4"/>
+        <text x="585" y="58" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">藤壺の御殿</text>
+        <text x="585" y="76" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（戸は閉ざされている）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('右大臣邸 ― 藤の宴','三月二十日過ぎ、右大臣家で催された藤の花の宴。招かれた源氏は、桜の宴の夜に契った女君が右大臣の六の君（朧月夜）その人であることを、扇の照合によって確かめることになる。')">
+        <rect x="230" y="150" width="220" height="64" fill="#e6dbc2" stroke="var(--suou)" stroke-width="1.4" rx="4"/>
+        <text x="340" y="180" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">右大臣邸（藤の宴）</text>
+        <text x="340" y="198" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（後日・素性が判明する場）</text>
+        </g>
+
+        <line x1="150" y1="90" x2="380" y2="30" stroke="var(--ink-soft)" stroke-width="1.4" stroke-dasharray="3,3"/>
+        <line x1="380" y1="90" x2="340" y2="150" stroke="var(--suou)" stroke-width="1.6" stroke-dasharray="4,3"/>
+        <text x="360" y="122" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--suou)" paint-order="stroke" stroke="var(--paper-deep)" stroke-width="5" stroke-linejoin="round">後日、扇を手がかりに素性が判明</text>
+
+        <text x="350" y="245" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">内裏（宮中）から右大臣邸へ</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">舞台は大きく二段構え。前半は宮中・南殿での公の宴と、その夜の弘徽殿の細殿での私的な出会い。後半は場面を移し、一月ほど後の右大臣邸の藤の宴で、あの夜の相手の素性が明らかになる。同じ「花」を通わせた宴でありながら、桜（宮中・源氏方に近い場）と藤（右大臣家・弘徽殿方の場）という対照が意識されている点も特徴的。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>花宴（南殿の桜の宴）</dt>
+      <dd>陰暦二月二十日過ぎ、帝が紫宸殿（南殿）で催す桜見物の宴。皇族・公卿が集い、詩作や舞楽が披露される宮中の年中行事的な晴れの場。</dd>
+      <dt>春鶯囀（しゅんのうでん）</dt>
+      <dd>雅楽の演目のひとつ。桜の宴で光源氏が舞い、その美しさに人々が涙するほど感嘆したとされる。</dd>
+      <dt>柳花苑（りゅうかえん）</dt>
+      <dd>頭中将が桜の宴で舞った演目。源氏の「春鶯囀」に並ぶ見せ場として、あらかじめ二人で練習していたとされる。</dd>
+      <dt>朧月夜（おぼろづきよ）</dt>
+      <dd>本来は「霞がかってほのかに霞んで見える春の夜の月」を指す言葉。この帖で女君が「朧月夜に似るものぞなき」と口ずさんだことに由来し、後にこの女君自身の呼び名（朧月夜の君）として定着する。</dd>
+      <dt>后がね（きさいがね）</dt>
+      <dd>将来、后（皇后・中宮）候補として見込まれている女性を指す語。朧月夜は東宮（後の朱雀帝）への入内が内定した「后がね」の身であり、それゆえ源氏との一夜が政治的にも危うい意味を持つ。</dd>
+      <dt>藤の宴</dt>
+      <dd>右大臣家で催された藤の花見の宴。桜の宴から一月余りのち、源氏が招かれてこの邸を訪れ、扇の照合によって朧月夜の素性を確かめる場となる。</dd>
+    </dl>
+  </section>
+
+  <!-- 4.5 和歌 -->
+  <section class="block" id="waka">
+    <div class="block-head"><span class="idx">4-2</span><h2>贈答歌</h2></div>
+    <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">女君（後の朧月夜）が口ずさんだ古歌</div>
+        <div class="poem">照りもせず<br>曇りもはてぬ<br>春の夜の<br>朧月夜に<br>しくものぞなき</div>
+        <div class="trans-label">現代語訳（意訳）</div>
+        <div class="trans">くっきりと照るのでもなく、すっかり曇りきるのでもない、春の夜のおぼろな月に及ぶものはない。</div>
+      </div>
+    </div>
+    <p class="disclaimer">※これは大江千里の歌（『新古今和歌集』などに収録）として伝わる、女君が自ら作った歌ではなく口ずさんだ古歌です。源氏がこの声に呼び止められたことが二人の出会いの発端になります。なお、この後に二人が実際に交わしたとされる贈答歌の正確な原文については確認できないため、ここでは割愛しています。</p>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>南殿の桜の宴</h3><p>如月（二月）二十日過ぎ、帝主催の桜の宴が紫宸殿で催される。光源氏は「春鶯囀」を、頭中将は「柳花苑」を舞い、居並ぶ人々を感嘆させる。藤壺もこの宴に同席している。</p></div>
+      <div class="tl-item"><h3>宴のあとの夜歩き</h3><p>宴が果てたのち、酔いにまかせた源氏は藤壺への断ちがたい思いから、その御殿の方へ足を向けるが、戸は固く閉ざされていて近づけない。</p></div>
+      <div class="tl-item"><h3>弘徽殿の細殿での出会い</h3><p>やむなく引き返そうとした源氏は、弘徽殿の細殿で「朧月夜に似るものぞなき」と口ずさむ若い女の声を聞きつけ、思わず声をかける。互いに素性を明かさぬまま、二人はその場で契りを結ぶ。</p></div>
+      <div class="tl-item"><h3>扇の交換と別れ</h3><p>夜が明け始め、人目を気にした女君は名乗らぬまま去ろうとする。源氏は自分の扇を渡し、女君の扇を代わりに受け取ることで、せめてもの手がかりを残す。</p></div>
+      <div class="tl-item"><h3>手がかりを探る源氏</h3><p>その後、源氏は交換した扇を頼りに相手の素性を探るが、確証を得られないまま日々が過ぎる。</p></div>
+      <div class="tl-item"><h3>右大臣邸の藤の宴</h3><p>三月二十日過ぎ、右大臣家で藤の花の宴が催され、源氏も招かれる。そこで源氏は、あの夜の女君が右大臣の六の君であり、弘徽殿女御の妹で、東宮への入内が内定している「后がね」の身であることを、扇の照合を通じて確信する。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 全体構造・作品論</div>
+      <h3>「花」の対比構造 ―― 桜（源氏方）と藤（右大臣方）</h3>
+      <p>この帖は「桜の宴」で始まり「藤の宴」で締めくくられるという、二つの花の宴で挟まれた構成になっています。桜は宮中・帝の場であり源氏が主役を張る場、藤は右大臣家・弘徽殿方の場であり源氏にとって本来は危うい場、という対比で読むことができる、という見方があります。同じ「花見の宴」という形式を繰り返しながら、場の性格が正反対であることが、この帖のもつ不穏さを支えている、という解釈です。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 深層考察・伏線としての機能</div>
+      <h3>藤壺への叶わぬ思いが、より危険な恋への引き金になる</h3>
+      <p>源氏が藤壺の御殿に近づけず引き返した直後に、朧月夜と出会っている点は、桐壺・帚木の帖から続く「満たされない思いが、別の対象への行動を引き起こす」というパターンの延長線上にある、という見方ができます。ただし、空蟬や夕顔のときと違い、今回の相手は政敵である右大臣家の、しかも東宮の妃候補という、政治的にきわめて危険な相手であった点が、以降の展開（朱雀帝の代替わり後の須磨への退去）に直結する伏線になっている、という考察が可能です。</p>
+    </div>
+    <p class="disclaimer">※このセクションは物語解釈にもとづくAIの考察・見解であり、学術的に確定した通説ではありません。</p>
+  </section>
+
+  <!-- 7. 特記事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特記事項・伏線</h2></div>
+    <div class="note-card">
+      <h3>この一夜が、後の須磨退去につながる遠因になる</h3>
+      <p>朧月夜との関係は、この帖の時点では源氏自身も相手の素性を確信できていない一夜限りの出来事として描かれますが、この関係が右大臣・弘徽殿方に知られたことは、後の帖で源氏が政治的に追い詰められ、自ら須磨へ退去する展開の遠因のひとつになります。</p>
+    </div>
+    <div class="note-card">
+      <h3>「朧月夜」という呼び名の由来</h3>
+      <p>この女君は本来は名前を明かされないまま物語に登場しますが、この帖で口ずさんだ古歌「朧月夜に似るものぞなき」にちなんで、後世「朧月夜の君」と呼び習わされるようになりました。この帖の題名「花宴」自体も、この夜の出会いと桜の宴を重ね合わせたものと考えられます。</p>
+    </div>
+    <div class="note-card">
+      <h3>扇による本人確認というモチーフ</h3>
+      <p>夜が明ける前に素性を明かさぬまま扇を取り交わし、後日その扇を手がかりに相手を特定するという展開は、平安文学における「もの（形見）による本人確認」というモチーフの一例として読むことができます。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 8;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  genji:     {x:360, y:50,  label:'光源氏'},
+  fujitsubo: {x:600, y:50,  label:'藤壺'},
+  toonoc:    {x:120, y:50,  label:'頭中将'},
+  oborozukiyo:{x:360, y:290,label:'朧月夜（六の君）'},
+  kokiden:   {x:600, y:290, label:'弘徽殿女御'},
+  udaijin:   {x:120, y:290, label:'右大臣'}
+};
+const edges = [
+  {a:'genji', b:'fujitsubo', label:'断ちがたい思慕', type:'love'},
+  {a:'genji', b:'toonoc', label:'親友・義兄弟', type:'blood'},
+  {a:'genji', b:'oborozukiyo', label:'名も知らぬ一夜の契り', type:'love'},
+  {a:'oborozukiyo', b:'kokiden', label:'姉妹', type:'blood'},
+  {a:'oborozukiyo', b:'udaijin', label:'父娘', type:'blood'},
+  {a:'kokiden', b:'udaijin', label:'父娘', type:'blood'},
+  {a:'genji', b:'kokiden', label:'警戒・敵対', type:'riv'},
+  {a:'toonoc', b:'udaijin', label:'左右両家の緊張', type:'pol'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  g.appendChild(el('rect',{x:n.x-62,y:n.y-18,width:124,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
