@@ -166,7 +166,7 @@
 <main>
   <div class="status-note">
     <span>&#9998;</span>
-    <div><strong>試作段階です。</strong>現在は第1帖「桐壺」・第2帖「帚木」のみ作成しています。順次追加していきます。</div>
+    <div><strong>公開中です。</strong><span id="statusText">読み込み中…</span></div>
   </div>
 
   <div class="toc-grid" id="tocGrid"></div>
@@ -198,6 +198,12 @@ chapters.forEach(c=>{
   gridEl.appendChild(btn);
 });
 jumpEl.selectedIndex = -1;
+
+const doneChapters = chapters.filter(c=>c.done);
+const doneCount = doneChapters.length;
+const latest = doneCount ? Math.max(...doneChapters.map(c=>c.n)) : 0;
+document.getElementById('statusText').textContent =
+  '全54帖中、第' + latest + '帖までの学習ノートを公開しています（公開済み ' + doneCount + '帖）。順次追加していきます。';
 </script>
 
 </body>
