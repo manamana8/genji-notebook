@@ -190,6 +190,13 @@
   }
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
 
   /* ---- 5. timeline ---- */
   .timeline{position:relative; padding-left:26px;}
@@ -349,18 +356,36 @@
       <dt>理想の女性を育てる</dt>
       <dd>自ら望む人柄・教養に沿って女性を養育しようとする発想。光る君が若紫を二条院に引き取る動機の中心となる。</dd>
     </dl>
-    <p class="disclaimer">※この帖では、これといえる象徴的な和歌の贈答は今回の底本テキストからは確認できなかったため、割愛しています。</p>
+
+    <h3 style="font-family:'Shippori Mincho',serif;font-size:1rem;color:var(--murasaki-deep);margin:30px 0 14px;padding-top:22px;border-top:1px solid var(--line);">作中の和歌解説</h3>
+    <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">【詠み手】尼君</div>
+        <div class="poem">生ひ立たむ<br>ありかも知らぬ<br>若草を<br>おくらす露ぞ<br>消えむそらなき</div>
+        <div class="trans-label">現代語訳</div>
+        <div class="trans">これからどこで成長していくのかもわからない若草（＝若紫）を残して、消えていく露（＝私）は、死ぬに死にきれません。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">【詠み手】光源氏</div>
+        <div class="poem">初草の<br>若葉の上を<br>見つるより<br>旅寝の袖も<br>露ぞ乾かぬ</div>
+        <div class="trans-label">現代語訳</div>
+        <div class="trans">初草のように愛らしい若葉（＝若紫）の姿をひと目見て以来、北山での旅寝の袖は涙に濡れて乾く間もありません。</div>
+      </div>
+    </div>
+    <p class="disclaimer">※和歌は原文からの意訳・要約です。表記のゆれについては学習用として簡略化しています。</p>
   </section>
 
   <!-- 5. あらすじ -->
   <section class="block" id="story">
     <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
     <div class="timeline">
-      <div class="tl-item"><h3>北山での療養</h3><p>瘧病を患った光る君は、療養と加持祈祷のため北山の聖のもとを訪れる。</p></div>
-      <div class="tl-item"><h3>運命の少女との出会い</h3><p>近くの庵を垣間見た光る君は、藤壺によく似た愛らしい少女・若紫を見つけて心惹かれる。若紫が藤壺の姪と知った光る君は、祖母の尼君に彼女を引き取りたいと申し出るが、当初は拒まれる。</p></div>
-      <div class="tl-item"><h3>藤壺との密通</h3><p>都に戻った光る君は、王命婦の手引きにより藤壺との密会の機会を得て、二人はついに一線を越えてしまう。藤壺は光る君の子を身ごもるが、深い苦悩と罪悪感に苛まれ、二度と過ちを繰り返すまいと心に誓う。</p></div>
-      <div class="tl-item"><h3>尼君の死と若紫の引き取り</h3><p>祖母の尼君が病没し、若紫は後見を失う。父・兵部卿宮が引き取りを検討し始めるが、その隙に光る君は好機を逃さず、乳母の助けを借りて若紫を二条院へと迎え入れる。</p></div>
-      <div class="tl-item"><h3>皇子の誕生</h3><p>年が明け、藤壺は帝の子として皇子を出産する。真実を知らぬ帝は、皇子が光る君に似ていると無邪気に喜ぶ。</p></div>
+      <div class="tl-item"><h3>瘧病の発症と北山行き</h3><p>東宮候補にも擬せられるほどの重責を担う光る君は、間欠的に高熱を発する瘧病（わらわやみ）に長く苦しめられていた。都でいくつもの加持祈祷を重ねても効き目がなく、噂に聞く北山の聖の験力を頼り、惟光ら供の者を連れて京から北へと分け入っていく。山深い地に立つと、都の喧騒とは無縁の静けさが広がり、光る君は久方ぶりに心身の緊張がほどけていくのを感じる。</p></div>
+      <div class="tl-item"><h3>小柴垣の垣間見と若紫との出会い</h3><p>療養の合間、人気のない夕暮れ時に小柴垣越しにふと隣の庵をのぞいた光る君は、十歳ほどの愛らしい少女が、逃がしてしまった雀の子を嘆いて涙ぐむ姿を目にする。その面影があまりにも藤壺に似ていることに胸を突かれ、目が離せなくなる。少女は若紫、藤壺の兄・兵部卿宮の娘であり、母を早くに亡くして祖母の尼君のもとで育てられていると知り、光る君の心はいよいよ大きく動かされる。</p></div>
+      <div class="tl-item"><h3>尼君への申し出と拒絶</h3><p>藤壺への叶わぬ思いを胸の奥に秘めながら、光る君は尼君に、若紫を自邸・二条院に引き取って育てたいと申し出る。しかし尼君は、相手が身分違いのうえに若紫がまだあまりに幼いことを理由に、丁重ながらもきっぱりとこれを拒む。それでも光る君の若紫への思いは募るばかりで、都へ戻ってからも便りを絶やさず送り続ける。</p></div>
+      <div class="tl-item"><h3>都への帰還と藤壺への募る思い</h3><p>都に戻った光る君の心は、北山で出会った少女の面影と、誰よりも深く恋い慕う藤壺その人との間で揺れ続ける。長らく人目を忍んで胸に秘めてきた藤壺への思いは、年月を経てもむしろ募る一方で、光る君はついに人目を欺いて藤壺のもとへ近づく機会をうかがい始める。</p></div>
+      <div class="tl-item"><h3>藤壺との密通</h3><p>藤壺付きの女房・王命婦の密かな手引きにより、光る君はついに藤壺と一夜を共にする機会を得る。長く胸に秘めてきた恋がかなったその瞬間にも、二人の間には抑えがたい恐れと後悔が同時に押し寄せる。まもなく藤壺は自らが光る君の子を身ごもったことを知り、帝への深い裏切りの重さに苛まれながら、二度とこの過ちを繰り返すまいと固く心に誓う。</p></div>
+      <div class="tl-item"><h3>尼君の死と若紫の引き取り</h3><p>秋も深まる頃、若紫を案じて見舞いに訪れた光る君の目の前で、尼君はほどなく病の床に伏し、そのまま息を引き取ってしまう。後見を失った若紫のもとへは、実父・兵部卿宮が正式に引き取ろうと動き始めるが、光る君はその機を逃さず、乳母の少納言らを説き伏せ、夜半ひそかに若紫を二条院へと連れ帰るようにして迎え入れる。</p></div>
+      <div class="tl-item"><h3>皇子の誕生と帝の喜び</h3><p>年が明けた頃、藤壺はついに帝の御子として皇子を出産する。真実を知る由もない帝は、生まれたばかりの皇子の面差しがどこか光る君に似ていることに気づき、無邪気に目を細めて喜ぶ。この上ない栄誉と、この上ない秘密とが、ひとつの赤子のうちに同居する瞬間である。</p></div>
     </div>
   </section>
 
