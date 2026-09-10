@@ -9,7 +9,7 @@ const chapters = [
  {n:8,t:"花宴",f:"ch08_hananoen.html",done:true},
  {n:9,t:"葵",f:"ch09_aoi.html",done:true},
  {n:10,t:"賢木",f:"ch10_sakaki.html",done:true},
- {n:11,t:"花散里"},
+ {n:11,t:"花散里",f:"ch11_hanachirusato.html",done:true},
  {n:12,t:"須磨"},{n:13,t:"明石"},{n:14,t:"澪標"},{n:15,t:"蓬生"},{n:16,t:"関屋"},
  {n:17,t:"絵合"},{n:18,t:"松風"},{n:19,t:"薄雲"},{n:20,t:"朝顔"},{n:21,t:"少女"},
  {n:22,t:"玉鬘"},{n:23,t:"初音"},{n:24,t:"胡蝶"},{n:25,t:"蛍"},{n:26,t:"常夏"},
