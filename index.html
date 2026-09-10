@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.8;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+
+  /* ===== header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 18px 10px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1.15rem;
+    letter-spacing:.04em;
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .brand small{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-weight:400;
+    font-size:.68rem;
+    color:#d8b98a;
+    letter-spacing:.08em;
+  }
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.82rem;
+    max-width:44vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  nav.tabs::-webkit-scrollbar-thumb{background:#6b4a70;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.82rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    cursor:default;
+    opacity:.55;
+  }
+  .tab.active{
+    color:#fff;
+    border-bottom-color:var(--yamabuki);
+    opacity:1;
+    font-weight:600;
+  }
+  .tab.enabled{
+    opacity:.85;
+    cursor:pointer;
+    color:#f2ead8;
+  }
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== main grid ===== */
+  main{max-width:880px; margin:0 auto; padding:36px 20px 80px;}
+
+  .status-note{
+    display:flex; align-items:flex-start; gap:10px;
+    background:transparent;
+    border:1px dashed var(--line);
+    padding:16px 18px;
+    font-size:.85rem;
+    color:var(--ink-soft);
+    margin-bottom:32px;
+  }
+  .status-note strong{color:var(--murasaki-deep);}
+
+  .toc-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(150px,1fr));
+    gap:8px;
+  }
+  .toc-btn{
+    display:block;
+    padding:14px 10px;
+    text-align:center;
+    background:var(--paper-deep);
+    border:1px solid var(--line);
+    color:var(--ink-soft);
+    text-decoration:none;
+    font-size:.85rem;
+    line-height:1.5;
+  }
+  .toc-btn .n{
+    display:block;
+    font-family:"Shippori Mincho", serif;
+    color:var(--suou);
+    font-size:.72rem;
+    margin-bottom:2px;
+  }
+  .toc-btn.done{
+    background:#fbf6ea;
+    border-color:var(--yamabuki);
+    color:var(--ink);
+    font-weight:600;
+    cursor:pointer;
+  }
+  .toc-btn.done:hover{background:#f3e6c4;}
+  .toc-btn.disabled{
+    opacity:.55;
+    cursor:default;
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <div class="brand">源氏物語 学習ノート <small>全54帖 体系的解読</small></div>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+  <div class="status-note">
+    <span>&#9998;</span>
+    <div><strong>試作段階です。</strong>現在は第1帖「桐壺」・第2帖「帚木」・第3帖「空蝉」のみ作成しています。順次追加していきます。</div>
+  </div>
+
+  <div class="toc-grid" id="tocGrid"></div>
+</main>
+
+<script src="chapters-data.js"></script>
+<script>
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+const gridEl = document.getElementById('tocGrid');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  jumpEl.appendChild(opt);
+
+  const btn = document.createElement(c.done ? 'a' : 'div');
+  btn.className = 'toc-btn ' + (c.done ? 'done' : 'disabled');
+  if(c.done){ btn.href = c.f; }
+  btn.innerHTML = '<span class="n">第' + c.n + '帖</span>' + c.t;
+  gridEl.appendChild(btn);
+});
+jumpEl.selectedIndex = -1;
+</script>
+
+</body>
+</html>

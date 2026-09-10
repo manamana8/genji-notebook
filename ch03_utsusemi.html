@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第3帖 空蝉 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{max-width:60ch; color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0 0 6px; font-size:.83rem; color:var(--ink-soft);}
+  .person p:last-child{margin-bottom:0;}
+  .person b{color:var(--murasaki-deep); font-weight:700;}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:560px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:14px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:11px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.love line{stroke:var(--suou);}
+  .edge.blood line{stroke:var(--koke);}
+  .edge.pol line{stroke:var(--murasaki);}
+  .edge.coop line{stroke:var(--yamabuki);}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:14px; height:3px; display:inline-block;}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .poem.unknown{font-family:"Zen Kaku Gothic New", sans-serif; font-size:.85rem; font-style:italic; color:var(--ink-soft);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第3帖</div>
+    <h1>空蝉</h1>
+    <div class="kana">うつせみ</div>
+    <p class="lead">帚木の夜を忘れられない光源氏が小君の手引きで紀伊守邸を再訪し、垣間見の末に人違いの一夜を経験する帖。空蟬が残した衣が「空蝉」という呼び名の由来となる。</p>
+  </div>
+
+  <!-- 1. 主要登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主要登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person">
+        <div class="row"><span class="name">光源氏</span><span class="age">17歳</span></div>
+        <p><b>性格：</b>空蟬への未練を断ち切れず、拒まれてなお近づこうとする強引さと執着を見せる。</p>
+        <p><b>人間関係：</b>空蟬の弟・小君を手引き役に使う／継娘の軒端荻とは人違いと知りつつ契りを結ぶ。</p>
+        <p><b>将来の展開：</b>空蟬とは以後、心の通う清いやりとりのみが続く。この経験は生涯続く「拒まれる恋」の原型となる。</p>
+      </div>
+      <div class="person">
+        <div class="row"><span class="name">空蟬</span><span class="age">明記なし（源氏よりやや年上とされる）</span></div>
+        <p><b>性格：</b>光る君の気配を敏感に察し、衣一枚を残して隣室へ逃れる機転と意志の強さを見せる。</p>
+        <p><b>人間関係：</b>伊予介の後妻／継娘・軒端荻と碁を打つ間柄／弟・小君を光る君に頼まれ複雑な立場に置かれる。</p>
+        <p><b>将来の展開：</b>以後、光る君の求愛を退け続ける数少ない女性となる。第16帖「関屋」で再会する。</p>
+      </div>
+      <div class="person">
+        <div class="row"><span class="name">軒端荻</span><span class="age">明記なし（若い娘）</span></div>
+        <p><b>性格：</b>屈託がなく明るく大柄。空蟬とは対照的に、物事を深く気に病まない性分として描かれる。</p>
+        <p><b>人間関係：</b>伊予介の先妻の娘（紀伊守の妹）／空蟬の継娘にあたる／その夜、空蟬と碁を打っていた。</p>
+        <p><b>将来の展開：</b>光る君と空蟬の人違いに気づかぬまま契りを結ぶことに。後朝の文を受け取る立場となる。</p>
+      </div>
+      <div class="person">
+        <div class="row"><span class="name">小君</span><span class="age">少年</span></div>
+        <p><b>性格：</b>素直で光る君に心から懐いており、姉の苦しい立場までは深く理解していない年頃。</p>
+        <p><b>人間関係：</b>空蟬の弟／光る君に頼まれ再訪の手引きをする／姉を裏切る形になることに気づいていない。</p>
+        <p><b>将来の展開：</b>以後も光る君と空蟬をつなぐ役割を担い続け、姉の複雑な胸中の傍観者であり続ける。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 関係性 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="love">感情のつながり・執着</button>
+      <button data-f="blood">血縁・婚姻</button>
+      <button data-f="pol">対立・すれ違い</button>
+      <button data-f="coop">協力・手引き</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 800 340" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--suou)"></i>感情のつながり・執着</span>
+      <span><i style="background:var(--koke)"></i>血縁・婚姻</span>
+      <span><i style="background:var(--murasaki)"></i>対立・すれ違い</span>
+      <span><i style="background:var(--yamabuki)"></i>協力・手引き</span>
+    </div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">軒端荻は本文上「継娘」と明記される。空蟬・光る君・軒端荻の三者の関係は、垣間見の場から一夜の人違いへと展開する。</p>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>物語の場面解説（空間・地理構造）</h2></div>
+    <p style="font-size:.88rem;color:var(--ink-soft);margin-top:-8px;margin-bottom:18px;">紀伊守邸における室内の位置関係と、几帳越しの垣間見から人違いへと至る光源氏の動線のイメージ図です（クリックで説明表示）。</p>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+
+        <g class="scene-room" onclick="showScenePopup('母屋（碁を打つ間）','灯火のもと、空蟬が継娘・軒端荻と碁を打っていた部屋。几帳を隔てた奥にも間続きの空間がある。')">
+        <rect x="60" y="40" width="200" height="90" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.4" rx="4"/>
+        <text x="160" y="78" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">母屋</text>
+        <text x="160" y="98" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（碁を打つ間）</text>
+        </g>
+
+        <line x1="260" y1="45" x2="260" y2="125" stroke="var(--ink-soft)" stroke-width="2" stroke-dasharray="3,3"/>
+        <text x="290" y="70" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)" writing-mode="vertical-rl" paint-order="stroke" stroke="var(--paper-deep)" stroke-width="5" stroke-linejoin="round">几帳（間仕切り）</text>
+
+        <g class="scene-room" onclick="showScenePopup('空蟬が逃れた奥の間','光る君の気配を敏感に察した空蟬が、とっさに薄い衣一枚を残し、ひそかに身を隠した隣室。')">
+        <rect x="380" y="40" width="200" height="90" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.4" rx="4"/>
+        <text x="480" y="78" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">奥の間</text>
+        <text x="480" y="98" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（空蟬が逃れた先）</text>
+        </g>
+
+        <line x1="260" y1="85" x2="380" y2="85" stroke="var(--suou)" stroke-width="1.6" stroke-dasharray="4,3"/>
+        <text x="320" y="72" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--suou)" paint-order="stroke" stroke="var(--paper-deep)" stroke-width="5" stroke-linejoin="round">几帳の陰から奥の間へ</text>
+
+        <g class="scene-room" onclick="showScenePopup('光る君の潜入位置（簀子）','小君の手引きで紀伊守邸に忍び入った光る君が、几帳越しに母屋の様子をうかがった位置。')">
+        <rect x="60" y="190" width="200" height="70" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.4" rx="4" stroke-dasharray="2,2"/>
+        <text x="160" y="220" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">簀子</text>
+        <text x="160" y="238" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（光る君の潜入位置）</text>
+        </g>
+
+        <line x1="160" y1="188" x2="160" y2="132" stroke="var(--murasaki)" stroke-width="1.6" stroke-dasharray="4,3" marker-end="url(#arrow3)"/>
+        <text x="185" y="165" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--murasaki)" paint-order="stroke" stroke="var(--paper-deep)" stroke-width="5" stroke-linejoin="round">垣間見</text>
+
+        <defs>
+          <marker id="arrow3" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="var(--murasaki)"/>
+          </marker>
+        </defs>
+
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">空蟬が奥の間へ逃れた後も、母屋にはそのまま軒端荻が一人残っていた。光る君は人違いと気づきながらも母屋へ向かい、軒端荻とそのまま一夜を共にすることになる。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>碁（ご）</dt>
+      <dd>二人が盤上に石を並べ、陣地の広さを競う遊戯。空蟬と軒端荻が打っていた勝負を光る君が垣間見る。</dd>
+      <dt>小袿（こうちき）</dt>
+      <dd>女性が表着の上に羽織る、丈の短い上着。空蟬が脱ぎ捨てて逃れた、この帖を象徴する衣。</dd>
+      <dt>直衣（のうし）</dt>
+      <dd>貴族男性の普段着。私的な訪問時にも用いる。光る君が忍びで紀伊守邸を訪ねる際の装い。</dd>
+      <dt>生絹（すずし）</dt>
+      <dd>生糸で織った薄く軽い絹織物。夏向けの装束。季節感を伝える、この時期の装束の描写に用いる。</dd>
+      <dt>几帳（きちょう）</dt>
+      <dd>布を垂らした可動式の間仕切り。空蟬たちの部屋を仕切り、垣間見を可能にした調度。</dd>
+      <dt>空蝉（うつせみ）</dt>
+      <dd>蝉の抜け殻の意。この世のはかなさ、脱ぎ捨てられた衣の比喩。光る君の贈歌に由来し、本帖以降ヒロインの呼び名として定着した。</dd>
+      <dt>垣間見（かいまみ）</dt>
+      <dd>御簾や物の隙間からこっそり異性の姿を覗き見ること。碁を打つ空蟬と軒端荻の様子を光る君が垣間見る場面。</dd>
+      <dt>後朝の文（きぬぎぬのふみ）</dt>
+      <dd>一夜を共にした翌朝、男が女に送る手紙。人違いと知りつつ契った軒端荻にも、儀礼として送られる。</dd>
+      <dt>継娘（ままむすめ）</dt>
+      <dd>配偶者の連れ子にあたる娘を指す語。軒端荻は伊予介の先妻の娘で、空蟬の継娘にあたる。</dd>
+      <dt>贈答歌（ぞうとうか）</dt>
+      <dd>男女が歌を贈り合い、互いの思いを伝え合うやりとり。光る君と空蟬が交わす歌が、本帖を象徴する場面となる。</dd>
+    </dl>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）＋贈答歌</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>数日後</h3><p>帚木の夜が忘れられない光る君は、空蟬の弟・小君を手なずけ、再訪の機会をうかがう。</p></div>
+      <div class="tl-item"><h3>その夜</h3><p>小君の手引きで紀伊守邸に忍び入った光る君は、灯火のもと空蟬が継娘・軒端荻と碁を打つ姿を几帳越しに垣間見る。</p></div>
+      <div class="tl-item"><h3>深夜</h3><p>光る君の忍び寄る気配を敏感に察した空蟬は、とっさに薄い衣一枚を残し、ひそかに隣室へと身を隠す。</p></div>
+      <div class="tl-item"><h3>同じ頃</h3><p>何も知らず眠っていた軒端荻のもとへ、光る君は人違いと気づきながらも、そのまま契りを結んでしまう。</p></div>
+      <div class="tl-item"><h3>明け方</h3><p>光る君は空蟬が残した薄衣を手に取り、複雑な思いを胸に抱えたまま紀伊守邸をあとにする。</p></div>
+      <div class="tl-item"><h3>その後</h3><p>光る君は歌を空蟬に贈って未練を伝え、空蟬もまた返歌を送る。人違いのまま結ばれた軒端荻にも、儀礼として後朝の文が届けられる。</p></div>
+    </div>
+
+    <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">光源氏 → 空蟬</div>
+        <div class="poem">空蝉の　身をかへてける　木のもとに　なほ人がらの　なつかしきかな</div>
+        <div class="trans-label">現代語訳（要旨）</div>
+        <div class="trans">蝉が殻を脱ぎ捨てるように、あなたも衣一枚を残して身をかわしてしまった。それでもなお、その木の下に残る人柄が慕わしく思われることだ、という意。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">空蟬 → 光源氏（返歌）</div>
+        <div class="poem unknown">原文は本資料には記載されておらず、確認できません。</div>
+        <div class="trans-label">内容の要旨（原文未確認）</div>
+        <div class="trans">身の置き所のなさと人妻としての辛さを詠んだ歌とされる。ただし具体的な字句は本資料の出典範囲では確認できていません。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 本文から素直に読み取れる解釈</div>
+      <h3>拒む空蟬と、流されやすい光る君</h3>
+      <p>空蟬が衣一枚を残して逃れる行動は、帚木で強引に迫られた立場からの明確な意思表示であり、拒絶の姿勢を貫く数少ない女性としての輪郭を際立たせている、という見方ができます。一方で光る君が人違いと知りながら軒端荻との関係を退けなかった点は、彼の恋の追求が理想の相手そのものより、その場の欲求や好奇心に流されやすい一面を持つことを示している、とも読めます。空蟬に贈る歌が「抜け殻」に寄せた未練の表現であることは、得られなかった相手への執着がかえって深まる、この帖特有の屈折した恋のかたちを表している、という解釈です。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 物語全体・研究的視点</div>
+      <h3>理論と現実の落差、そして「空蝉」という比喩の始まり</h3>
+      <p>帚木で語られた「中の品こそ興あり」という理論に触発された光る君が、実際には理想の相手に拒まれ、代わりに別の女性と結ばれてしまう本帖の展開は、理論と現実の落差を早々に示す構成として読めます。また「空蝉」という語がこの後も繰り返し光る君の歌に登場し、この世のはかなさ・脱ぎ捨てられる身という仏教的無常観と結びつく点は、研究者の間でしばしば指摘されます。光る君に応じない女性という前例をこの早い段階に置くことで、後の藤壺・朧月夜など様々な女性関係の対比軸を用意しているとの見方もあります。</p>
+    </div>
+    <p class="disclaimer">※このセクションは物語解釈にもとづくAIの考察・見解であり、学術的に確定した通説ではありません。</p>
+  </section>
+
+  <!-- 7. 特記事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>物語全体からみた特筆事項</h2></div>
+    <div class="note-card">
+      <h3>抵抗する女性としての空蟬</h3>
+      <p>光る君の求愛を最終的に拒み通す、物語の中でも数少ない女性の一人として描かれます。「中の品」論の実例が、理論通りにはいかない現実を体現する存在でもあります。</p>
+    </div>
+    <div class="note-card">
+      <h3>「空蝉」という比喩の継続</h3>
+      <p>衣を残して逃れた一夜の印象は、蝉の抜け殻という比喩とともに以後の光る君の歌にも繰り返し呼び起こされ、彼女を象徴する言葉として定着していきます。</p>
+    </div>
+    <div class="note-card">
+      <h3>後の「関屋」帖への伏線</h3>
+      <p>本帖では夫・伊予介は不在のまま語られますが、空蟬はのちに夫の任地への同行を経て、第16帖「関屋」で光る君と再会することになります。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 3;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  iyonosuke: {x:140, y:70,  label:'伊予介'},
+  genji:     {x:400, y:70,  label:'光源氏'},
+  kogimi:    {x:660, y:70,  label:'小君'},
+  utsusemi:  {x:140, y:280, label:'空蟬'},
+  nokiba:    {x:400, y:280, label:'軒端荻'},
+  kiinokami: {x:660, y:280, label:'紀伊守'}
+};
+const edges = [
+  {a:'iyonosuke', b:'utsusemi', label:'婚姻（地方赴任中）', type:'blood'},
+  {a:'kiinokami', b:'nokiba', label:'兄妹', type:'blood'},
+  {a:'kogimi', b:'genji', label:'手引き役', type:'coop'},
+  {a:'genji', b:'utsusemi', label:'拒み逃れる・執着', type:'love'},
+  {a:'genji', b:'nokiba', label:'人違いの契り', type:'pol'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  g.appendChild(el('rect',{x:n.x-52,y:n.y-18,width:104,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>

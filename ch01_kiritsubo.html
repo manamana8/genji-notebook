@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第1帖 桐壺 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{max-width:60ch; color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:560px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:14px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:11px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.love line{stroke:var(--suou);}
+  .edge.blood line{stroke:var(--koke);}
+  .edge.pol line{stroke:var(--murasaki);}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:14px; height:3px; display:inline-block;}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第1帖</div>
+    <h1>桐壺</h1>
+    <div class="kana">きりつぼ</div>
+    <p class="lead">光源氏の誕生、母・桐壺更衣の死、藤壺の宮の入内と光の君の成長を描く物語の原点。</p>
+  </div>
+
+  <!-- 1. 主要登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主要登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">0歳〜12歳</span></div><p>桐壺帝の第二皇子。類まれなる美貌と才能に恵まれ「光の君」と呼ばれる。母の面影を追い求める宿命を負う。</p></div>
+      <div class="person"><div class="row"><span class="name">桐壺帝</span><span class="age">推定30代〜40代</span></div><p>源氏の父帝。深い情愛に満ちた治世を行うが、桐壺更衣への偏愛により後宮の秩序を混乱させる。</p></div>
+      <div class="person"><div class="row"><span class="name">桐壺更衣</span><span class="age">推定10代後半・早世</span></div><p>源氏の生母。按察大納言の娘。帝の過剰な寵愛を受け、他后妃の嫉妬と嫌がらせに耐えかねて病死。</p></div>
+      <div class="person"><div class="row"><span class="name">弘徽殿女御</span><span class="age">推定20代〜30代</span></div><p>右大臣の娘で東宮（後の朱雀帝）の母。後宮で最も強い勢力を持ち、桐壺更衣と源氏を激しく敵視する。</p></div>
+      <div class="person"><div class="row"><span class="name">藤壺の宮</span><span class="age">10代前半〜18歳</span></div><p>先帝の第四皇女。亡き桐壺更衣に酷似しているため入内。源氏にとって理想の女性であり憧憬の対象。</p></div>
+      <div class="person"><div class="row"><span class="name">葵の上</span><span class="age">12歳〜16歳（源氏＋4歳）</span></div><p>左大臣の娘。源氏の元服に伴い正妻となるが、年下の夫に対してプライドが高く冷淡に応じる。</p></div>
+      <div class="person"><div class="row"><span class="name">命婦（靫負命婦）</span><span class="age">不明</span></div><p>桐壺帝の勅使として桐壺更衣の実家を訪れ、祖母との悲しみを共有し源氏入内のきっかけを作る賢臣。</p></div>
+      <div class="person"><div class="row"><span class="name">桐壺更衣の母</span><span class="age">推定40代〜50代</span></div><p>更衣の死後、幼い源氏の後見に尽力するが、深い悲しみのあまり間もなく病死する。</p></div>
+    </div>
+  </section>
+
+  <!-- 2. 関係性 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>登場人物の関係性</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="love">恋愛・求愛</button>
+      <button data-f="blood">血縁・親子</button>
+      <button data-f="pol">政治・対立</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--suou)"></i>恋愛・求愛</span>
+      <span><i style="background:var(--koke)"></i>血縁・親子</span>
+      <span><i style="background:var(--murasaki)"></i>政治・対立</span>
+    </div>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>物語の場面解説（空間・地理構造）</h2></div>
+    <p style="font-size:.88rem;color:var(--ink-soft);margin-top:-8px;margin-bottom:18px;">平安宮内裏における主要殿舎の位置関係（七殿五舎）。方位や距離のイメージをつかむための模式図です。</p>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+        <text x="320" y="18" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">北</text>
+        <g class="scene-room" onclick="showScenePopup('淑景舎（きこうしゃ）― 桐壺更衣','清涼殿から最も遠い北東の一角にある局。桐壺更衣の住まい。帝のもとへ向かうには他の妃たちの局の前を通らねばならず、その「物理的な通り道」が嫉妬を招く一因になったとされる。')">
+        <rect x="40" y="34" width="140" height="60" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.2" rx="4"/>
+        <text x="110" y="58" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">淑景舎</text>
+        <text x="110" y="76" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（桐壺更衣）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('飛香舎（ひぎょうしゃ）― 藤壺','清涼殿に近い位置にある局。桐壺更衣の死後、その面影を宿す藤壺の宮に与えられた。清涼殿への近さゆえ、他妃たちの政争から距離を置ける立地とされる。')">
+        <rect x="250" y="34" width="140" height="60" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.4" rx="4"/>
+        <text x="320" y="58" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">飛香舎</text>
+        <text x="320" y="76" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（藤壺）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('弘徽殿（こきでん）― 弘徽殿女御','清涼殿のすぐ北西に位置する格調高い殿舎。帝の動きを監視しやすい立地にあり、後宮において最も強い権力基盤を持つ弘徽殿女御の住まいとされる。')">
+        <rect x="460" y="34" width="140" height="60" fill="#fbf8f1" stroke="var(--suou)" stroke-width="1.4" rx="4"/>
+        <text x="530" y="58" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">弘徽殿</text>
+        <text x="530" y="76" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（弘徽殿女御）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('清涼殿（せいりょうでん）― 帝の日常の居所','天皇が日常を過ごす殿舎。ここからの距離・位置関係が、後宮内での妃たちの発言力や帝との近さを象徴すると考えられている。')">
+        <rect x="250" y="150" width="140" height="70" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.6" rx="4"/>
+        <text x="320" y="180" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">清涼殿</text>
+        <text x="320" y="198" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（帝の日常の居所）</text>
+        </g>
+
+        <line x1="110" y1="94" x2="320" y2="150" stroke="var(--line)" stroke-dasharray="3,3"/>
+        <line x1="320" y1="94" x2="320" y2="150" stroke="var(--line)" stroke-dasharray="3,3"/>
+        <line x1="530" y1="94" x2="320" y2="150" stroke="var(--line)" stroke-dasharray="3,3"/>
+
+        <text x="320" y="270" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">南</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">桐壺更衣の局・淑景舎は、清涼殿から最も遠い北東の一角にあった。帝のもとへ向かうには、弘徽殿をはじめ他の妃たちの局の前を通らねばならず、この「物理的な通り道」が他妃たちの目に留まり、嫉妬を強める構造的な要因になった、という見方ができる。更衣の死後、藤壺には清涼殿に近い飛香舎が与えられ、政争から距離を置ける位置関係になっている。</p>
+    <p class="disclaimer">※図は位置関係のイメージをつかむための簡略な模式図であり、史実の正確な建築配置を示すものではありません。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>更衣（こうい）と女御（にょうご）</dt>
+      <dd>天皇の妃の階級。最高位の「皇后・中宮」に次ぐのが「女御」（大臣クラスの娘）、その下がいわゆる「更衣」（納言以下の娘）。桐壺更衣は身分が低いにもかかわらず帝の破格の寵愛を受けたため、後宮の秩序を乱すと激しい嫉妬を招いた。</dd>
+      <dt>入内（じゅだい）と后妃</dt>
+      <dd>【入内】皇族や公卿の娘が天皇の妃として後宮に入ること。【后妃】皇后・中宮・女御・更衣などの総称。実家の政治的うしろだて（後見力）が、后妃の後宮内での地位を左右する。</dd>
+      <dt>東宮（とうぐう）</dt>
+      <dd>皇太子のこと。桐壺帝と弘徽殿女御の間に生まれた第一皇子が東宮に立てられていた。しかし美しく優秀な第二皇子（光源氏）の存在は、右大臣家にとって将来の東宮の立場を脅かす最大の脅威であった。</dd>
+      <dt>臣籍降下（しんせきこうか）</dt>
+      <dd>皇族の身分を離れ、臣下（源氏など）となること。桐壺帝は源氏に後ろ盾がなく東宮争いに巻き込まれれば命の危険があると判断し、政治的に生き残らせるために「源」の姓を与えて臣下に下した。</dd>
+      <dt>相人（そうにん）と高麗人</dt>
+      <dd>人相・観相を行う者のこと。渤海国使節として訪れていた高麗の相人は光源氏を観察し、「帝にすれば国が乱れ、臣下にすれば朝廷の柱となる」という予言を与えた。</dd>
+    </dl>
+
+    <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">【詠み手】桐壺帝</div>
+        <div class="poem">いづれの時にか<br>秋の露<br>もあはれは尽きぬ<br>ものにぞありける</div>
+        <div class="trans-label">現代語訳</div>
+        <div class="trans">どのような季節の移り変わりを見ても、亡き更衣とともに眺めた日々の愛おしさが思い出され、悲しみに耐えかねる。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">【詠み手】桐壺更衣の母（大納言の北の方）</div>
+        <div class="poem">宮城野の<br>露吹きむすぶ<br>風の音に<br>小萩がもとを<br>思ひこそやれ</div>
+        <div class="trans-label">現代語訳</div>
+        <div class="trans">宮城野に露を結ばせる風の音を聞くにつけ、そこに生い茂る小萩（＝幼い源氏）の身の上が案じられてなりません。</div>
+      </div>
+    </div>
+    <p class="disclaimer">※和歌は原文からの意訳・要約です。表記のゆれについては学習用として簡略化しています。</p>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>誕生と悲劇</h3><p>桐壺帝の激しい寵愛を受けた桐壺更衣は、後宮からの苛烈ないじめと嫉妬の中で光り輝く若宮（光源氏）を出産するが、心身を病み、若宮が3歳の時に急逝する。</p></div>
+      <div class="tl-item"><h3>悲嘆と藤壺の入内</h3><p>帝は悲しみに暮れ、政務も手につかない状態となる。やがて、亡き更衣に瓜二つである先帝の皇女・藤壺の宮が入内し、帝の深い寵愛を受けるようになる。</p></div>
+      <div class="tl-item"><h3>臣籍降下と元服</h3><p>若宮は「光源氏」と称されるほどの美貌と才能を見せる。帝は若宮の将来を案じ、高麗の相人の「帝にすれば国が乱れ、臣下にすれば朝廷の柱となる」という予言に従い、源姓を与えて臣籍に下す。</p></div>
+      <div class="tl-item"><h3>葵の上との結婚</h3><p>12歳で元服した光源氏に対し、帝は左大臣の娘・葵の上との婚姻を調える。しかし年上の葵の上のプライドの高さと冷淡さにより、二人の間には心の距離が生まれる。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 全体概要・作品論</div>
+      <h3>『長恨歌』を下敷きにした宮廷ロマンスの実像</h3>
+      <p>『桐壺』の巻は、中国の詩人・白居易の『長恨歌』をベースに構成されているとされます。一見美しい宮廷ロマンスですが、その実態は「後ろ盾（実家の政治力）を欠いた美女が、帝の軽率な寵愛によって宮廷政治の犠牲になる」という、平安後宮の生々しい権力闘争を描いている、という見方ができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 深層考察・心理構造</div>
+      <h3>母性飢餓とトラウマの原点</h3>
+      <p>光源氏という人物を解読する鍵が、この第1帖に存在するという見方があります。3歳で母を失った源氏は、父帝から「亡き母にそっくりな女性」として提示された藤壺の宮に対し、母への憧憬と恋愛感情が未分離なまま強い葛藤を抱くことになります。この「理想の母の面影を追い求める衝動」が、後の『若紫』や『葵の上』との関係、ひいては全54帖にわたる女性遍歴の根本的な原動力になっている、という解釈です。</p>
+    </div>
+    <p class="disclaimer">※このセクションは物語解釈にもとづくAIの考察・見解であり、学術的に確定した通説ではありません。</p>
+  </section>
+
+  <!-- 7. 特記事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特記事項・伏線</h2></div>
+    <div class="note-card">
+      <h3>物語全体を貫く巨大な伏線：藤壺への感情</h3>
+      <p>桐壺帝が藤壺の宮を引き合わせ「母と思って親しみなさい」と言い含めたことが、後に第5帖『若紫』、第7帖『紅葉賀』で結実する「養母との密通・皇子（冷泉帝）の誕生」という物語最大の禁忌へ直結します。</p>
+    </div>
+    <div class="note-card">
+      <h3>政治構造の対立軸：左大臣派 vs 右大臣派</h3>
+      <p>光源氏を支持する「左大臣家（葵の上・頭中将の家系）」と、東宮を支持する「右大臣家（弘徽殿女御の家系）」の政権抗争が描かれます。源氏が左大臣家に婿として入ることで、物語の政治的基盤が完成します。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 1;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  teitei:  {x:120, y:60,  label:'桐壺帝'},
+  koui:    {x:360, y:60,  label:'桐壺更衣'},
+  kokiden: {x:600, y:60,  label:'弘徽殿女御'},
+  fujitsubo:{x:120, y:270, label:'藤壺女御'},
+  genji:   {x:360, y:270, label:'光源氏'},
+  aoi:     {x:600, y:270, label:'葵の上'}
+};
+const edges = [
+  {a:'teitei', b:'koui', label:'深い寵愛', type:'love'},
+  {a:'koui', b:'kokiden', label:'激しい嫉妬・対立', type:'pol'},
+  {a:'teitei', b:'fujitsubo', label:'寵愛（更衣の面影）', type:'love'},
+  {a:'teitei', b:'genji', label:'父と子（溺愛）', type:'blood'},
+  {a:'koui', b:'genji', label:'母と子', type:'blood'},
+  {a:'fujitsubo', b:'genji', label:'密かな慕情', type:'love'},
+  {a:'genji', b:'aoi', label:'夫婦（距離あり）', type:'love'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  g.appendChild(el('rect',{x:n.x-52,y:n.y-18,width:104,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第4帖 夕顔 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{max-width:60ch; color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:600px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.love line{stroke:var(--suou);}
+  .edge.blood line{stroke:var(--koke);}
+  .edge.pol line{stroke:var(--murasaki); stroke-dasharray:5,3;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:14px; height:3px; display:inline-block;}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item .when{font-size:.72rem; color:var(--suou); margin-bottom:3px; letter-spacing:.03em;}
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card .tag{font-size:.72rem; color:var(--murasaki); margin-bottom:6px; letter-spacing:.03em;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- 8. notes ---- */
+  .notes-list{counter-reset:notenum; padding-left:0; list-style:none;}
+  .notes-list li{
+    counter-increment:notenum;
+    position:relative; padding-left:28px; margin-bottom:12px;
+    font-size:.85rem; color:var(--ink-soft);
+  }
+  .notes-list li::before{
+    content:counter(notenum); position:absolute; left:0; top:0;
+    color:var(--murasaki); font-family:"Shippori Mincho", serif; font-weight:700; font-size:.85rem;
+  }
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第4帖</div>
+    <h1>夕顔</h1>
+    <div class="kana">ゆうがお</div>
+    <p class="lead">乳母見舞いの折に出会った素性を隠す女・夕顔と忍びの恋を重ねた光る君が、某院での逢瀬の夜に彼女を物の怪により突然失う帖。頭中将が語った「常夏の女」の正体も明かされる。</p>
+  </div>
+
+  <!-- 1. 主要登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主要登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">17歳</span></div><p>六条御息所との重く複雑な関係に疲れを覚えつつ、素性を明かさぬ夕顔の親しみやすさに心が安らぐ。某院に連れ出した夜、物の怪により夕顔を突然失う。</p></div>
+      <div class="person"><div class="row"><span class="name">夕顔</span><span class="age">明記なし（19歳前後とされる）</span></div><p>つつましく素性を明かさない、はかなげで親しみやすい人柄。某院での逢瀬の夜、物の怪に取り憑かれ急死。帚木で語られた「常夏の女」その人であったことが判明する。</p></div>
+      <div class="person"><div class="row"><span class="name">六条御息所</span><span class="age">明記なし（光る君より年上）</span></div><p>亡き東宮の妃で高い教養と誇りを持つが、光る君の心変わりに深く思い悩む。夕顔の死の夜、その気配が物の怪として現れたと示唆される。</p></div>
+      <div class="person"><div class="row"><span class="name">頭中将</span><span class="age">光る君と同年代</span></div><p>本帖には直接登場しないが背後で存在感を放つ。かつて夕顔と契り娘をもうけた仲だったが、本妻の嫉妬を恐れた夕顔に去られ行方を見失っていた。</p></div>
+      <div class="person"><div class="row"><span class="name">惟光</span><span class="age">明記なし（光る君の乳母子）</span></div><p>忠実で機転が利き、危機に際して冷静に動く。光る君の最も信頼する腹心として、夕顔の宿の探索や死後の秘密裏の処理を一手に引き受ける。</p></div>
+      <div class="person"><div class="row"><span class="name">右近</span><span class="age">明記なし（夕顔の侍女）</span></div><p>主人に忠実で、その素性を知る数少ない人物。夕顔の死後、光る君に引き取られて仕えることになる。頭中将との関係や娘の存在を語る証言者。</p></div>
+      <div class="person"><div class="row"><span class="name">大弐乳母</span><span class="age">明記なし（病床にある高齢の乳母）</span></div><p>光る君を我が子のように慈しんできた献身的な人物。その見舞いに訪れたことが、夕顔の宿との出会いのきっかけとなる。</p></div>
+    </div>
+  </section>
+
+  <!-- 2. 関係性 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>登場人物の関係性</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="love">恋愛・情愛</button>
+      <button data-f="blood">縁故・奉公</button>
+      <button data-f="pol">対立・示唆</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--suou)"></i>恋愛・情愛</span>
+      <span><i style="background:var(--koke)"></i>縁故・奉公</span>
+      <span><i style="background:var(--murasaki)"></i>対立・示唆</span>
+    </div>
+    <p style="font-size:.8rem;color:var(--ink-soft);margin-top:14px;">※「物の怪」の正体は本文中では明言されておらず、六条御息所説はこの帖以降の描写から示唆される読み方である（考察）。</p>
+  </section>
+
+  <!-- 3. 参考図 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>参考図　―　五条の夕顔の宿と六条御息所邸</h2></div>
+    <p style="font-size:.88rem;color:var(--ink-soft);margin-top:-8px;margin-bottom:18px;">大路一本分の距離にありながら、光る君の心の中では対極にあった二つの邸のイメージ図です。四角をクリックすると詳細が表示されます。</p>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+        <text x="320" y="18" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">北</text>
+
+        <g class="scene-room" onclick="showScenePopup('五条の夕顔の宿','立地：五条大路沿い。庶民の家々が軒を連ねる、都でも目立たない界隈。外見：荒れた板塀に夕顔の花が這う、質素で手狭な佇まい。ギャップ：見た目の慎ましさに反し、機知に富んだ和歌のやりとりが光る君の心を掴む。象徴するもの：帚木の「中の品」論をさらに超えた、身分の低さの中にこそある美点。')">
+        <rect x="90" y="90" width="180" height="66" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.4" rx="4"/>
+        <text x="180" y="118" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">五条の夕顔の宿</text>
+        <text x="180" y="138" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（質素・親しみやすさ）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('六条御息所邸','立地：六条、都でも指折りの高雅な邸が並ぶ界隈。外見：手入れの行き届いた壮麗な邸宅。洗練の極みを尽くした佇まい。内実：深い教養と気品に満ちるが、誇り高さゆえの重圧感も漂う。象徴するもの：光る君にとってかつては憧れ、今はやや息苦しさを覚える存在に。')">
+        <rect x="390" y="90" width="180" height="66" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.4" rx="4"/>
+        <text x="480" y="118" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">六条御息所邸</text>
+        <text x="480" y="138" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（高雅・重圧感）</text>
+        </g>
+
+        <line x1="270" y1="123" x2="390" y2="123" stroke="var(--suou)" stroke-width="1.6" stroke-dasharray="4,3"/>
+        <text x="330" y="110" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--suou)" paint-order="stroke" stroke="var(--paper-deep)" stroke-width="5" stroke-linejoin="round">大路一本分の近さ（事実）</text>
+
+        <text x="180" y="230" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">五条大路</text>
+        <text x="480" y="230" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">六条大路</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">地理的にはごく近い二つの場所が、光る君の心の中ではまったく異なる意味を持つ世界として対比されている（考察）。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>某院（なにがしのいん）</dt>
+      <dd>所有者を明示せず「某（なにがし）」とぼかして呼ばれる、荒れた邸宅。光る君が夕顔を連れ出し、事件が起こる舞台となる。</dd>
+      <dt>御息所（みやすんどころ）</dt>
+      <dd>帝や東宮の寵愛を受けた女性、またはその御子を産んだ女性への敬称。六条御息所は亡き東宮の妃であったことを示す称号。</dd>
+      <dt>随身（ずいじん）</dt>
+      <dd>貴人の外出に付き従う警護の従者。光る君の五条訪問にも随身が同行している。</dd>
+      <dt>半蔀（はじとみ）</dt>
+      <dd>上下に開閉できる板張りの窓・戸。庶民の住居によく見られた。夕顔の宿の質素な佇まいを特徴づける建具。</dd>
+      <dt>召人（めしうど）</dt>
+      <dd>主人に仕えながら、私的な関係も持つ女房。右近はこの立場から、のちに光る君に仕えることになる。</dd>
+      <dt>物の怪（もののけ）</dt>
+      <dd>人に取り憑いて病や死をもたらすとされた、霊的な存在。夕顔の急死の直接の原因として描かれる、本帖最大の事件。</dd>
+      <dt>生霊（いきりょう）</dt>
+      <dd>強い怨念や嫉妬により、生きている人間の魂が抜け出て祟るとされたもの。六条御息所の思いが生霊として現れたと示唆される。</dd>
+      <dt>夕顔（ゆうがお）</dt>
+      <dd>夏の夕方に白い花を咲かせるウリ科のつる草。ヒロインの呼び名の由来。花を通じた和歌のやりとりが、この恋の始まりとなる。</dd>
+      <dt>無常（むじょう）</dt>
+      <dd>この世のすべては移ろい、永続するものはないという仏教的な思想。夕顔の急死を通じ、光る君が人生の儚さを痛感する主題となる。</dd>
+      <dt>後見（うしろみ）</dt>
+      <dd>後ろ盾となって世話や庇護をすること、またその人。夕顔亡き後、光る君が右近の後見役を引き受ける。</dd>
+    </dl>
+    <p class="disclaimer">※夕顔の返歌など、和歌のやりとり自体は本文に登場するが、元データに具体的な字句が残っていないため、今回は原文の引用を割愛しています。</p>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><div class="when">夏</div><h3>五条の宿との出会い</h3><p>病床の乳母を見舞った光る君は、隣家の質素な垣根に咲く夕顔の花に目を留める。</p></div>
+      <div class="tl-item"><div class="when">同日</div><h3>扇に添えられた和歌</h3><p>花を所望すると、扇に和歌をしたためた返事が届き、光る君は宿の女に興味を抱く。</p></div>
+      <div class="tl-item"><div class="when">以後</div><h3>忍びの逢瀬</h3><p>互いに素性を明かさぬまま、光る君は正体を隠して夕顔のもとへ通うようになる。</p></div>
+      <div class="tl-item"><div class="when">並行して</div><h3>揺れる心</h3><p>光る君は年上の恋人・六条御息所との関係にも重さを感じ、気持ちが揺れ動いている。</p></div>
+      <div class="tl-item"><div class="when">夜</div><h3>某院への同行</h3><p>人目を避け、光る君は夕顔をさびれた某院へと連れ出し、二人きりの夜を過ごす。</p></div>
+      <div class="tl-item"><div class="when">深夜</div><h3>物の怪の出現</h3><p>夢に美しい女の霊が現れ光る君を恨むように語りかけ、目覚めると夕顔は息絶えていた。</p></div>
+      <div class="tl-item"><div class="when">直後</div><h3>惟光による秘密裏の処理</h3><p>惟光の助けを借り、光る君は夕顔の死を秘密裏に処理し、悲しみに沈む。</p></div>
+      <div class="tl-item"><div class="when">その後</div><h3>「常夏の女」の正体判明</h3><p>夕顔の侍女・右近の証言により、彼女がかつて頭中将と契り娘をもうけた「常夏の女」であったことが明らかになる。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 本文から素直に読み取れる解釈</div>
+      <h3>「重さ」の裏返しとしての夕顔への安らぎ</h3>
+      <p>光る君が夕顔に惹かれた理由は、六条御息所との関係の「重さ」の裏返しとして描かれている。素性を隠し、気負わず心を通わせられる夕顔との関係は、身分や教養に縛られた宮廷の恋愛とは対照的な、束の間の安らぎだった。その安らぎが物の怪という形で唐突に断ち切られる展開は、平安貴族社会における恋愛の危うさと隣り合わせの無常観を色濃く映し出している。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 物語全体・研究的視点からの読み解き</div>
+      <h3>語られない「物の怪」の正体と伏線回収</h3>
+      <p>夕顔を死に至らしめた物の怪の正体は本文中で明言されず、意図的な曖昧さが保たれている。この「語られない主体」は、のちの「葵」の帖で六条御息所の生霊がより明確な形で描かれることへの伏線と捉えられ、研究者の間でもしばしば関連づけて論じられる。また、帚木で語られた「常夏の女」が夕顔その人であったという事実は、光る君と頭中将という二人の男の恋愛遍歴が、一人の女性を介して交差していたことを示す、物語屈指の伏線回収である。</p>
+    </div>
+    <p class="disclaimer">※このセクションは物語解釈にもとづくAIの考察・見解であり、学術的に確定した通説ではありません。</p>
+  </section>
+
+  <!-- 7. 物語全体からみた特筆事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>物語全体からみた特筆事項</h2></div>
+    <p style="font-size:.88rem;color:var(--ink-soft);margin-top:-8px;margin-bottom:18px;">夕顔の死は、源氏物語における「物の怪」というモチーフの原点となる。</p>
+    <div class="note-card">
+      <div class="tag">1｜六条御息所という存在の伏線</div>
+      <h3>「葵」の帖への布石</h3>
+      <p>本帖で示唆される嫉妬の気配は、後の「葵」の帖で明確な生霊として描かれ、物語屈指の恐ろしい場面へと発展していく。以後、六条御息所の生霊は物語の中で繰り返し姿を現し、光る君をめぐる女性たちの嫉妬と怨念を体現する存在として、長く物語を規定していく。</p>
+    </div>
+    <div class="note-card">
+      <div class="tag">2｜玉鬘という長期の伏線</div>
+      <h3>物語後半への橋渡し</h3>
+      <p>夕顔と頭中将の間に生まれた娘は、物語の後半で「玉鬘」として再登場し、複数の帖にまたがる大きな物語群の起点となる。</p>
+    </div>
+    <div class="note-card">
+      <div class="tag">3｜光る君の恋の「原罪」の一つ</div>
+      <h3>以後の恋愛観に落ちる影</h3>
+      <p>身分を隠した恋の末に相手を喪うという経験は、以後の光る君の恋愛観・女性への接し方に影を落とし続ける。</p>
+    </div>
+  </section>
+
+  <!-- 8. 出典・注記 -->
+  <section class="block" id="citations">
+    <div class="block-head"><span class="idx">8</span><h2>出典・注記　―　事実と考察の区別</h2></div>
+    <ol class="notes-list">
+      <li>本ページの人物設定・年齢・エピソードは、原則として『源氏物語』第四帖「夕顔」の本文に基づく。</li>
+      <li>本文に年齢や関係性が明記されていない箇所は「明記なし」と注記した。</li>
+      <li>夕顔が頭中将の「常夏の女」であったこと、その娘がのちの玉鬘であることなど、他の帖にまたがる情報は本文中で明示している。</li>
+      <li>夕顔の死をもたらした物の怪の正体は、本帖の本文中では明言されていない。「六条御息所説」は、本帖以降の描写を踏まえた伝統的な読み方・示唆であり、確定した事実ではない点にご留意いただきたい。</li>
+      <li>「参考図（3節）」の夕顔の宿・六条御息所邸の対比、地理的近さの指摘は、本文の内容を図解・整理したものである。</li>
+      <li>「考察」「深層考察」（6節）はAIによる読み解き・分析であり、原典に記された解釈ではない。研究者間で見解が分かれる場合がある点にご留意いただきたい。</li>
+    </ol>
+    <p class="disclaimer">原文の精読には、新編日本古典文学全集などの注釈付きテキストの参照を推奨します。</p>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared, from chapters-data.js) ===== */
+const CURRENT = 4;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  daini:    {x:110, y:60,  label:'大弐乳母'},
+  genji:    {x:380, y:60,  label:'光源氏'},
+  rokujo:   {x:650, y:60,  label:'六条御息所'},
+  koremitsu:{x:180, y:210, label:'惟光'},
+  yugao:    {x:380, y:210, label:'夕顔'},
+  toonoc:   {x:580, y:210, label:'頭中将'},
+  ukon:     {x:280, y:350, label:'右近'},
+  musume:   {x:480, y:350, label:'娘（のち玉鬘）'}
+};
+const edges = [
+  {a:'genji', b:'rokujo',   label:'冷めゆく情熱', type:'love'},
+  {a:'genji', b:'yugao',    label:'新鮮な安らぎ', type:'love'},
+  {a:'toonoc', b:'yugao',   label:'途絶えた未練', type:'love'},
+  {a:'daini', b:'genji',    label:'光る君の乳母', type:'blood'},
+  {a:'koremitsu', b:'genji',label:'乳母子・探索と後始末', type:'blood'},
+  {a:'ukon', b:'yugao',     label:'侍女', type:'blood'},
+  {a:'ukon', b:'genji',     label:'後に光る君に仕える', type:'blood'},
+  {a:'yugao', b:'musume',   label:'実子（後帖判明）', type:'blood'},
+  {a:'toonoc', b:'musume',  label:'実子（後帖判明）', type:'blood'},
+  {a:'rokujo', b:'yugao',   label:'嫉妬・物の怪（示唆）', type:'pol'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  const w = Math.max(90, n.label.length*15 + 24);
+  g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>

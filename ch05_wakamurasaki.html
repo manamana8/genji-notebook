@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第5帖 若紫 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{max-width:60ch; color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+  .block-note{font-size:.86rem;color:var(--ink-soft);margin-top:-8px;margin-bottom:18px;}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  svg#relmap{width:100%; min-width:600px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.love line{stroke:var(--suou);}
+  .edge.blood line{stroke:var(--koke);}
+  .edge.pol line{stroke:var(--murasaki);}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:14px; height:3px; display:inline-block;}
+
+  /* ---- 3. scene / spatial diagram ---- */
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+
+  /* ---- 6. reasons (why undiscovered, now part of 考察) ---- */
+  .reason-timeline{position:relative; padding-left:26px;}
+  .reason-timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .rt-item{position:relative; margin-bottom:24px;}
+  .rt-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .rt-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .rt-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+  .irony-box{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:22px;}
+  .irony-box .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .irony-box h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .irony-box p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+  .subhead{font-size:.78rem; color:var(--suou); letter-spacing:.03em; margin:0 0 14px;}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第5帖</div>
+    <h1>若紫</h1>
+    <div class="kana">わかむらさき</div>
+    <p class="lead">瘧病の療養で訪れた北山で藤壺によく似た少女・若紫と出会う一方、王命婦の手引きにより藤壺との禁断の一線を越えてしまう帖。</p>
+  </div>
+
+  <!-- 1. 主要登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主要登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">18歳</span></div><p>瘧病の療養先の北山で運命の少女・若紫に出会い、理想の女性を自らの手で育てたいという願望を抱く。王命婦の手引きで藤壺との禁断の一線を越えてしまう。</p></div>
+      <div class="person"><div class="row"><span class="name">藤壺</span><span class="age">明記なし</span></div><p>帝の妃。光る君と一線を越え、密かに子を身ごもる。帝への申し訳なさと光る君への思いの間で引き裂かれ、深い苦悩と罪悪感を抱え続ける。</p></div>
+      <div class="person"><div class="row"><span class="name">若紫（のちの紫の上）</span><span class="age">10歳前後</span></div><p>藤壺の姪（兵部卿宮の娘）。母を亡くし後見も定まらない不安定な境遇にあり、祖母の尼君に育てられている。無邪気で愛らしい。</p></div>
+      <div class="person"><div class="row"><span class="name">尼君</span><span class="age">明記なし（高齢）</span></div><p>若紫の祖母。母を失った孫を手元で養育する、慈愛に満ちた人物。光る君の申し出には当初警戒を示す。</p></div>
+      <div class="person"><div class="row"><span class="name">兵部卿宮</span><span class="age">明記なし</span></div><p>藤壺の兄、若紫の実父。本妻に配慮し、若紫の養育に積極的に関わってこなかった。尼君の死後に娘を引き取ろうとするが遅れをとる。</p></div>
+      <div class="person"><div class="row"><span class="name">王命婦</span><span class="age">明記なし</span></div><p>藤壺付きの女房。藤壺の苦悩を間近で知る立場にあり、光る君と藤壺との密会を仲介する、事件の鍵を握る人物。</p></div>
+      <div class="person"><div class="row"><span class="name">帝（桐壺帝）</span><span class="age">明記なし</span></div><p>藤壺の夫。藤壺と光る君の秘密を知らぬまま、変わらぬ愛情を注ぎ続ける。生まれた皇子が光る君に似ていると無邪気に喜ぶ。</p></div>
+      <div class="person"><div class="row"><span class="name">惟光</span><span class="age">明記なし（光る君の乳母子）</span></div><p>相変わらず忠実で機転が利く、光る君の腹心。北山での若紫の身元探索や、二条院への引き取りの実務を支える。</p></div>
+    </div>
+  </section>
+
+  <!-- 2. 関係性 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>登場人物の関係性</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="love">恋愛・求愛</button>
+      <button data-f="blood">友誼・姻戚</button>
+      <button data-f="pol">政治・対立</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 760 450" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--suou)"></i>恋愛・求愛</span>
+      <span><i style="background:var(--koke)"></i>友誼・姻戚</span>
+      <span><i style="background:var(--murasaki)"></i>政治・対立</span>
+    </div>
+    <p class="disclaimer">※皇子（のちの冷泉帝）の出生の秘密は本文でも明確に語られる、物語全体を貫く最重要の伏線です。</p>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>物語の場面解説（空間・地理構造）</h2></div>
+    <p class="block-note">京から北へ隔たった北山（尼君の草庵）と、都の中にある内裏・二条院との位置関係のイメージ図です。クリックで各地の説明が開きます。</p>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+        <text x="320" y="18" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">北</text>
+
+        <g class="scene-room" onclick="showScenePopup('北山 ― 尼君の草庵','京から北へ入った山中の地。俗世を離れた聖が住まい、その近くに尼君と若紫が身を寄せる質素な草庵がある。都の喧騒から隔たった静けさの中で、光る君は療養のかたわら運命の少女・若紫と出会う。')">
+        <rect x="245" y="34" width="150" height="56" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.4" rx="4"/>
+        <text x="320" y="58" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">北山・尼君の草庵</text>
+        <text x="320" y="76" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（若紫との出会い）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('内裏 ― 藤壺の御方','都の中心、宮中にある藤壺の御殿。御簾や几帳の奥深く、限られた女房以外は近づけない場所だが、王命婦の手引きにより光る君はここで藤壺との密会を果たす。')">
+        <rect x="115" y="190" width="160" height="56" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.4" rx="4"/>
+        <text x="195" y="214" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">内裏・藤壺の御方</text>
+        <text x="195" y="232" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（藤壺との密会）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('二条院 ― 光る君の邸','光る君自身が構える私邸。宮中からほど近い都の中にある。祖母・尼君を亡くし後見を失った若紫が、ここに引き取られて養育されることになる。')">
+        <rect x="365" y="190" width="160" height="56" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.4" rx="4"/>
+        <text x="445" y="214" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">二条院</text>
+        <text x="445" y="232" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（若紫を迎える邸）</text>
+        </g>
+
+        <line x1="300" y1="90" x2="205" y2="190" stroke="var(--suou)" stroke-width="1.6" stroke-dasharray="4,3"/>
+        <text x="215" y="140" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--suou)" paint-order="stroke" stroke="var(--paper-deep)" stroke-width="5" stroke-linejoin="round">療養を終え都へ戻る</text>
+
+        <line x1="340" y1="90" x2="445" y2="190" stroke="var(--yamabuki)" stroke-width="1.6" stroke-dasharray="4,3"/>
+        <text x="435" y="140" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--yamabuki)" paint-order="stroke" stroke="var(--paper-deep)" stroke-width="5" stroke-linejoin="round">尼君の死後、若紫を迎える</text>
+
+        <line x1="275" y1="218" x2="365" y2="218" stroke="var(--ink-soft)" stroke-width="1.2" stroke-dasharray="2,3"/>
+        <text x="320" y="208" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)" paint-order="stroke" stroke="var(--paper-deep)" stroke-width="5" stroke-linejoin="round">共に京の中、程近い立地</text>
+
+        <text x="320" y="284" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">南（都）</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">北山は京の中心部から北へ隔たった山間の地で、俗世を離れた聖や隠遁者が身を置く場所として物語にたびたび登場する。一方、内裏と二条院はいずれも都の中にあり、光る君にとっては行き来しやすい距離にある。この「都から隔たった北山」と「都の中で近接する内裏・二条院」という位置関係が、この帖の舞台構造の骨格になっている。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>瘧病（わらわやみ）</dt>
+      <dd>間欠的に発熱を繰り返す病。当時はもののけの仕業とも考えられた。光る君が北山を訪れる直接のきっかけとなる。</dd>
+      <dt>聖（ひじり）</dt>
+      <dd>俗世を離れて修行する高僧・僧侶。祈祷や加持で病を癒すとされた。光る君が療養と快癒祈願のために頼る北山の聖。</dd>
+      <dt>命婦（みょうぶ）</dt>
+      <dd>五位以上の女官、または五位以上の妻の称。王命婦は藤壺付きの女房として密会を手引きする。</dd>
+      <dt>兵部卿宮（ひょうぶきょうのみや）</dt>
+      <dd>兵部省の長官を務める親王への呼称。若紫の実父で、藤壺の兄にあたる皇族。</dd>
+      <dt>后がね（きさきがね）</dt>
+      <dd>将来、后になる可能性を秘めた女性という意味の言葉。光る君が若紫の将来性を見出す際の含意として用いられる。</dd>
+      <dt>垣間見（かいまみ）</dt>
+      <dd>御簾や垣根の隙間からこっそり異性の姿を覗き見ること。光る君が北山で幼い若紫の姿を初めて目にする場面。</dd>
+      <dt>紫のゆかり</dt>
+      <dd>藤壺と血縁でつながる、紫草に例えられる人々のつながり。若紫が藤壺の面影を宿す理由を象徴的に表す言葉。</dd>
+      <dt>密通（みっつう）</dt>
+      <dd>許されない相手と密かに情を通じること。光る君と藤壺の関係を指す、物語最大の秘密。</dd>
+      <dt>後見（うしろみ）</dt>
+      <dd>後ろ盾となって世話や庇護をすること、またその人。尼君亡き後、光る君が若紫の後見役を自任する。</dd>
+      <dt>理想の女性を育てる</dt>
+      <dd>自ら望む人柄・教養に沿って女性を養育しようとする発想。光る君が若紫を二条院に引き取る動機の中心となる。</dd>
+    </dl>
+    <p class="disclaimer">※この帖では、これといえる象徴的な和歌の贈答は今回の底本テキストからは確認できなかったため、割愛しています。</p>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>北山での療養</h3><p>瘧病を患った光る君は、療養と加持祈祷のため北山の聖のもとを訪れる。</p></div>
+      <div class="tl-item"><h3>運命の少女との出会い</h3><p>近くの庵を垣間見た光る君は、藤壺によく似た愛らしい少女・若紫を見つけて心惹かれる。若紫が藤壺の姪と知った光る君は、祖母の尼君に彼女を引き取りたいと申し出るが、当初は拒まれる。</p></div>
+      <div class="tl-item"><h3>藤壺との密通</h3><p>都に戻った光る君は、王命婦の手引きにより藤壺との密会の機会を得て、二人はついに一線を越えてしまう。藤壺は光る君の子を身ごもるが、深い苦悩と罪悪感に苛まれ、二度と過ちを繰り返すまいと心に誓う。</p></div>
+      <div class="tl-item"><h3>尼君の死と若紫の引き取り</h3><p>祖母の尼君が病没し、若紫は後見を失う。父・兵部卿宮が引き取りを検討し始めるが、その隙に光る君は好機を逃さず、乳母の助けを借りて若紫を二条院へと迎え入れる。</p></div>
+      <div class="tl-item"><h3>皇子の誕生</h3><p>年が明け、藤壺は帝の子として皇子を出産する。真実を知らぬ帝は、皇子が光る君に似ていると無邪気に喜ぶ。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <p class="subhead">参考｜藤壺との密通が発覚しなかった経緯（本文の記述にもとづく整理）</p>
+    <div class="reason-timeline">
+      <div class="rt-item"><h3>1. 後宮という物理的な壁</h3><p>高位の女性は御簾・几帳の奥深くに住まい、限られた女房以外は姿を見ることすら叶わない。この厳重な隔絶が、外部の詮索を遠ざける結果にもなった。</p></div>
+      <div class="rt-item"><h3>2. 王命婦という内通者</h3><p>藤壺に最も近侍する女房・王命婦が、光る君との密会の機会を実際に手引きした。信頼された側近だからこそ持ち得た「内側からの通路」だった。</p></div>
+      <div class="rt-item"><h3>3. 帝の訪れという隠れ蓑</h3><p>この時期も帝は変わらず藤壺のもとへ通っており、身ごもった子の父を疑う理由が周囲には生まれなかった。</p></div>
+      <div class="rt-item"><h3>4. 一度きりの機会という抑制</h3><p>事の後、藤壺自身が深く思い悩み、二度と同じ過ちを繰り返すまいと固く心に誓う。露見の機会そのものが、以後は閉ざされていく。</p></div>
+    </div>
+    <div class="irony-box">
+      <div class="tag">皮肉な一場面（事実）</div>
+      <h4>真実を知らぬ帝の喜び</h4>
+      <p>生まれた皇子を見た帝は、その面差しが光る君に似ていると無邪気に喜ぶ。真実を知らぬ帝のこの反応こそが、この秘密がいかに巧妙に隠されていたかを最も端的に物語っている。</p>
+    </div>
+    <div class="analysis-card" style="margin-top:26px;">
+      <div class="tag">考察 ｜ 本文から素直に読み取れる解釈</div>
+      <h3>「藤壺に似ている」に集約される恋の構図</h3>
+      <p>光る君が若紫に惹かれた理由は、単なる愛らしさだけでなく「藤壺に似ている」という一点に集約されます。手の届かない藤壺への思いを、自ら育てられる少女に重ねて満たそうとするこの構図は、恋愛感情というより、理想の女性像を自らの手で作り上げたいという欲求に近い、という見方ができます。この養育と恋愛が未分化なまま進んでいく点に、後の紫の上との関係の複雑さの萌芽がある、と読むこともできます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 深層考察・物語全体からの読み解き</div>
+      <h3>「物語全体を貫く原罪」としての一夜</h3>
+      <p>藤壺との密通は、単発の事件ではなく、生まれた皇子がのちに冷泉帝として即位することで、物語全体の政治的構造そのものを規定していきます。光る君の栄華の少なからぬ部分が、この一夜に端を発する血のつながりの上に成り立っている点は、研究者の間でもしばしば「物語全体を貫く原罪」として論じられます。また、藤壺の面影を若紫に、さらに後年には別の女性に重ねていく光る君の恋愛パターンは、この帖を起点に繰り返し現れる主題として指摘されます。</p>
+    </div>
+    <p class="disclaimer">※このセクションは物語解釈にもとづくAIの考察・見解であり、学術的に確定した通説ではありません。</p>
+  </section>
+
+  <!-- 7. 特記事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特記事項・物語全体からみた位置づけ</h2></div>
+    <div class="note-card">
+      <h3>紫の上との出会い</h3>
+      <p>以後、光る君が生涯にわたり最も深く愛することになる女性との出会いが、この帖に描かれます。</p>
+    </div>
+    <div class="note-card">
+      <h3>物語最大の秘密の発端</h3>
+      <p>冷泉帝の出生の秘密は、以後の帖における光る君の栄華と苦悩の双方の根源となり続けます。</p>
+    </div>
+    <div class="note-card">
+      <h3>古い異名の由来</h3>
+      <p>この帖の印象の強さから、源氏物語全体が古くは「紫のゆかりの物語」とも呼ばれた、という言い伝えが残っています。</p>
+    </div>
+    <p class="disclaimer">※若紫を二条院に引き取る経緯は、本文上、十分な同意を得たとは言い難い、強引な性質を伴います。本ノートはこれを美化せず、事実として記載しています。</p>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared, driven by chapters-data.js) ===== */
+const CURRENT = 5;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  mikado:      {x:130, y:50,  label:'帝（桐壺帝）'},
+  fujitsubo:   {x:400, y:50,  label:'藤壺'},
+  hyobukyo:    {x:670, y:50,  label:'兵部卿宮'},
+  oomyoubu:    {x:130, y:230, label:'王命婦'},
+  genji:       {x:400, y:230, label:'光源氏'},
+  wakamurasaki:{x:670, y:230, label:'若紫'},
+  koremitsu:   {x:130, y:410, label:'惟光'},
+  miko:        {x:400, y:410, label:'皇子（冷泉帝）'},
+  amagimi:     {x:670, y:410, label:'尼君'}
+};
+const edges = [
+  {a:'mikado', b:'fujitsubo', label:'帝と妃（夫婦）', type:'blood'},
+  {a:'mikado', b:'genji', label:'父帝と皇子', type:'blood'},
+  {a:'genji', b:'fujitsubo', label:'禁断の恋・密通', type:'love'},
+  {a:'genji', b:'wakamurasaki', label:'理想を育てる恋', type:'love'},
+  {a:'genji', b:'miko', label:'実の父（秘密）', type:'love'},
+  {a:'fujitsubo', b:'hyobukyo', label:'姉弟', type:'blood'},
+  {a:'wakamurasaki', b:'amagimi', label:'祖母・孫', type:'blood'},
+  {a:'wakamurasaki', b:'hyobukyo', label:'実の父（疎遠）', type:'pol'},
+  {a:'oomyoubu', b:'fujitsubo', label:'密会の手引き', type:'pol'},
+  {a:'koremitsu', b:'genji', label:'腹心・乳母子', type:'blood'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  g.appendChild(el('rect',{x:n.x-62,y:n.y-18,width:124,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>

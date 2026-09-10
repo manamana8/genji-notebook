@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第6帖 末摘花 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="chapters-data.js"></script>
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{max-width:60ch; color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:560px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:14px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:11px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.love line{stroke:var(--suou);}
+  .edge.blood line{stroke:var(--koke);}
+  .edge.pol line{stroke:var(--murasaki);}
+  .edge.coop line{stroke:var(--yamabuki);}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:14px; height:3px; display:inline-block;}
+
+  /* ---- 3. reaction stages ---- */
+  .stage-note{font-size:.86rem; color:var(--ink-soft); margin-top:14px;}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第6帖</div>
+    <h1>末摘花</h1>
+    <div class="kana">すえつむはな</div>
+    <p class="lead">箏の名手という噂だけを頼りに近づいた光る君が、期待と現実の落差に戸惑いながらも、末摘花を見捨てず支え続けていくことになる、物語屈指の喜劇的な一帖。</p>
+  </div>
+
+  <!-- 1. 主要登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主要登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">18〜19歳頃</span></div><p>夕顔を忘れられぬまま、噂に聞く箏の名手の姫君に好奇心を募らせる。理想と現実の落差に戸惑いつつも、後に彼女を見捨てず経済的に支え続けることになる。</p></div>
+      <div class="person"><div class="row"><span class="name">末摘花</span><span class="age">明記なし</span></div><p>亡き常陸宮の娘。極端に内気で人づきあいに不慣れ。困窮した邸で世間から隔絶した古風な暮らしを守り続けている。</p></div>
+      <div class="person"><div class="row"><span class="name">頭中将</span><span class="age">光る君と同年代</span></div><p>互いに正体を明かさぬまま、同じ末摘花のもとへ通っていたことが判明する、本帖限りの「知らぬ恋敵」。</p></div>
+      <div class="person"><div class="row"><span class="name">大輔命婦</span><span class="age">明記なし</span></div><p>気が利き、噂話にも通じている女房。光る君に末摘花の噂を伝え、物語の発端を作る情報源となる。</p></div>
+      <div class="person"><div class="row"><span class="name">惟光</span><span class="age">明記なし（光る君の乳母子）</span></div><p>相変わらず忠実で機転が利く光る君の腹心。末摘花への訪問の実務を支える、いつもの役回り。</p></div>
+    </div>
+  </section>
+
+  <!-- 2. 関係性 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>登場人物の関係性</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="love">感情のつながり</button>
+      <button data-f="blood">血縁・婚姻</button>
+      <button data-f="pol">対立・障壁</button>
+      <button data-f="coop">協力・手引き</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--suou)"></i>感情のつながり</span>
+      <span><i style="background:var(--koke)"></i>血縁・婚姻</span>
+      <span><i style="background:var(--murasaki)"></i>対立・障壁</span>
+      <span><i style="background:var(--yamabuki)"></i>協力・手引き</span>
+    </div>
+  </section>
+
+  <!-- 3. 末摘花の容姿描写と光る君の反応の変化 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>物語の場面解説（空間・地理構造）</h2></div>
+    <p style="font-size:.88rem;color:var(--ink-soft);margin-top:-8px;margin-bottom:18px;">荒れ果てた常陸宮邸と、光る君の二条院との対比のイメージです。クリックで各邸の説明が開きます。</p>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+        <g class="scene-room" onclick="showScenePopup('常陸宮邸 ― 末摘花の旧邸','亡き常陸宮の邸。長年手入れされず、蓬（よもぎ）や葎（むぐら）が生い茂り、築地塀も崩れかけた荒れ果てた屋敷。末摘花は乳母子の侍従とともに、困窮しながらひっそりと暮らしている。')">
+        <rect x="60" y="70" width="180" height="70" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.4" rx="4"/>
+        <text x="150" y="98" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">常陸宮邸</text>
+        <text x="150" y="118" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（荒れ果てた旧邸）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('二条院 ― 光る君の邸','光る君自身の邸。都の中にあり、手入れの行き届いた邸宅。困窮する末摘花を経済的に支え、後に迎え入れる後見の拠点となる。')">
+        <rect x="400" y="70" width="180" height="70" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.4" rx="4"/>
+        <text x="490" y="98" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">二条院</text>
+        <text x="490" y="118" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（光る君の邸）</text>
+        </g>
+
+        <line x1="240" y1="105" x2="400" y2="105" stroke="var(--suou)" stroke-width="1.6" stroke-dasharray="4,3"/>
+        <text x="320" y="95" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--suou)" paint-order="stroke" stroke="var(--paper-deep)" stroke-width="5" stroke-linejoin="round">経済的援助・後の後見</text>
+
+        <text x="320" y="220" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">同じ都の中でも、手入れの行き届いた邸と荒れ果てた邸という対比</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p class="stage-note"><strong>「末摘花」という名の由来（事実）：</strong>紅花（べにばな）の別名。茎の先端を摘んで紅を採ることから、赤い鼻先の姫君への、光る君のやや自嘲めいた洒落として和歌に詠まれ定着した呼び名。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>末摘花</dt>
+      <dd>紅花の別名。茎の先を摘んで紅を採ることから、赤い鼻先の洒落にちなむ、ヒロインの呼び名の由来であり本帖の題名でもある。</dd>
+      <dt>常陸宮（ひたちのみや）</dt>
+      <dd>常陸国（現在の茨城県）を治める親王への呼称。末摘花の亡き父であり、娘に財産らしい財産を残せなかった。</dd>
+      <dt>零落（れいらく）</dt>
+      <dd>かつての栄華を失い、落ちぶれること。常陸宮家の没落した暮らしぶりを象徴する言葉。</dd>
+      <dt>黒貂の皮衣（くろてんのかわぎぬ）</dt>
+      <dd>黒貂の毛皮で仕立てた防寒着で、当時すでに時代遅れとされた。末摘花が着ていた、著しく流行遅れな装いの象徴。</dd>
+      <dt>後見（うしろみ）</dt>
+      <dd>後ろ盾となって世話や庇護をすること、またその人。父を亡くした末摘花には、これを担う者がいなかった。</dd>
+      <dt>几帳（きちょう）</dt>
+      <dd>布を垂らした可動式の間仕切り。対面の際も姫君の姿を隠す役割を果たす。</dd>
+      <dt>直衣（のうし）</dt>
+      <dd>貴族男性の普段着。私的な訪問時にも用いられ、光る君が忍びで末摘花を訪ねる際の装いに用いられる。</dd>
+      <dt>二条東院（にじょうのとういん）</dt>
+      <dd>光る君が後年造営する、複数の女性を住まわせる邸。末摘花が後に迎え入れられることになる住まい。</dd>
+    </dl>
+    <p class="disclaimer">※この帖では、これといえる象徴的な和歌の贈答は伝わっていないため、今回は割愛しています。</p>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>大輔命婦からの噂</h3><p>大輔命婦から、亡き常陸宮の姫君が箏に秀でていると聞き、光る君は興味を抱く。</p></div>
+      <div class="tl-item"><h3>文と琴の音を頼りに</h3><p>以後、文と垣間聞いた琴の音だけを頼りに、光る君は姫君への思いを募らせていく。</p></div>
+      <div class="tl-item"><h3>頭中将も同じ姫君に</h3><p>実は頭中将も、互いに正体を知らぬまま同じ姫君のもとへ通っていたことが判明する。</p></div>
+      <div class="tl-item"><h3>初めての訪問</h3><p>ある夜、光る君はついに末摘花のもとを訪れるが、極端な内気さゆえに会話らしい会話が成り立たない。</p></div>
+      <div class="tl-item"><h3>雪の朝の衝撃</h3><p>明るい雪明かりの下、光る君は初めて末摘花の素顔をはっきりと目にし、理想との落差に愕然とする。</p></div>
+      <div class="tl-item"><h3>変わらぬ庇護</h3><p>容姿への落胆から足が遠のきかけるが、困窮する彼女の暮らしぶりを知って憐れみを覚え、見捨てずに生活の面倒を見続ける決意を固める。後年、末摘花は光る君の二条東院に迎え入れられ、その庇護のもとで生涯を送ることになる。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">参考｜本文の記述にもとづく整理</div>
+      <h3>容姿描写と光る君の反応の変化（5段階）</h3>
+      <p style="margin-bottom:14px;">期待・幻滅・そして憐憫へ ― 各段階をクリックすると詳細が表示されます。</p>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 900 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+
+          <g class="scene-room" onclick="showReactionPopup('噂を聞く ― 期待','箏の名手という評判の、深窓の姫君。夕顔のような「隠れた美点」を期待し、光る君の好奇心が高まる。')">
+          <rect x="10" y="40" width="150" height="70" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.4" rx="4"/>
+          <text x="85" y="68" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">噂を聞く</text>
+          <text x="85" y="90" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--suou)">期待</text>
+          </g>
+
+          <path d="M165 75 L192 75" stroke="var(--ink-soft)" stroke-width="1.6" marker-end="url(#arrow6)"/>
+
+          <g class="scene-room" onclick="showReactionPopup('文と琴の音 ― 好奇心','姿は見えぬまま、和歌のやりとりと琴の音だけが伝わる。この時点ではまだ神秘性が魅力として働いている。')">
+          <rect x="197" y="40" width="150" height="70" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.4" rx="4"/>
+          <text x="272" y="68" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">文と琴の音</text>
+          <text x="272" y="90" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--suou)">好奇心</text>
+          </g>
+
+          <path d="M352 75 L379 75" stroke="var(--ink-soft)" stroke-width="1.6" marker-end="url(#arrow6)"/>
+
+          <g class="scene-room" onclick="showReactionPopup('初めての逢瀬 ― 当惑','実際に言葉を交わすと、極端な内気さゆえに会話がまったく弾まない。違和感が生まれ始める。')">
+          <rect x="384" y="40" width="150" height="70" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.4" rx="4"/>
+          <text x="459" y="68" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">初めての逢瀬</text>
+          <text x="459" y="90" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--suou)">当惑</text>
+          </g>
+
+          <path d="M539 75 L566 75" stroke="var(--ink-soft)" stroke-width="1.6" marker-end="url(#arrow6)"/>
+
+          <g class="scene-room" onclick="showReactionPopup('雪の朝の対面 ― 衝撃','明るい雪明かりの下、初めてその素顔を目にする。青白い顔、目立って長く垂れた鼻先の赤さ、時代遅れの分厚い黒貂の衣。理想とのギャップに愕然とする。')">
+          <rect x="571" y="40" width="150" height="70" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.6" rx="4"/>
+          <text x="646" y="68" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">雪の朝の対面</text>
+          <text x="646" y="90" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--suou)">衝撃</text>
+          </g>
+
+          <path d="M726 75 L753 75" stroke="var(--ink-soft)" stroke-width="1.6" marker-end="url(#arrow6)"/>
+
+          <g class="scene-room" onclick="showReactionPopup('その後 ― 憐憫と責任','落胆しつつも見捨てず、困窮する彼女を経済的に支え続ける。のちに二条東院へ迎え入れる。')">
+          <rect x="758" y="40" width="140" height="70" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.4" rx="4"/>
+          <text x="828" y="62" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">その後</text>
+          <text x="828" y="84" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--suou)">憐憫と責任</text>
+          </g>
+
+          <defs>
+            <marker id="arrow6" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="var(--ink-soft)"/>
+            </marker>
+          </defs>
+
+          <text x="450" y="150" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">源氏物語屈指の喜劇的な一場面（各段階をクリック）</text>
+        </svg>
+      </div>
+      <div class="scene-popup" id="reactionPopup" style="display:none;"></div>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 本文から素直に読み取れる解釈</div>
+      <h3>「品定め」の理想論を、身をもって裏切る一帖</h3>
+      <p>この帖は、これまでの帖の緊張感（藤壺との密通、夕顔の死）とは対照的に、意図的に喜劇的な調子で描かれている、という見方ができます。噂だけで恋心を募らせる光る君の姿は、帚木の「品定め」で語られた理想論がいかに現実離れしていたかを、身をもって示す形になっています。一方で、容姿への落胆後も彼女を見捨てない結末は、単なる笑い話にとどまらない、光る君の人としての誠実さを浮かび上がらせている、とも解釈できます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 物語全体・研究的視点からの読み解き</div>
+      <h3>緊張と弛緩のリズム、そして「後見人」の萌芽</h3>
+      <p>直前の「若紫」で藤壺との密通という物語最大の重い秘密を描いた直後に、この喜劇的な帖を配置する構成は、緊張と弛緩を意図的に織り交ぜる物語全体のリズム作りと見ることができます。また、外見での失望にもかかわらず生涯にわたり支援を続けるという展開は、後年に光る君が経済的な庇護者として複数の女性たちを二条東院に住まわせていく「後見人」としての側面の、早い例として位置づけられる、という見方があります。</p>
+    </div>
+    <p class="disclaimer">※このセクションは物語解釈にもとづくAIの考察・見解であり、学術的に確定した通説ではありません。</p>
+  </section>
+
+  <!-- 7. 特記事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特記事項・伏線</h2></div>
+    <p style="font-size:.88rem;color:var(--ink-soft);margin-top:-8px;margin-bottom:18px;">末摘花は、源氏物語の中で「恋の失敗」を正面から描く数少ない帖である。光る君の栄光ばかりが語られがちな物語の中で、この帖は彼の見込み違いと、それでもなお示される誠実さの両方を伝える、貴重な一帖として位置づけられる。</p>
+    <div class="note-card">
+      <h3>物語の喜劇的側面</h3>
+      <p>源氏物語が一貫して悲劇や耽美一辺倒ではなく、人間味あふれる滑稽さも描き分ける作品であることを示す代表例。</p>
+    </div>
+    <div class="note-card">
+      <h3>「後見人」としての光る君の萌芽</h3>
+      <p>外見への失望を超えて経済的庇護を続ける姿勢は、後の二条東院での複数女性の庇護へとつながる原型となる。</p>
+    </div>
+    <div class="note-card">
+      <h3>末摘花という人物の再登場</h3>
+      <p>この帖限りの脇役に見えて、末摘花は後の帖でも継続して登場し、光る君との関係が生涯続く数少ない女性となる。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+function showReactionPopup(title, desc){
+  const el = document.getElementById('reactionPopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'reactionPopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (uses global `chapters` from chapters-data.js) ===== */
+const CURRENT = 6;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  genji:    {x:360, y:60,  label:'光源氏'},
+  taifu:    {x:120, y:60,  label:'大輔命婦'},
+  tono:     {x:600, y:60,  label:'頭中将'},
+  sue:      {x:360, y:270, label:'末摘花'},
+  koremitsu:{x:120, y:270, label:'惟光'},
+  jiju:     {x:600, y:270, label:'侍従（侍女）'}
+};
+const edges = [
+  {a:'genji', b:'sue', label:'期待から哀憐へ', type:'love'},
+  {a:'tono', b:'sue', label:'知らぬ間の求愛', type:'love'},
+  {a:'genji', b:'tono', label:'知らぬ恋敵同士', type:'pol'},
+  {a:'taifu', b:'genji', label:'噂を伝える', type:'coop'},
+  {a:'koremitsu', b:'genji', label:'乳母子・訪問を支える', type:'blood'},
+  {a:'jiju', b:'sue', label:'仕える侍女', type:'coop'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  g.appendChild(el('rect',{x:n.x-56,y:n.y-18,width:112,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第2帖 帚木 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{max-width:60ch; color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:560px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:14px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:11px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.love line{stroke:var(--suou);}
+  .edge.blood line{stroke:var(--koke);}
+  .edge.pol line{stroke:var(--murasaki);}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:14px; height:3px; display:inline-block;}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第2帖</div>
+    <h1>帚木</h1>
+    <div class="kana">ははきぎ</div>
+    <p class="lead">五月雨の宿直所での「雨夜の品定め」を経て、光源氏が方違え先の紀伊守邸で人妻・空蝉と出会う帖。</p>
+  </div>
+
+  <!-- 1. 主要登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主要登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">17歳</span></div><p>中将。藤壺への叶わぬ思慕を胸に秘めながら女性論議の聞き役に回るうち、「中の品」の女性への関心を強めていく。</p></div>
+      <div class="person"><div class="row"><span class="name">頭中将</span><span class="age">源氏と同年代</span></div><p>左大臣の子息で葵の上の兄、源氏の親友。女性体験談として「常夏の女」（本妻に脅され姿を隠した愛人）の話を語る。</p></div>
+      <div class="person"><div class="row"><span class="name">左馬頭</span><span class="age">年長</span></div><p>雨夜の品定めの中心人物。「指食いの女」と「浮気な女」の逸話を語り、女性論の結論を述べる。</p></div>
+      <div class="person"><div class="row"><span class="name">藤式部丞</span><span class="age">不明</span></div><p>学問はあるが振る舞いが滑稽な博士の娘（蒜食いの女）との顛末を語り、一同の笑いを誘う。</p></div>
+      <div class="person"><div class="row"><span class="name">空蝉</span><span class="age">推定20代前半</span></div><p>故・中納言（右衛門督）の娘。入内の話もあった美貌の女性だったが、父の死後に身を落とし、年の離れた伊予介の後妻となっている。</p></div>
+    </div>
+  </section>
+
+  <!-- 2. 関係性 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>登場人物の関係性</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="love">恋愛・求愛</button>
+      <button data-f="blood">友誼・姻戚</button>
+      <button data-f="pol">政治・対立</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--suou)"></i>恋愛・求愛</span>
+      <span><i style="background:var(--koke)"></i>友誼・姻戚</span>
+      <span><i style="background:var(--murasaki)"></i>政治・対立</span>
+    </div>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>物語の場面解説（空間・地理構造）</h2></div>
+    <p style="font-size:.88rem;color:var(--ink-soft);margin-top:-8px;margin-bottom:18px;">「方違え」の制度と、京の中心部から紀伊守邸（中川）への位置関係のイメージ図です。</p>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+        <text x="320" y="18" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">北</text>
+        <g class="scene-room" onclick="showScenePopup('内裏・宿直所 ― 雨夜の品定め','物忌みで源氏が宮中に籠っていた際、頭中将・左馬頭・藤式部丞らが集まり女性談義に興じた場所。「雨夜の品定め」の舞台。')">
+        <rect x="250" y="34" width="140" height="56" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.4" rx="4"/>
+        <text x="320" y="58" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">内裏・宿直所</text>
+        <text x="320" y="76" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（雨夜の品定め）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('中川・紀伊守邸 ― 方違え先','京の中心部からやや離れた中川沿いにある邸宅。源氏が方違えのため訪れ、伊予介の後妻となっていた空蝉と出会う舞台となった。')">
+        <rect x="440" y="150" width="150" height="56" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.4" rx="4"/>
+        <text x="515" y="174" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">中川・紀伊守邸</text>
+        <text x="515" y="192" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（空蝉のいる方違え先）</text>
+        </g>
+
+        <line x1="320" y1="90" x2="515" y2="150" stroke="var(--suou)" stroke-width="1.6" stroke-dasharray="4,3"/>
+        <text x="422" y="103" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--suou)" paint-order="stroke" stroke="var(--paper-deep)" stroke-width="5" stroke-linejoin="round">方違え（一夜だけ別方向へ）</text>
+
+        <text x="320" y="240" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">南</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">方違えとは、目的地の方角に凶とされる方位神がいる場合、いったん別の方角へ一泊し、翌日改めて違う方角から目的地へ向かうという習わし。源氏が宮中から「方違え」で中川の紀伊守邸へ向かったことが、空蝉との出会いを生む導線になっている。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>雨夜の品定め</dt>
+      <dd>五月雨の宿直所に集った若い男たちが、それぞれの女性体験を語り合い理想の女性論を交わす場面。左馬頭・頭中将・藤式部丞がそれぞれ「指食いの女」「常夏の女」「蒜食いの女」の逸話を語り、光源氏は聞き役に徹する。</dd>
+      <dt>上の品・中の品・下の品</dt>
+      <dd>左馬頭が展開する女性階級論。身分の高い「上の品」は堅苦しく理想からは遠く、身分は低くとも思いがけない魅力を秘めた「中の品」にこそ理想の女性がいる、という結論が語られる。</dd>
+      <dt>方違え（かたたがえ）</dt>
+      <dd>外出や帰宅の際、目的地の方角に凶とされる方位神がいる場合、いったん別の方角へ行って一夜を明かし、翌日改めて違う方角から目的地へ向かうことで禁忌の方角を避ける習わし。</dd>
+      <dt>後朝の文（きぬぎぬのふみ）</dt>
+      <dd>男女が一夜を共にした翌朝、男から女へ送る文（手紙）。届く早さや文面の丁寧さが、相手への誠意のあらわれとされた。</dd>
+    </dl>
+    <p class="disclaimer">※この帖では、これといえる象徴的な和歌の贈答は伝わっていないため、今回は割愛しています。</p>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>長雨の宿直所</h3><p>五月雨が降り続くある夜、物忌みで宮中に籠っていた光源氏の宿直所に、頭中将・左馬頭・藤式部丞ら若手の好き者が集まり、女性談義が始まる。</p></div>
+      <div class="tl-item"><h3>雨夜の品定め</h3><p>左馬頭が女性論を展開し、それぞれが体験談を語る。左馬頭は嫉妬深い女（指食いの女）と浮気な女の話を、頭中将は本妻に脅されて姿を隠した愛人（常夏の女）の話を、藤式部丞は学問はあるが振る舞いが滑稽な博士の娘（蒜食いの女）の話をする。藤壺への叶わぬ思いを抱える源氏は聞き役に徹しつつ、「中の品」の女性への関心を募らせていく。</p></div>
+      <div class="tl-item"><h3>方違えで紀伊守邸へ</h3><p>翌日、天気が回復した源氏は、方違えのため中川にある紀伊守邸を訪れる。そこには伊予介の後妻となっていた空蝉がいた。</p></div>
+      <div class="tl-item"><h3>空蝉と強引に契る</h3><p>入内の話もあったほど美しいと評判だった空蝉が目当てだった源氏は、嫌がる空蝉を自分の局へ運び、強引に契りを結ぶ。以後たびたび文を送るが、伊予介の妻としての節を守る空蝉は容易に応じようとしない。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 全体概要・作品論</div>
+      <h3>「雨夜の品定め」は物語全体の女性類型カタログ</h3>
+      <p>この帖で語られる「上の品・中の品・下の品」の女性論は、単なる余興ではなく、以降の帖で描かれる女性たち（夕顔・空蝉・末摘花・明石の君など）の位置づけを示す座標軸として機能している、という見方ができます。光源氏が生涯にわたって出会う女性は、この雨夜の品定めで語られた「型」のいずれかに当てはまるよう配置されている、という解釈です。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 深層考察・心理構造</div>
+      <h3>藤壺への思慕が生む「代償的な恋」の始まり</h3>
+      <p>桐壺帖で植え付けられた藤壺への絶対に叶わない思慕が、光源氏を「手の届く中の品の女性」へと向かわせる動機になっている、という見方があります。空蝉への強引な行為も、単なる好色というより、満たされない思いのはけ口を別の対象に求める行動パターンの最初の現れと捉えることができます。</p>
+    </div>
+    <p class="disclaimer">※このセクションは物語解釈にもとづくAIの考察・見解であり、学術的に確定した通説ではありません。</p>
+  </section>
+
+  <!-- 7. 特記事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特記事項・伏線</h2></div>
+    <div class="note-card">
+      <h3>頭中将が語る「常夏の女」は、後の夕顔その人</h3>
+      <p>頭中将が体験談として語る「本妻に脅されて姿を隠した愛人」は、第4帖『夕顔』で光源氏自身が出会うことになる女性その人であることが、後の帖で明かされます。この時点ではまだ「誰か分からない女性」として語られているだけですが、物語全体を通じて重要な伏線になっています。</p>
+    </div>
+    <div class="note-card">
+      <h3>空蝉との出会いが生む「不本意な恋」の型</h3>
+      <p>身分の高い家の娘でありながら、父の死という不運によって年の離れた受領の後妻に甘んじている空蝉の境遇は、この物語で繰り返し描かれる「後ろ盾を失った女性の不安定な立場」というテーマの、桐壺更衣に続く二つ目の変奏である、という見方ができます。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 2;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  genji:   {x:360, y:60,  label:'光源氏'},
+  toonoc:  {x:120, y:60,  label:'頭中将'},
+  fujitsubo:{x:600, y:60, label:'藤壺の宮'},
+  utsusemi:{x:360, y:270, label:'空蝉'},
+  samanokami:{x:120, y:270, label:'左馬頭'},
+  tokonatsu:{x:600, y:270, label:'常夏の女'}
+};
+const edges = [
+  {a:'genji', b:'fujitsubo', label:'密かな慕情（変わらず）', type:'love'},
+  {a:'genji', b:'toonoc', label:'親友・妻の兄', type:'blood'},
+  {a:'genji', b:'samanokami', label:'女性論の聞き役', type:'blood'},
+  {a:'genji', b:'utsusemi', label:'強引な契り', type:'love'},
+  {a:'toonoc', b:'tokonatsu', label:'隠れた愛人関係', type:'love'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  g.appendChild(el('rect',{x:n.x-52,y:n.y-18,width:104,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
