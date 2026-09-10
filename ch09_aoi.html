@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>第2帖 帚木 | 源氏物語 学習ノート</title>
+<title>第9帖 葵 | 源氏物語 学習ノート</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
@@ -228,21 +228,22 @@
 <main>
 
   <div class="frontispiece">
-    <div class="num">第2帖</div>
-    <h1>帚木</h1>
-    <div class="kana">ははきぎ</div>
-    <p class="lead">五月雨の宿直所での「雨夜の品定め」を経て、光源氏が方違え先の紀伊守邸で人妻・空蝉と出会う帖。</p>
+    <div class="num">第9帖</div>
+    <h1>葵</h1>
+    <div class="kana">あおい</div>
+    <p class="lead">賀茂祭の車争いに端を発した六条御息所の生霊が正妻・葵の上の命を奪い、源氏が紫の上と正式な夫婦の契りを結ぶまでを描く帖。</p>
   </div>
 
   <!-- 1. 主要登場人物 -->
   <section class="block" id="people">
     <div class="block-head"><span class="idx">1</span><h2>主要登場人物</h2></div>
     <div class="people-grid">
-      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">17歳</span></div><p>中将。藤壺への叶わぬ思慕を胸に秘めながら女性論議の聞き役に回るうち、「中の品」の女性への関心を強めていく。</p></div>
-      <div class="person"><div class="row"><span class="name">頭中将</span><span class="age">源氏と同年代</span></div><p>左大臣の子息で葵の上の兄、源氏の親友。女性体験談として「常夏の女」（本妻に脅され姿を隠した愛人）の話を語る。</p></div>
-      <div class="person"><div class="row"><span class="name">左馬頭</span><span class="age">年長</span></div><p>雨夜の品定めの中心人物。「指食いの女」と「浮気な女」の逸話を語り、女性論の結論を述べる。</p></div>
-      <div class="person"><div class="row"><span class="name">藤式部丞</span><span class="age">不明</span></div><p>学問はあるが振る舞いが滑稽な博士の娘（蒜食いの女）との顛末を語り、一同の笑いを誘う。</p></div>
-      <div class="person"><div class="row"><span class="name">空蝉</span><span class="age">推定20代前半</span></div><p>故・中納言（右衛門督）の娘。入内の話もあった美貌の女性だったが、父の死後に身を落とし、年の離れた伊予介の後妻となっている。</p></div>
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">22～23歳</span></div><p>大将。正妻・葵の上を亡くし、その悲しみの中で六条御息所への恐れと哀れみを深めつつ、紫の上との関係を夫婦のものへと進める。</p></div>
+      <div class="person"><div class="row"><span class="name">葵の上</span><span class="age">26歳</span></div><p>左大臣の娘、源氏の正妻。長らく源氏と心の距離があったが、懐妊を機にわずかに歩み寄る。物の怪に苦しめられ、夕霧を出産した直後に息を引き取る。</p></div>
+      <div class="person"><div class="row"><span class="name">六条御息所</span><span class="age">推定29～30歳</span></div><p>亡き前東宮の妃。誇り高く教養に優れるが、車争いで受けた屈辱と源氏への複雑な思いから、自覚のないまま生霊となって葵の上に取り憑く。</p></div>
+      <div class="person"><div class="row"><span class="name">紫の上</span><span class="age">14歳</span></div><p>源氏が二条院に引き取り養育してきた少女。葵の上の死後、源氏と正式に「新枕」を交わし、名実ともに源氏の妻となる。</p></div>
+      <div class="person"><div class="row"><span class="name">頭中将</span><span class="age">源氏と同年代</span></div><p>左大臣の子息、葵の上の兄。妹の死を深く悲しむ。</p></div>
+      <div class="person"><div class="row"><span class="name">左大臣・大宮</span><span class="age">壮年～老年</span></div><p>葵の上の両親。娘の死を嘆きつつ、生まれた孫・夕霧を大切に育てる。</p></div>
     </div>
   </section>
 
@@ -251,16 +252,16 @@
     <div class="block-head"><span class="idx">2</span><h2>登場人物の関係性</h2></div>
     <div class="filters">
       <button data-f="all" class="active">すべて表示</button>
-      <button data-f="love">恋愛・求愛</button>
-      <button data-f="blood">友誼・姻戚</button>
+      <button data-f="love">恋愛・情念</button>
+      <button data-f="blood">血縁・姻戚</button>
       <button data-f="pol">政治・対立</button>
     </div>
     <div class="diagram-wrap">
       <svg id="relmap" viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div class="legend">
-      <span><i style="background:var(--suou)"></i>恋愛・求愛</span>
-      <span><i style="background:var(--koke)"></i>友誼・姻戚</span>
+      <span><i style="background:var(--suou)"></i>恋愛・情念</span>
+      <span><i style="background:var(--koke)"></i>血縁・姻戚</span>
       <span><i style="background:var(--murasaki)"></i>政治・対立</span>
     </div>
   </section>
@@ -268,56 +269,62 @@
   <!-- 3. 空間・地理構造 -->
   <section class="block" id="scene">
     <div class="block-head"><span class="idx">3</span><h2>物語の場面解説（空間・地理構造）</h2></div>
-    <p style="font-size:.88rem;color:var(--ink-soft);margin-top:-8px;margin-bottom:18px;">「方違え」の制度と、京の中心部から紀伊守邸（中川）への位置関係のイメージ図です。</p>
+    <p style="font-size:.88rem;color:var(--ink-soft);margin-top:-8px;margin-bottom:18px;">物語の転機となった、賀茂祭（葵祭）当日の一条大路における「車争い」の位置関係のイメージ図です。</p>
     <div class="diagram-wrap">
       <svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
-        <text x="320" y="18" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">北</text>
-        <g class="scene-room" onclick="showScenePopup('内裏・宿直所 ― 雨夜の品定め','物忌みで源氏が宮中に籠っていた際、頭中将・左馬頭・藤式部丞らが集まり女性談義に興じた場所。「雨夜の品定め」の舞台。')">
-        <rect x="250" y="34" width="140" height="56" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.4" rx="4"/>
-        <text x="320" y="58" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">内裏・宿直所</text>
-        <text x="320" y="76" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（雨夜の品定め）</text>
+        <text x="320" y="18" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">賀茂の斎院御禊の行列（源氏も供奉）</text>
+        <g class="scene-room" onclick="showScenePopup('一条大路 ― 葵の上一行の桟敷・新造の牛車','左大臣家の権勢を背景に、新しく美しく飾り立てた牛車を連ねて繰り出した葵の上の一行。人目を惹く豪華さで、良い見物場所を確保していた。')">
+        <rect x="90" y="120" width="170" height="60" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.4" rx="4"/>
+        <text x="175" y="146" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">葵の上一行</text>
+        <text x="175" y="164" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（新造の牛車・大人数）</text>
         </g>
 
-        <g class="scene-room" onclick="showScenePopup('中川・紀伊守邸 ― 方違え先','京の中心部からやや離れた中川沿いにある邸宅。源氏が方違えのため訪れ、伊予介の後妻となっていた空蝉と出会う舞台となった。')">
-        <rect x="440" y="150" width="150" height="56" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.4" rx="4"/>
-        <text x="515" y="174" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">中川・紀伊守邸</text>
-        <text x="515" y="192" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（空蝉のいる方違え先）</text>
+        <g class="scene-room" onclick="showScenePopup('一条大路 ― 六条御息所の忍びの牛車','世間の目を避け、身分を隠してひっそりと見物に訪れていた六条御息所の牛車。葵の上方の従者に押しのけられ、榻（しじ）を折られて見物の場所を失う屈辱を受ける。')">
+        <rect x="400" y="120" width="170" height="60" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.4" rx="4"/>
+        <text x="485" y="146" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">六条御息所の車</text>
+        <text x="485" y="164" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（忍びの粗末な網代車）</text>
         </g>
 
-        <line x1="320" y1="90" x2="515" y2="150" stroke="var(--suou)" stroke-width="1.6" stroke-dasharray="4,3"/>
-        <text x="422" y="103" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--suou)" paint-order="stroke" stroke="var(--paper-deep)" stroke-width="5" stroke-linejoin="round">方違え（一夜だけ別方向へ）</text>
+        <line x1="260" y1="150" x2="400" y2="150" stroke="var(--suou)" stroke-width="2" stroke-dasharray="4,3"/>
+        <text x="330" y="140" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--suou)" paint-order="stroke" stroke="var(--paper-deep)" stroke-width="5" stroke-linejoin="round">車争い（押しのけ・榻を折られる）</text>
 
-        <text x="320" y="240" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">南</text>
+        <text x="320" y="230" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">一条大路（見物の人垣）</text>
       </svg>
     </div>
     <div class="scene-popup" id="scenePopup" style="display:none;"></div>
-    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">方違えとは、目的地の方角に凶とされる方位神がいる場合、いったん別の方角へ一泊し、翌日改めて違う方角から目的地へ向かうという習わし。源氏が宮中から「方違え」で中川の紀伊守邸へ向かったことが、空蝉との出会いを生む導線になっている。</p>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">「車争い」とは、祭見物の場所取りをめぐる牛車同士の実力衝突。葵の上方の従者が、身分を隠していた六条御息所の車と知らずに（あるいは知りながら）これを押しのけ、車の榻（したい・轅を支える台）を折って隅に押しやった事件。御息所はこの屈辱を公然と晴らすこともできず、深く心に刻むことになる。</p>
   </section>
 
   <!-- 4. 用語解説 -->
   <section class="block" id="glossary">
     <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
     <dl class="gloss">
-      <dt>雨夜の品定め</dt>
-      <dd>五月雨の宿直所に集った若い男たちが、それぞれの女性体験を語り合い理想の女性論を交わす場面。左馬頭・頭中将・藤式部丞がそれぞれ「指食いの女」「常夏の女」「蒜食いの女」の逸話を語り、光源氏は聞き役に徹する。</dd>
-      <dt>上の品・中の品・下の品</dt>
-      <dd>左馬頭が展開する女性階級論。身分の高い「上の品」は堅苦しく理想からは遠く、身分は低くとも思いがけない魅力を秘めた「中の品」にこそ理想の女性がいる、という結論が語られる。</dd>
-      <dt>方違え（かたたがえ）</dt>
-      <dd>外出や帰宅の際、目的地の方角に凶とされる方位神がいる場合、いったん別の方角へ行って一夜を明かし、翌日改めて違う方角から目的地へ向かうことで禁忌の方角を避ける習わし。</dd>
-      <dt>後朝の文（きぬぎぬのふみ）</dt>
-      <dd>男女が一夜を共にした翌朝、男から女へ送る文（手紙）。届く早さや文面の丁寧さが、相手への誠意のあらわれとされた。</dd>
+      <dt>賀茂祭（かもさい）</dt>
+      <dd>のちに「葵祭」と呼ばれるようになる賀茂神社の祭礼。斎院の御禊（みそぎ）の行列に源氏も供奉し、都中が見物に繰り出す一大行事。この帖の車争いの舞台となる。</dd>
+      <dt>車争い（くるまあらそい）</dt>
+      <dd>祭見物の場所取りをめぐって起きた、葵の上方と六条御息所方の牛車同士の衝突事件。身分を隠して忍んでいた御息所の車が押しのけられ、公衆の面前で屈辱を受けた。</dd>
+      <dt>物の怪（もののけ）</dt>
+      <dd>人に取り憑いて苦しめると信じられていた霊的存在の総称。生霊（生きている人の魂が身体を離れて祟るもの）と死霊の両方を含む。葵の上は出産前後、物の怪に激しく苦しめられる。</dd>
+      <dt>生霊（いきりょう）</dt>
+      <dd>強い怨念や執着によって、生きている人間の魂が本人の自覚なしに肉体を離れ、他者に取り憑いて祟るとされたもの。六条御息所は自らの意思とは無関係に、車争いの屈辱と源氏への複雑な思いから生霊となり、葵の上を苦しめる。</dd>
+      <dt>御息所（みやすどころ）</dt>
+      <dd>本来は帝の御子を産んだ女御・更衣などへの敬称。六条御息所は亡き前東宮（皇太子）の妃であったことに由来する呼称。</dd>
+      <dt>新枕（にいまくら）</dt>
+      <dd>男女が初めて夫婦として床を共にすること。この帖で源氏と紫の上が新枕を交わし、養育者と被後見人の関係から名実ともに夫婦の関係へと移行する。</dd>
     </dl>
-    <p class="disclaimer">※この帖では、これといえる象徴的な和歌の贈答は伝わっていないため、今回は割愛しています。</p>
+    <p class="disclaimer">※この帖でも、後世に広く伝わる形での象徴的な和歌の贈答は本ノートでは割愛しています。</p>
   </section>
 
   <!-- 5. あらすじ -->
   <section class="block" id="story">
     <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
     <div class="timeline">
-      <div class="tl-item"><h3>長雨の宿直所</h3><p>五月雨が降り続くある夜、物忌みで宮中に籠っていた光源氏の宿直所に、頭中将・左馬頭・藤式部丞ら若手の好き者が集まり、女性談義が始まる。</p></div>
-      <div class="tl-item"><h3>雨夜の品定め</h3><p>左馬頭が女性論を展開し、それぞれが体験談を語る。左馬頭は嫉妬深い女（指食いの女）と浮気な女の話を、頭中将は本妻に脅されて姿を隠した愛人（常夏の女）の話を、藤式部丞は学問はあるが振る舞いが滑稽な博士の娘（蒜食いの女）の話をする。藤壺への叶わぬ思いを抱える源氏は聞き役に徹しつつ、「中の品」の女性への関心を募らせていく。</p></div>
-      <div class="tl-item"><h3>方違えで紀伊守邸へ</h3><p>翌日、天気が回復した源氏は、方違えのため中川にある紀伊守邸を訪れる。そこには伊予介の後妻となっていた空蝉がいた。</p></div>
-      <div class="tl-item"><h3>空蝉と強引に契る</h3><p>入内の話もあったほど美しいと評判だった空蝉が目当てだった源氏は、嫌がる空蝉を自分の局へ運び、強引に契りを結ぶ。以後たびたび文を送るが、伊予介の妻としての節を守る空蝉は容易に応じようとしない。</p></div>
+      <div class="tl-item"><h3>賀茂祭と車争い</h3><p>賀茂の斎院御禊の行列に源氏が加わると聞き、都中が見物に繰り出す。懐妊中の葵の上も渋々ながら見物に出るが、その一行の従者が、忍んで見物していた六条御息所の車を場所争いで押しのけ、車の榻を折って隅へ追いやってしまう。御息所は公然と抗議もできぬまま、深い屈辱を胸に刻む。</p></div>
+      <div class="tl-item"><h3>御息所の苦悩と生霊化の予兆</h3><p>屈辱と、源氏の心が自分から離れつつあることへの苦しみを抱えた御息所は、心が乱れ、正気を失いかけるほどの状態に陥る。物思いにふけるうち、自分の魂が知らぬ間に体を抜け出しているのではないかという恐れにとらわれ始める。</p></div>
+      <div class="tl-item"><h3>葵の上、物の怪に苦しむ</h3><p>臨月を迎えた葵の上が激しい物の怪に苦しめられ、加持祈祷が続けられる。物の怪の中には、葵の上や周囲の者には正体の知れない、執念深い霊の気配があった。</p></div>
+      <div class="tl-item"><h3>夕霧の誕生と葵の上の死</h3><p>葵の上は男子（後の夕霧）を無事に出産し、周囲は安堵する。しかし油断も束の間、産後の葵の上は再び容態が急変し、まもなく息を引き取る。左大臣家は深い悲しみに包まれる。</p></div>
+      <div class="tl-item"><h3>御息所の自覚と伊勢下向の決意</h3><p>自邸に籠っていた六条御息所は、自分の衣に護摩の芥子の香が焼き付いているのに気づき、自らの魂が生霊となって葵の上を苦しめ、死に至らしめたのではないかという疑念に苛まれる。世を厭う思いを強め、娘（前斎宮）とともに伊勢へ下る決意を固めていく。</p></div>
+      <div class="tl-item"><h3>源氏と紫の上の新枕</h3><p>喪が明けたころ、源氏は二条院で成長した紫の上と正式に夫婦の契りを結ぶ（新枕）。これまで娘のように慈しみ育ててきた紫の上との関係は、この夜を境に名実ともに夫婦のものへと変わる。</p></div>
     </div>
   </section>
 
@@ -326,13 +333,18 @@
     <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
     <div class="analysis-card">
       <div class="tag">考察 ｜ 全体概要・作品論</div>
-      <h3>「雨夜の品定め」は物語全体の女性類型カタログ</h3>
-      <p>この帖で語られる「上の品・中の品・下の品」の女性論は、単なる余興ではなく、以降の帖で描かれる女性たち（夕顔・空蝉・末摘花・明石の君など）の位置づけを示す座標軸として機能している、という見方ができます。光源氏が生涯にわたって出会う女性は、この雨夜の品定めで語られた「型」のいずれかに当てはまるよう配置されている、という解釈です。</p>
+      <h3>「車争い」は身分の誇りと恋の力関係を可視化する装置</h3>
+      <p>車争いの場面は、単なる場所取りの喧嘩ではなく、正妻という「公認された地位」を持つ葵の上と、教養・血筋では劣らぬのに公的な後ろ盾を欠く六条御息所との、目に見える形での力関係の逆転として読める、という見方ができます。この物理的な屈辱が、後の生霊化という超自然的な事件の説得力を支えている、という構成上の役割があると考えられます。</p>
     </div>
     <div class="analysis-card">
       <div class="tag">考察 ｜ 深層考察・心理構造</div>
-      <h3>藤壺への思慕が生む「代償的な恋」の始まり</h3>
-      <p>桐壺帖で植え付けられた藤壺への絶対に叶わない思慕が、光源氏を「手の届く中の品の女性」へと向かわせる動機になっている、という見方があります。空蝉への強引な行為も、単なる好色というより、満たされない思いのはけ口を別の対象に求める行動パターンの最初の現れと捉えることができます。</p>
+      <h3>生霊は「本人が自覚できない感情」の物語装置</h3>
+      <p>六条御息所自身、生霊となって葵の上を苦しめているという自覚がないまま事が進む描写は、抑えきれない嫉妬や執着が本人の理性ではコントロールできないものとして描かれている、という解釈ができます。物の怪という超自然的な設定を用いることで、当時の regard（体面）を重んじる貴族社会では言葉にできない感情を、物語として表現する手段になっている、という見方もできます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 人物関係の転換点</div>
+      <h3>紫の上との新枕は「庇護」から「夫婦」への質的転換</h3>
+      <p>それまで源氏が父・後見人のような立場で育ててきた紫の上との関係が、この帖で初めて夫婦としての実質を持つことになります。葵の上の死という悲劇と隣り合わせでこの転換が描かれることで、源氏の人生における「喪失と獲得」が対になって進んでいく物語構造が見て取れる、という考察ができます。</p>
     </div>
     <p class="disclaimer">※このセクションは物語解釈にもとづくAIの考察・見解であり、学術的に確定した通説ではありません。</p>
   </section>
@@ -341,12 +353,16 @@
   <section class="block" id="notes">
     <div class="block-head"><span class="idx">7</span><h2>特記事項・伏線</h2></div>
     <div class="note-card">
-      <h3>頭中将が語る「常夏の女」は、後の夕顔その人</h3>
-      <p>頭中将が体験談として語る「本妻に脅されて姿を隠した愛人」は、第4帖『夕顔』で光源氏自身が出会うことになる女性その人であることが、後の帖で明かされます。この時点ではまだ「誰か分からない女性」として語られているだけですが、物語全体を通じて重要な伏線になっています。</p>
+      <h3>夕霧の誕生 ― 後の帖への長い伏線</h3>
+      <p>この帖で生まれた夕霧は、母を持たない子として祖父母（左大臣・大宮）のもとで育てられ、のちに独立した一帖「夕霧」の主人公にまで成長していきます。誕生の経緯そのものが、物語の非常に長い射程を持つ伏線になっています。</p>
     </div>
     <div class="note-card">
-      <h3>空蝉との出会いが生む「不本意な恋」の型</h3>
-      <p>身分の高い家の娘でありながら、父の死という不運によって年の離れた受領の後妻に甘んじている空蝉の境遇は、この物語で繰り返し描かれる「後ろ盾を失った女性の不安定な立場」というテーマの、桐壺更衣に続く二つ目の変奏である、という見方ができます。</p>
+      <h3>六条御息所の伊勢下向 ― 秋好中宮への系譜</h3>
+      <p>御息所が娘（前斎宮）とともに伊勢へ下る決意は、単なる退場ではなく、後にこの娘が「秋好中宮」として物語の重要な位置を占めることになる展開の出発点です。母の悲劇が娘の運命にも影を落としていく構図が、以降の帖で描かれていきます。</p>
+    </div>
+    <div class="note-card">
+      <h3>藤壺への叶わぬ思いの「代償」構造の一つの到達点</h3>
+      <p>第2帖以来、繰り返し示唆されてきた「藤壺への叶わぬ思いが、手の届く女性たちへの関心を生む」という構造は、紫の上との正式な結婚によって一つの到達点を迎える、という見方ができます。紫の上が、藤壺の姪という血縁を持つ人物である点も、この構造を補強する要素として指摘できます。</p>
     </div>
   </section>
 
@@ -363,8 +379,8 @@ function showScenePopup(title, desc){
   el.style.display = 'block';
 }
 
-/* ===== header nav (chapters array loaded from chapters-data.js) ===== */
-const CURRENT = 2;
+/* ===== header nav (shared, chapters array loaded from chapters-data.js) ===== */
+const CURRENT = 9;
 const tabsEl = document.getElementById('tabs');
 const jumpEl = document.getElementById('jump');
 
@@ -390,18 +406,19 @@ if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
 /* ===== relationship diagram ===== */
 const nodes = {
   genji:   {x:360, y:60,  label:'光源氏'},
-  toonoc:  {x:120, y:60,  label:'頭中将'},
-  fujitsubo:{x:600, y:60, label:'藤壺の宮'},
-  utsusemi:{x:360, y:270, label:'空蝉'},
-  samanokami:{x:120, y:270, label:'左馬頭'},
-  tokonatsu:{x:600, y:270, label:'常夏の女'}
+  aoi:     {x:120, y:60,  label:'葵の上'},
+  rokujo:  {x:600, y:60,  label:'六条御息所'},
+  murasaki:{x:120, y:270, label:'紫の上'},
+  toonoc:  {x:360, y:270, label:'頭中将'},
+  yugiri:  {x:600, y:270, label:'夕霧（新生児）'}
 };
 const edges = [
-  {a:'genji', b:'fujitsubo', label:'密かな慕情（変わらず）', type:'love'},
-  {a:'genji', b:'toonoc', label:'親友・妻の兄', type:'blood'},
-  {a:'genji', b:'samanokami', label:'女性論の聞き役', type:'blood'},
-  {a:'genji', b:'utsusemi', label:'強引な契り', type:'love'},
-  {a:'toonoc', b:'tokonatsu', label:'隠れた愛人関係', type:'love'}
+  {a:'genji', b:'aoi', label:'正妻（次第に和解の兆し）', type:'pol'},
+  {a:'genji', b:'rokujo', label:'恐れと哀れみが残る関係', type:'love'},
+  {a:'rokujo', b:'aoi', label:'生霊による祟り（嫉妬の情念）', type:'love'},
+  {a:'genji', b:'murasaki', label:'新枕・正式な夫婦へ', type:'love'},
+  {a:'aoi', b:'toonoc', label:'兄妹', type:'blood'},
+  {a:'aoi', b:'yugiri', label:'出産直後に死去', type:'blood'}
 ];
 const svg = document.getElementById('relmap');
 const NS = 'http://www.w3.org/2000/svg';
@@ -424,7 +441,7 @@ edges.forEach(edge=>{
 });
 Object.values(nodes).forEach(n=>{
   const g = el('g',{class:'node'});
-  g.appendChild(el('rect',{x:n.x-52,y:n.y-18,width:104,height:36,rx:8}));
+  g.appendChild(el('rect',{x:n.x-58,y:n.y-18,width:116,height:36,rx:8}));
   const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
   t.textContent = n.label;
   g.appendChild(t);
