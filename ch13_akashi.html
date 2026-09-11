@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第13帖 明石 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --gray:#8c8579;
+    --kon:#2c3a63;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{max-width:60ch; color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:var(--kon);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:18px; height:3px; display:inline-block;}
+  .legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka.solo{grid-column:1 / -1;}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+  .waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第13帖</div>
+    <h1>明石</h1>
+    <div class="kana">あかし</div>
+    <p class="lead">須磨を襲った暴風雨の後、明石入道の迎えによって明石へと移った光源氏27〜28歳。入道の娘・明石の君との間に距離を置きながらも心が近づいていく一方、都では朱雀帝の身に異変が起こり、源氏の帰京への道が開かれていく。政治的復権と、明石の君との出会いという二つの軸が同時に進む転換の帖。</p>
+  </div>
+
+  <!-- 1. 主な登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">27〜28歳・春〜秋</span></div><p>暴風雨の後、明石入道の迎えを受けて明石へ移る。都に残した紫の上への思いから明石の君との結婚には当初消極的だったが、入道の熱意と明石の君自身の教養・和歌の才に触れるうちに惹かれていく。やがて朱雀帝の宣旨により都への帰還が叶う。</p></div>
+      <div class="person"><div class="row"><span class="name">明石入道</span><span class="age">不明（源氏の母・桐壺更衣のいとこ）</span></div><p>もと播磨守。住吉の神を篤く信仰し、娘を高貴な人と結ばせることを長年祈願してきた。暴風雨の夜、住吉の神託を得たと確信して自ら舟で須磨へ赴き、源氏を明石へ迎え入れる。娘の縁組にすべてを賭ける、執念と信仰心の人物。</p></div>
+      <div class="person"><div class="row"><span class="name">明石の君</span><span class="age">不明（源氏より年下）</span></div><p>明石入道の娘。都の貴婦人にも劣らない和歌の才と琴の腕、慎み深い気品を持つ。身分の低さを強く意識し、源氏に対して終始遠慮がちな態度を取るが、その奥ゆかしさがかえって源氏の心を引きつける。後に源氏の子（明石の姫君）を身ごもる。</p></div>
+      <div class="person"><div class="row"><span class="name">明石の尼君</span><span class="age">不明</span></div><p>明石入道の妻で、明石の君の母。入道ほど直接的には動かないが、娘の身の上を案じ、源氏との仲を見守る。都出身の血筋を持つとされ、明石の君の教養の背景にもなっている人物。</p></div>
+      <div class="person"><div class="row"><span class="name">紫の上</span><span class="age">19歳ごろ</span></div><p>都・二条院に残り、源氏の帰りを待つ存在。源氏は明石滞在中も紫の上への文を絶やさず、心を通わせ続けるが、明石の君との一件は後に紫の上を苦しめる伏線ともなる。この帖では都で待つ「不在の存在」として描かれる。</p></div>
+      <div class="person"><div class="row"><span class="name">良清</span><span class="age">不明</span></div><p>源氏の近臣で、須磨から明石まで随行する。播磨守の息子であり、この地の事情に通じていたことが、良清自身がかつて明石の君に心を寄せていたとされる逸話とあわせ、源氏と明石一族との縁をつなぐ役割を担う。</p></div>
+    </div>
+  </section>
+
+  <!-- 2. 人物系図 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+      <span><i style="background:var(--kon);"></i>政争・対立</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+    </div>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 須磨から明石へ、そして源氏と明石の君の距離</h2></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="680" height="260" fill="var(--paper)"/>
+
+        <g class="scene-room" onclick="showScenePopup('須磨から明石への移動','須磨を襲った激しい暴風雨と落雷の後、亡き桐壺院が夢に現れ、住吉の神の導きにより須磨を去るよう告げる。同じ夜、明石入道もまた神託の夢を見て自ら小舟を仕立てて須磨へ赴き、不思議な追い風に押されるようにして源氏を明石へと迎え入れた。')">
+        <rect x="30" y="90" width="150" height="56" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.4" rx="4"/>
+        <text x="105" y="114" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">須磨</text>
+        <text x="105" y="132" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（暴風雨と神託）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('明石入道の邸（岡辺の家・浜辺の家）','入道は海沿いの浜辺の家のほかに、岡の中腹に建てた別邸「岡辺の家」を持つ。浜辺の家は源氏の当座の住まいとなり、岡辺の家には明石の君を住まわせている。都に劣らぬほど整えられた邸内の様子が、入道の財力と執念を物語る。')">
+        <rect x="265" y="30" width="150" height="56" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.6" rx="4"/>
+        <text x="340" y="54" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">明石入道の邸</text>
+        <text x="340" y="72" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（浜辺の家・岡辺の家）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('明石の君の住まいと源氏との距離','明石の君は岡の上の家に住み、源氏のいる浜辺の家とは目と鼻の先でありながら、身分差ゆえにすぐには結ばれない。入道の仲立ちや文の往復を経て、ようやく文月十三夜に対面が叶う。近さと隔たりが同時に描かれる、この帖ならではの空間演出である。')">
+        <rect x="500" y="90" width="150" height="56" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.4" rx="4"/>
+        <text x="575" y="114" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">明石の君の住まい</text>
+        <text x="575" y="132" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（岡の上・すぐには結ばれぬ距離）</text>
+        </g>
+
+        <line x1="180" y1="110" x2="265" y2="65" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="3,3"/>
+        <line x1="415" y1="65" x2="500" y2="110" stroke="var(--suou)" stroke-width="1.6" stroke-dasharray="4,3"/>
+        <text x="222" y="80" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)" paint-order="stroke" stroke="var(--paper-deep)" stroke-width="5" stroke-linejoin="round">入道の迎えによる上陸</text>
+        <text x="458" y="80" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--suou)" paint-order="stroke" stroke="var(--paper-deep)" stroke-width="5" stroke-linejoin="round">近くて遠い、文月十三夜まで</text>
+
+        <text x="340" y="220" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">明石27〜28歳春〜秋・文月十三夜に対面（推定・想像図）</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">須磨での蟄居から一転、明石では豊かな邸に迎えられながらも、源氏と明石の君の間には身分差という見えない壁が置かれている。浜辺の家と岡の上の家という物理的な近さが、かえって「すぐには結ばれない」時間の演出を際立たせている点に注目したい。入道が仲立ちとなり文を重ねさせることで、二人の距離は少しずつ、しかし確実に縮まっていく。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>入道（にゅうどう）</dt>
+      <dd>俗世にありながら出家し、仏道に入った人のこと。明石入道はもと播磨守という官人でありながら出家しており、俗世の財力と信仰心をあわせ持つ人物として描かれる。</dd>
+      <dt>宣旨（せんじ）</dt>
+      <dd>天皇の命令、またはそれを伝える文書。この帖の終盤、朱雀帝から源氏の罪を赦し帰京を許す宣旨が下され、源氏の運命が大きく好転する契機となる。</dd>
+      <dt>除目（じもく）</dt>
+      <dd>大臣以外の官職を任命する朝廷の儀式。都で政変が進む中、人事にも影響が及んだことが示唆される場面があり、当時の官人社会の仕組みを示す用語として登場する。</dd>
+      <dt>大赦（たいしゃ）</dt>
+      <dd>国家的な慶事や災異の際に、罪人を広く赦免すること。朱雀帝の眼病や天変地異が続いたことを受けて大赦が行われ、これが源氏の赦免・召還にもつながっていく。</dd>
+      <dt>太政大臣（だいじょうだいじん）</dt>
+      <dd>朝廷の最高位の官職。左大臣（致仕大臣、頭中将の父）がこの帖の政変の中で辞任を願い出るなど、都の政局の緊張を示す文脈で言及される役職である。</dd>
+    </dl>
+    <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">光源氏 → 明石の君</div>
+        <div class="poem">嘆きつつ<br>あかしの浦に<br>朝霧の<br>たつやと人を<br>思ひやるかな</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">嘆き明かしながら過ごすこの明石の浦に、朝霧が立つように、あなたも物思いに沈んで嘆いていらっしゃるだろうかと、思いをはせています。「あかし」に「明かし」と地名「明石」を掛ける。</div>
+        <div class="source">出典：『源氏物語』明石巻（原典）。国語辞典類の用例としても複数の資料で原文の一致を確認</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">明石の君（口ずさみ）</div>
+        <div class="poem">なほざりに<br>頼め置くめる<br>一ことを<br>つきせぬ音にや<br>かけてしのばん</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">その場限りのお約束かもしれないその一言を、頼りに、尽きることのない泣き声にかこつけて、いつまでも偲んでいくのでしょうか。源氏から形見の琴を贈られた場面で、口ずさむともなく漏らした歌。</div>
+        <div class="source">出典：『源氏物語』明石巻（原典）。原文は複数の現代語訳・注釈サイトで一致を確認</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">光源氏 → 明石の君（返し）</div>
+        <div class="poem">逢ふまでの<br>かたみに契る<br>中の緒の<br>しらべはことに<br>変はらざらなむ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">再び逢う日までの形見として約束し合った、この琴の中の緒の調べのように、私たちの仲もけっして変わらないでいてほしいものです。「中の緒」に琴の弦の名と「二人の仲」を掛ける。</div>
+        <div class="source">出典：『源氏物語』明石巻（原典）。原文は複数の現代語訳・注釈サイトで一致を確認</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">光源氏 → 明石の君（旅立ちの贈歌）</div>
+        <div class="poem">このたびは<br>立ち別るとも<br>藻塩焼く<br>煙は同じ<br>方になびかむ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">今回は別れて離れ離れになろうとも、藻塩を焼く煙がみな同じ方角へたなびくように、私たちもいずれ同じ場所で一緒になりましょう。</div>
+        <div class="source">出典：『源氏物語』明石巻（原典）。原文は複数の解説サイトで一致を確認</div>
+      </div>
+      <div class="waka solo">
+        <div class="speaker">明石の君 → 光源氏（返歌）</div>
+        <div class="poem">かきつめて<br>海人のたく藻の<br>思ひにも<br>今はかひなき<br>うらみだにせじ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">かき集めて海人が藻塩を焼くように、あれこれとかき集めた物思いを抱いても、今となっては言っても仕方のないこと。せめてあなたを恨むことだけはすまいと思います。</div>
+        <div class="source">出典：『源氏物語』明石巻（原典）。旅立ち前夜の贈答歌として複数サイトで一致を確認</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>都の政変 ― 朱雀帝の眼病と桐壺院の霊示</h3><p>須磨での暴風雨と時を同じくして、都の朱雀帝の夢にも亡き桐壺院が現れ、鋭い眼差しで何事かを訴える。以来、朱雀帝は目を患うようになり、后腹の弘徽殿大后をはじめ宮中にも病や異変が相次ぐ。人々は、源氏を理由もなく須磨へ追いやったことへの神仏の怒りではないかと恐れはじめる。</p></div>
+      <div class="tl-item"><h3>暴風雨と明石入道の出現</h3><p>須磨を襲った激しい雷雨がおさまらぬある夜、源氏の夢に桐壺院が立ち、住吉の神の導きによってこの地を去るようにと告げる。同じ夜、明石入道もまた同様の神託を得たと確信し、不思議な風に押されるようにして小舟で須磨へと渡ってくる。入道は長年住吉の神に祈り続けてきた願いがついに叶ったのだと涙する。</p></div>
+      <div class="tl-item"><h3>明石入道の邸に迎えられる</h3><p>入道の勧めに従い、源氏は明石へと移る。浜辺の家に用意された住まいは、都に劣らぬほど整えられており、入道の財力と、娘を高貴な人に嫁がせようとする長年の執念がうかがえる。入道はさっそく、娘・明石の君を源氏に薦めようとするが、源氏は都に残した紫の上への思いから、なかなか気が進まない。</p></div>
+      <div class="tl-item"><h3>文通と、揺れる二人の心</h3><p>入道の熱心な勧めに動かされるように、源氏は明石の君へ文を送りはじめる。明石の君は身分の違いを強く意識し、簡単には応じようとしないが、その筆跡や和歌の詠みぶりが都の貴婦人にも劣らぬ品格を示しており、源氏は次第に強く惹かれていく。二人の距離は、文の往復を重ねながら少しずつ縮まっていく。</p></div>
+      <div class="tl-item"><h3>文月十三夜、初めての対面</h3><p>秋、文月の十三夜、源氏はついに明石の君のもとを訪れ、直接顔を合わせる。案じていたよりもはるかに上品で知的な明石の君の様子に、源氏は見捨てがたい思いを深める。その後、二人は琴を弾き合い、源氏は都から持参した琴の御琴を形見として贈り、「逢ふまでのかたみに契る中の緒のしらべはことに変はらざらなむ」と歌を交わす。</p></div>
+      <div class="tl-item"><h3>大赦・帰京の宣旨</h3><p>都では朱雀帝の病がいよいよ重くなり、これも源氏を理不尽に退けたことへの報いではないかとの声が強まる。ついに大赦が行われ、朱雀帝から源氏の罪を赦し帰京を許す宣旨が下される。源氏は都に戻れる喜びを感じる一方で、明石の君やこの地を離れる寂しさに複雑な思いを抱く。</p></div>
+      <div class="tl-item"><h3>明石を発つ朝の別れ</h3><p>出立を明後日に控え、源氏は明石の君のもとを訪れ、「このたびは立ち別るとも藻塩焼く煙は同じ方になびかむ」と別れの歌を詠む。明石の君は「かきつめて海人のたく藻の思ひにも今はかひなきうらみだにせじ」と涙ながらに返す。この頃、明石の君にはすでに源氏の子を身ごもっている兆しがあり、二人の縁はこの別れを経てもなお続いていくことになる。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 距離の演出</div>
+      <h3>「近くて遠い」という空間設計の意味</h3>
+      <p>浜辺の家と岡の上の家という、目と鼻の先にありながらすぐには結ばれない二人の住まいの配置は、身分差ゆえの葛藤をそのまま空間に映し出したものと読めます。入道が仲立ちとなり文を重ねさせるという手順を踏むことで、二人の関係が単なる一夜の出会いではなく、時間をかけて育まれるものとして描かれていると考えられます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 明石入道の信仰と執念</div>
+      <h3>住吉信仰に支えられた確信</h3>
+      <p>入道が暴風雨の夜の神託を疑いなく信じ、自ら舟を出して須磨へ向かう行動力は、長年の住吉信仰に裏打ちされた確信から来ていると読めます。娘の縁組にすべてを賭けるその執念は、当時の受領階級が中央の権力に接近しようとする強い上昇志向の象徴としても読み取れるでしょう。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 後の帖との伏線</div>
+      <h3>明石の君の血筋が開く、後の物語への扉</h3>
+      <p>この帖で結ばれた源氏と明石の君の間に生まれる娘（明石の姫君）は、後に今上帝の中宮となり、源氏の血筋を皇統に連ねていく重要な存在となります。身分の低い明石の君が、物語の後半で最も高い地位に連なる血筋の始まりとなる点は、「明石」の帖が持つ大きな仕掛けの一つと見ることができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 貴種流離譚の完結</div>
+      <h3>須磨との対構造 ― 挫折から再生へ</h3>
+      <p>栄華の絶頂から一転して蟄居を強いられた「須磨」に対し、「明石」では新たな出会いと政治的復権への道が開かれていきます。試練を経てより大きな栄光を手にするという貴種流離譚の型が、この二帖を通じて完結する構成になっていると読めるでしょう。</p>
+    </div>
+    <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+  </section>
+
+  <!-- 7. 特筆事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+    <div class="note-card">
+      <h3>源氏の政治的復権の起点</h3>
+      <p>「明石」は、須磨での挫折から一転して源氏が政治的復権への道を歩みはじめる転機の帖である。大赦・帰京の宣旨を経て、源氏はやがて都で権勢を取り戻し、六条院の栄華へとつながっていく。その起点がこの明石での日々にあることは見逃せない。</p>
+    </div>
+    <div class="note-card">
+      <h3>明石の君の血筋が担う物語上の役割</h3>
+      <p>身分の低い受領の娘でありながら、明石の君は源氏の子を宿し、その血筋は後に皇統へと連なっていく。『源氏物語』全体を貫く「身分と血筋」というテーマにおいて、明石の君とその一族は極めて重要な位置を占める存在である。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 13;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  genji:      {x:400, y:190, label:'光源氏'},
+  nyudo:      {x:120, y:60,  label:'明石入道'},
+  akashilady: {x:400, y:40,  label:'明石の君'},
+  amagimi:    {x:680, y:60,  label:'明石の尼君'},
+  murasaki:   {x:680, y:190, label:'紫の上'},
+  yoshikiyo:  {x:120, y:190, label:'良清'}
+};
+const edges = [
+  {a:'genji', b:'nyudo', label:'婿として迎えたい入道の思惑', type:'alliance'},
+  {a:'genji', b:'akashilady', label:'文と琴を通じて近づく心', type:'emotion'},
+  {a:'nyudo', b:'akashilady', label:'父娘', type:'kinship'},
+  {a:'nyudo', b:'amagimi', label:'夫婦', type:'kinship'},
+  {a:'amagimi', b:'akashilady', label:'母娘', type:'kinship'},
+  {a:'genji', b:'murasaki', label:'都に残る妻同然の絆', type:'kinship'},
+  {a:'genji', b:'yoshikiyo', label:'須磨・明石に従う近臣', type:'loyalty'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  const w = Math.max(96, n.label.length*13);
+  g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
