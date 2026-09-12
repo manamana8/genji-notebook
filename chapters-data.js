@@ -15,7 +15,7 @@ const chapters = [
  {n:16,t:"関屋",f:"ch16_sekiya.html",done:true},
  {n:17,t:"絵合",f:"ch17_eawase.html",done:true},
  {n:18,t:"松風",f:"ch18_matsukaze.html",done:true},
- {n:19,t:"薄雲",f:"ch19_usugumo.html",done:true},{n:20,t:"朝顔",f:"ch20_asagao.html",done:true},{n:21,t:"少女"},
+ {n:19,t:"薄雲",f:"ch19_usugumo.html",done:true},{n:20,t:"朝顔",f:"ch20_asagao.html",done:true},{n:21,t:"少女",f:"ch21_otome.html",done:true},
  {n:22,t:"玉鬘"},{n:23,t:"初音"},{n:24,t:"胡蝶"},{n:25,t:"蛍"},{n:26,t:"常夏"},
  {n:27,t:"篝火"},{n:28,t:"野分"},{n:29,t:"行幸"},{n:30,t:"藤袴"},{n:31,t:"真木柱"},
  {n:32,t:"梅枝"},{n:33,t:"藤裏葉"},{n:34,t:"若菜上"},{n:35,t:"若菜下"},{n:36,t:"柏木"},
