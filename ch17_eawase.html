@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第17帖 絵合 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --gray:#8c8579;
+    --kon:#2c3a63;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:var(--kon);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:18px; height:3px; display:inline-block;}
+  .legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka.solo{grid-column:1 / -1;}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+  .waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第17帖</div>
+    <h1>絵合</h1>
+    <div class="kana">えあわせ</div>
+    <p class="lead">冷泉帝の御代、光源氏31歳の春の物語。故六条御息所の娘・前斎宮は源氏の後見のもと冷泉帝のもとに参内し、梅壺の女御となる。すでに入内していた権中納言（かつての頭中将）の娘・弘徽殿女御との間に、後宮を二分する対抗関係が生まれる。絵を好む冷泉帝の心をとらえようと、両陣営は絵の蒐集にしのぎを削り、まず藤壺の御前で内々の絵合が催され、決着つかぬまま帝の御前での正式な絵合へと持ち越される。最後の番になって、源氏が須磨・明石の侘び住まいの中で描き溜めた絵日記が繰り広げられると、その場の誰もが涙し、勝敗はあっけなく決する。芸術としての絵が、政治の駆け引きの場を制する一帖である。</p>
+  </div>
+
+  <!-- 1. 主な登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">31歳</span></div><p>須磨・明石からの帰京後、政治的に大きく復権した内大臣。前斎宮（梅壺女御）の後見役として、その入内を陰で支える。絵合においては表向き控えめに振る舞いながらも、最後に須磨・明石の絵日記を持ち出し、決定的な役割を果たす。</p></div>
+      <div class="person"><div class="row"><span class="name">秋好中宮（梅壺女御・前斎宮）</span><span class="age">22歳</span></div><p>亡き六条御息所の娘。かつて伊勢斎宮として下向し、朱雀院譲位により帰京。源氏の後見で冷泉帝のもとに参内し、梅壺の御方と呼ばれる。奥ゆかしく落ち着いた人柄で、絵の才にも恵まれ帝の心を引く。</p></div>
+      <div class="person"><div class="row"><span class="name">権中納言（元頭中将）</span><span class="age">源氏と同世代</span></div><p>源氏の昔からの親友であり、政治的には競い合うライバル。娘・弘徽殿女御を先に入内させていたが、梅壺女御の参内により娘が脅かされることに焦り、絵の蒐集で対抗心をむき出しにする。源氏とは友情と政争が同居する関係。</p></div>
+      <div class="person"><div class="row"><span class="name">弘徽殿女御</span><span class="age">14歳</span></div><p>権中納言の娘。梅壺女御より2年早く入内し、冷泉帝とは幼なじみのように親しい。今風で華やかな絵を好み、後宮において梅壺女御方と競い合う立場に置かれる。</p></div>
+      <div class="person"><div class="row"><span class="name">冷泉帝</span><span class="age">13歳</span></div><p>実は藤壺と源氏の子であるという秘密を知らぬまま帝位にある。絵をこよなく愛し、梅壺女御・弘徽殿女御の双方と絵を通じて親しむ。この帖では二人の女御の間で心を動かされる少年らしい姿が描かれる。</p></div>
+      <div class="person"><div class="row"><span class="name">朱雀院</span><span class="age">源氏の異母兄・譲位後</span></div><p>かつて前斎宮に密かに恋慕していたが、源氏の計らいで彼女が冷泉帝に入内することとなり、複雑な思いを抱く。梅壺女御に格別な贈り物と歌を贈り、なお消えぬ思いをにじませる。</p></div>
+      <div class="person"><div class="row"><span class="name">藤壺（中宮）</span><span class="age">源氏より年上</span></div><p>冷泉帝の実母（表向きは先帝の中宮）。絵に深い造詣を持ち、藤壺の御前で催された内々の絵合の後見役・判定役をつとめる。源氏とただ二人だけが知る秘密（冷泉帝の出生）を胸に、須磨・明石の絵日記を特別な思いで見る。</p></div>
+    </div>
+  </section>
+
+  <!-- 2. 人物系図 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+      <span><i style="background:var(--kon);"></i>政争・対立</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+    </div>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 後宮の間取りから帝の御前まで</h2></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="700" height="360" fill="var(--paper)"/>
+
+        <g class="scene-room" onclick="showScenePopup('後宮の配置 ― 梅壺と弘徽殿','梅壺女御（前斎宮）は宮中の凝花舎、通称「梅壺」に局を賜り、そこに紅白の梅が植えられていたことからこの呼び名がある。弘徽殿女御はその名の通り弘徽殿を局とする。二つの殿舎は後宮内で近接しており、帝の御渡りの頻度や絵の贈答のたびに互いの動静が伝わる、緊張をはらんだ距離に置かれている。')">
+        <rect x="30" y="30" width="290" height="80" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.6" rx="4"/>
+        <text x="175" y="62" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">梅壺（凝花舎）／弘徽殿</text>
+        <text x="175" y="82" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（後宮内で向かい合う二つの陣営）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('藤壺の御前 ― 内々の絵合','中宮（藤壺）が里第（三条宮）から参内していた折、双方の女房たちが絵の優劣を論じ合う様子を興深く御覧になり、みずから左右に陣営を分けて内々の絵合を催す。竹取物語と宇津保物語、伊勢物語と正三位が番えられ、女房たちの歌の応酬もあったが、決着はつかぬまま夜に入る。')">
+        <rect x="380" y="30" width="290" height="80" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.4" rx="4"/>
+        <text x="525" y="62" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">藤壺の御前（内々の絵合）</text>
+        <text x="525" y="82" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（物語絵の優劣を競う・判定つかず）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('清涼殿・後涼殿 ― 帝の御前での正式な絵合','源氏の提案により、あらためて帝の御前で正式な勝負が催される。女房の控所である大盤所に帝の御座を設け、殿上人は後涼殿の簀子でそれぞれの支持する方に心を寄せて控える。蛍兵部卿宮が判者をつとめ、双方譲らぬまま夜に入るが、最後の番で源氏の須磨の巻が繰り広げられ、一同涙し、左方（梅壺女御方）の勝利で幕を閉じる。')">
+        <rect x="205" y="200" width="290" height="80" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.4" rx="4"/>
+        <text x="350" y="232" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">清涼殿・後涼殿（正式な絵合）</text>
+        <text x="350" y="252" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（須磨・明石の絵日記が勝敗を決す）</text>
+        </g>
+
+        <text x="350" y="320" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">後宮の対立から帝の御前の決着まで（推定・想像図）</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">須磨・明石の絵日記が土壇場で持ち込まれた経緯としては、源氏が二条院の御厨子から古い絵・新しい絵を選び出す際、紫の上とともにこの絵日記を見返し、二人でしみじみと当時を思い出す場面がまずある。源氏はそれを「思すところありて」あえて献上する絵の中に加え、正式な絵合の最後の番として温存しておいた。この一巻が繰り広げられるまで、双方の絵はどちらも優劣つけがたい出来であったが、須磨での孤独と苦難がそのまま筆に表れた絵日記の前では、他のすべての絵への興味が失せてしまうほどの感動を呼んだと語られる。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>絵合（えあわせ）</dt>
+      <dd>左右二方に分かれて絵を持ち寄り、その優劣を競う遊び。歌合にならった形式で、村上天皇主催の「天徳内裏歌合」の様式を踏まえるとされる。『源氏物語』のこの帖以前に絵合の記録は見当たらず、実質的な最初期の絵合の記述として知られる。</dd>
+      <dt>梅壺女御（うめつぼのにょうご）</dt>
+      <dd>秋好中宮（前斎宮）が宮中の凝花舎に局を賜ったことから呼ばれた名。凝花舎に紅白の梅が植えられていたことに由来する。後の帖で正式に中宮に立ち、「秋好中宮」と呼ばれるようになる。</dd>
+      <dt>物語絵（ものがたりえ）</dt>
+      <dd>物語の一場面を絵画化したもの。藤壺の御前での内々の絵合では『竹取物語』と『宇津保物語』、『伊勢物語』と散逸した『正三位』という物語がそれぞれ番えられ、絵の趣向とあわせて物語そのものの価値も論じられた。</dd>
+      <dt>判者（はんじゃ）</dt>
+      <dd>歌合や絵合において優劣の判定を下す役。帝の御前での正式な絵合では、絵を好む蛍兵部卿宮（源氏の異母弟）が判者をつとめたが、双方の絵の出来があまりに優れていたため、最後まで判定に窮したと語られる。</dd>
+    </dl>
+    <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">朱雀院 → 前斎宮（入内当日、贈り物に添えて）</div>
+        <div class="poem">わかれ路に<br>添へし小櫛を<br>かごとにて<br>はるけきなかと<br>神やいさめし</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">貴女を伊勢にお送りした時に「都の方に帰りたもうな」と小櫛を差し添えたが、それを理由に、私たちがこれほど遠く隔たった仲になるようにと神がお禁じになったのだろうか。</div>
+        <div class="source">出典：『源氏物語』絵合巻（原典）。小学館「日本古典文学全集」準拠の原文（roudokus.com「絵合01」）で原文の一致を確認</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">前斎宮（梅壺女御）→ 朱雀院（返し）</div>
+        <div class="poem">別るとて<br>はるかにいひし<br>ひとことも<br>かへりてものは<br>今ぞかなしき</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">都を離れる時に「はるかに（都を思うな）」とおっしゃったあの一言も、こうして帰京した今となっては、かえって悲しく思い出されます。</div>
+        <div class="source">出典：『源氏物語』絵合巻（原典）。小学館「日本古典文学全集」準拠の原文（roudokus.com「絵合02」）で原文の一致を確認</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">朱雀院 → 梅壺女御（大極殿の絵に添えて）</div>
+        <div class="poem">身こそかく<br>しめのほかなれ<br>そのかみの<br>心のうちを<br>忘れしもせず</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">私の身こそ今は宮中の外におりますが、あの頃、貴女を思っていた心の内は今も忘れておりません。</div>
+        <div class="source">出典：『源氏物語』絵合巻（原典）。小学館「日本古典文学全集」準拠の原文（roudokus.com「絵合08」）で原文の一致を確認</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">梅壺女御 → 朱雀院（返し）</div>
+        <div class="poem">しめのうちは<br>昔にあらぬ<br>心地して<br>神代のことも<br>今ぞ恋しき</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">宮中は昔とは変わってしまった気がして、斎宮として神にお仕えしていたあの頃のことさえ、今は恋しく思われます。</div>
+        <div class="source">出典：『源氏物語』絵合巻（原典）。小学館「日本古典文学全集」準拠の原文（roudokus.com「絵合08」）で原文の一致を確認</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">平内侍（藤壺御前・左方＝梅壺方の女房）</div>
+        <div class="poem">伊勢の海の<br>ふかきこころを<br>たどらずて<br>ふりにし跡と<br>波や消つべき</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">『伊勢物語』の海のように深い情趣をたどろうともせず、古臭い物語だと言って、波が浜の足跡を消すように、なきものにしてしまってよいのでしょうか。</div>
+        <div class="source">出典：『源氏物語』絵合巻（原典）。小学館「日本古典文学全集」準拠の原文（roudokus.com「絵合07」）で原文の一致を確認</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">大弐典侍（藤壺御前・右方＝弘徽殿方の女房）</div>
+        <div class="poem">雲のうへに<br>思ひのぼれる<br>心には<br>千ひろの底も<br>はるかにぞ見る</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">宮中という雲の上にまで志を抱いて上ろうとする心からすれば、千尋の海の底も同然の『伊勢物語』など、はるか下に見えます。</div>
+        <div class="source">出典：『源氏物語』絵合巻（原典）。小学館「日本古典文学全集」準拠の原文（roudokus.com「絵合07」）で原文の一致を確認</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">藤壺（内々の絵合の場で・判定に寄せて）</div>
+        <div class="poem">見るめこそ<br>うらふりぬらめ<br>年へにし<br>伊勢をのあまの<br>名をや沈めむ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">見た目には古びて見えましょうが、年月を経た伊勢の海人（＝『伊勢物語』）の名を、今さら沈めてしまってよいものでしょうか。</div>
+        <div class="source">出典：『源氏物語』絵合巻（原典）。小学館「日本古典文学全集」準拠の原文（roudokus.com「絵合07」）で原文の一致を確認</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">紫の上 → 光源氏（須磨・明石の絵日記を初めて見て）</div>
+        <div class="poem">ひとりゐて<br>嘆きしよりは<br>あまのすむ<br>かたをかくてぞ<br>見るべかりける</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">一人都に残って嘆いていたよりは、あなたが海辺で過ごされた様子を描いたこの絵を、こうして拝見していれば、もう少し心が慰められましたでしょうに。</div>
+        <div class="source">出典：『源氏物語』絵合巻（原典）。小学館「日本古典文学全集」準拠の原文（roudokus.com「絵合06」）で原文の一致を確認</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">光源氏 → 紫の上（返し）</div>
+        <div class="poem">うきめ見し<br>そのをりよりも<br>今日はまた<br>過ぎにしかたに<br>かへる涙か</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">つらい目を見たあの当時よりも、今日こうして絵を見返しながら過去に立ち返ると、なおさら涙があふれてくることですよ。</div>
+        <div class="source">出典：『源氏物語』絵合巻（原典）。小学館「日本古典文学全集」準拠の原文（roudokus.com「絵合06」）で原文の一致を確認</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>前斎宮の入内、朱雀院からの格別な贈り物</h3><p>源氏の後見のもと、前斎宮の入内が進められる。かつて彼女に心を寄せていた朱雀院は、外聞を憚って一度は消息を絶っていたが、入内当日になって、この上なく贅を尽くした調度と、別れの小櫛にちなむ歌を贈る。源氏はその心中を思いやり、複雑な思いに沈む。</p></div>
+      <div class="tl-item"><h3>斎宮の女御、参内し梅壺の御方となる</h3><p>前斎宮は夜更けに参内し、冷泉帝と対面する。奥ゆかしく落ち着いたその人柄に帝は心惹かれるが、すでに親しんでいる弘徽殿女御（権中納言の娘）のもとへ通う頻度のほうがなお多い。権中納言は、娘と競い合う形で参内した梅壺女御の存在に、心穏やかならぬものを感じはじめる。</p></div>
+      <div class="tl-item"><h3>絵を通じて深まる帝の親愛、権中納言の対抗心</h3><p>絵を好む冷泉帝は、梅壺女御の描く絵の趣に心を移し、頻繁にそのもとへ通うようになる。これを聞いた権中納言は負けん気を起こし、すぐれた画工たちを集めて秘密裏に絵を描かせ、絵の蒐集で対抗する。宮中はやがて絵の話題で持ちきりとなる。</p></div>
+      <div class="tl-item"><h3>源氏、須磨・明石の絵日記を紫の上とともに見返す</h3><p>献上する絵を選ぶため、源氏は二条院の御厨子を開き、須磨・明石で描き溜めた絵日記の箱を初めて紫の上に見せる。当時の苦難を思い起こした紫の上は「そばにいれば心細さも慰められたのに」と恨み言を歌に詠み、源氏もまた当時以上の涙にくれながら返歌する。</p></div>
+      <div class="tl-item"><h3>藤壺の御前での内々の絵合</h3><p>参内していた藤壺（中宮）が、女房たちの絵をめぐる論争を興深く御覧になり、みずから左右に陣を分けて内々の絵合を催す。『竹取物語』対『宇津保物語』、『伊勢物語』対『正三位』が番えられ、女房たちが歌を詠み交わして激しく争うが、藤壺自身も一首を寄せるほどの盛り上がりを見せながら、決着はつかぬまま夜に入る。</p></div>
+      <div class="tl-item"><h3>朱雀院から梅壺女御へ、なお消えぬ思いの贈り物</h3><p>絵合の噂を聞いた朱雀院は、かつての斎宮下向の儀式を描かせた絵を梅壺女御に贈り、「あの頃の心を忘れていない」と歌を添える。梅壺女御は畏れ多く思いながらも形ばかりの返歌をしたため、朱雀院はそれを見てなお、過ぎ去った御代を取り返したいと思わずにいられない。</p></div>
+      <div class="tl-item"><h3>帝の御前での正式な絵合</h3><p>源氏の提案により、あらためて帝の御前で正式に勝敗を決することになる。蛍兵部卿宮が判者をつとめるが、双方の絵があまりに優れているため、なかなか決着がつかないまま夜に入る。</p></div>
+      <div class="tl-item"><h3>須磨の絵日記が繰り広げられ、左方（梅壺女御方）が勝つ</h3><p>最後の番となって、源氏が心を尽くして描いた須磨の絵日記が現れると、居並ぶ人々は皆涙をとどめられない。実際に見たことのない浦々の景色までもが目の前にあるかのように描かれ、しみじみとした歌もまじるその一巻に、それまでの議論も絵への興味もすべて移ってしまい、あっけなく左方の勝利で幕を閉じる。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 絵という趣味を通じた後宮の勢力争い</div>
+      <h3>雅な遊びの奥にある、むき出しの政治</h3>
+      <p>絵合そのものは風雅な遊びとして描かれますが、その実態は梅壺女御方（源氏）と弘徽殿女御方（権中納言）が、どちらの娘を帝の寵愛の中心に据えるかをめぐる後宮内の勢力争いです。芸術をめぐる審美眼の競い合いが、そのまま政治的な立場の競い合いに直結している点が、この帖の骨格をなしています。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 源氏と権中納言の関係</div>
+      <h3>友情と政争が同居するライバル関係</h3>
+      <p>源氏と権中納言（元頭中将）は、若い頃からの気の置けない友人でありながら、娘たちの後見人としては互いに一歩も譲らぬ政敵でもあります。源氏が権中納言の意固地なふるまいを「若々しさが直らない」と笑う場面には、親しみと、それでも張り合わずにいられない二人の関係の複雑さがよく表れています。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 苦難が芸術に転化し、政治的資産となる逆説</div>
+      <h3>須磨・明石の孤独が、勝敗を決める切り札になる</h3>
+      <p>物語の前半で源氏に大きな試練としてのしかかった須磨・明石の謫居は、この帖において、誰も太刀打ちできない一枚の絵日記という形で、彼の政治的復権を決定づける切り札に転じます。苦難の記録がそのまま最大の説得力を持つ芸術作品となり、それが権力争いの決着をもたらすという構図は、物語全体を通じて繰り返される「試練の芸術への昇華」という主題の、最も鮮やかな一例と見ることができるでしょう。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 藤壺だけが知る絵の重み</div>
+      <h3>判定の裏にある、二人だけの秘密</h3>
+      <p>須磨・明石の絵日記が中宮（藤壺）にだけ特別に見せられるべきものとされているのは、源氏の須磨下向が、突き詰めれば藤壺との密通とその結果生まれた冷泉帝を守るための犠牲であったという、二人だけが知る事情によるものです。表向きは芸術をめぐる公正な絵合として進行するこの場面の底に、当事者しか知りえない重い秘密が流れていることは、留意しておいてよい点でしょう。</p>
+    </div>
+    <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+  </section>
+
+  <!-- 7. 特筆事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+    <div class="note-card">
+      <h3>源氏の政治的地位を確立する帖</h3>
+      <p>絵合における勝利は、単なる趣味の競い合いの結果にとどまらず、須磨・明石からの帰京後、着実に力を取り戻してきた源氏の政治的地位を、後宮という最も繊細な領域においても確立させる出来事として位置づけられる。この帖をもって、源氏方（梅壺女御・のちの秋好中宮）の後宮内での優位が定まっていく。</p>
+    </div>
+    <div class="note-card">
+      <h3>『源氏物語』における絵合の記録としての価値</h3>
+      <p>物語中に描かれるこの絵合は、実際の平安朝における絵合の記録としては最初期のものとされ、当時の物語（『竹取物語』『宇津保物語』『伊勢物語』など）の受容や評価のされ方をうかがう史料としても、しばしば引用される場面である。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 17;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  genji:      {x:150, y:70,  label:'光源氏'},
+  gonchunagon:{x:520, y:70,  label:'権中納言（元頭中将）'},
+  umetsubo:   {x:150, y:220, label:'秋好中宮（梅壺女御）'},
+  kokiden:    {x:520, y:220, label:'弘徽殿女御'},
+  reizei:     {x:340, y:340, label:'冷泉帝'},
+  suzaku:     {x:150, y:460, label:'朱雀院'},
+  fujitsubo:  {x:530, y:460, label:'藤壺（中宮）'}
+};
+const edges = [
+  {a:'genji', b:'umetsubo', label:'後見・入内を後押し（政略）', type:'alliance'},
+  {a:'gonchunagon', b:'kokiden', label:'実の父娘', type:'kinship'},
+  {a:'reizei', b:'umetsubo', label:'女御として入内', type:'kinship'},
+  {a:'reizei', b:'kokiden', label:'女御として先に入内', type:'kinship'},
+  {a:'reizei', b:'fujitsubo', label:'実は母子（秘密）', type:'kinship'},
+  {a:'umetsubo', b:'kokiden', label:'後宮での寵争い・絵合の対抗', type:'conflict'},
+  {a:'genji', b:'gonchunagon', label:'友情と政争が同居するライバル', type:'conflict'},
+  {a:'suzaku', b:'umetsubo', label:'秘めた恋慕（叶わぬ思い）', type:'emotion'},
+  {a:'genji', b:'fujitsubo', label:'昔の恋情・須磨下向の秘めた事情を共有', type:'emotion'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  const w = Math.max(96, n.label.length*13);
+  g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
