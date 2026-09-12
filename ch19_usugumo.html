@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第19帖 薄雲 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --gray:#8c8579;
+    --kon:#2c3a63;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+  .person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:var(--kon);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:18px; height:3px; display:inline-block;}
+  .legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka.solo{grid-column:1 / -1;}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+  .waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第19帖</div>
+    <h1>薄雲</h1>
+    <div class="kana">うすぐも</div>
+    <p class="lead">光源氏31歳の冬から32歳の秋にかけての物語。大堰でひとり物思いに沈む明石の君は、母・尼君の説得もあって、姫君の将来のために我が子を紫の上へ委ねる決意を固める。雪の朝、源氏が姫君を迎えに訪れ、母子は歌を交わして別れる。二条院に移った姫君は盛大な袴着を行い、紫の上にもよくなつく。翌年、太政大臣（かつての左大臣、頭中将・葵の上の父）が世を去り、天変地異が相次ぐ不穏な情勢のなか、三月には藤壺が三十七歳で崩御する。源氏は深い悲しみに沈み、念誦堂に籠って泣き暮らす。四十九日の法要が済んだころ、藤壺に長く仕えてきた夜居の僧都が、冷泉帝にその出生の秘密――実父が光源氏であること――を密かに奏上する。衝撃を受けた帝は源氏への譲位を申し出るが、源氏はこれを固く辞退し、物語は次の局面へと動き出す。</p>
+  </div>
+
+  <!-- 1. 主な登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">31～32歳</span></div><p>姫君を二条院に引き取る冬は31歳、藤壺の崩御と冷泉帝の出生の秘密が明かされる秋は32歳。政界の重鎮として権勢を誇る一方、明石の君への申し訳なさ、藤壺を失った深い悲しみ、我が子である帝の苦悩という三重の重みを一身に受け止める。</p></div>
+      <div class="person"><div class="row"><span class="name">明石の姫君</span><span class="age">3歳</span></div><p>光源氏と明石の君の娘。雪の朝、無邪気に母の袖を引いて車に乗ろうと急ぐが、事情は分からない。二条院に着いてからしばらく母を探して泣くが、やがて紫の上によくなつき、盛大な袴着の儀式を迎える。</p></div>
+      <div class="person"><div class="row"><span class="name">明石の君</span><span class="age">22～23歳</span></div><p>大堰にひとり冬を過ごし、我が子の将来のために身を引く決意を固める。雪の朝、自ら姫君を抱いて車まで見送り、「末遠き二葉の松にひき別れいつか木高きかげを見るべき」と詠んで泣き崩れる。娘を手放す苦しみと、娘のためを思う母心とが、この帖で最も深く描かれる。</p></div>
+      <div class="person"><div class="row"><span class="name">紫の上</span><span class="age">24歳</span></div><p>源氏の正妻格。明石の姫君を引き取り、実の子のように可愛がって育てる。姫君が懐いてくるにつれて機嫌を直し、明石の君への複雑な思いも和らいでいく。姫君の袴着を華やかに執り行う。</p></div>
+      <div class="person"><div class="row"><span class="name">藤壺（藤壺の女院・入道后の宮）</span><span class="age">37歳</span></div><p>冷泉帝の母。正月から病がちであったが、3月に37歳で崩御する。光源氏が生涯を通じて恋い慕い続けた人であり、その死は「入り日さす峰にたなびく薄雲はもの思ふ袖に色やまがへる」という帖名の由来となる歌に詠まれる。</p></div>
+      <div class="person"><div class="row"><span class="name">冷泉帝</span><span class="age">14歳</span></div><p>桐壺帝の第十皇子とされているが、実は藤壺と光源氏の子。母の四十九日の法要が済んだころ、夜居の僧都から出生の秘密を打ち明けられ、深く動揺する。実の父を臣下のままにしていることを恐れ、源氏に譲位を申し出るが、強く固辞される。</p></div>
+      <div class="person"><div class="row"><span class="name">夜居の僧都</span><span class="age">70歳くらい</span></div><p>藤壺の母后の代から祈祷僧として仕え、藤壺からも深く信頼されていた高僧。藤壺の崩御後、冷泉帝の出生の秘密を知る数少ない人物として、天変地異を案じ、忠誠と責任感から帝にその秘密を明かす。</p></div>
+    </div>
+  </section>
+
+  <!-- 2. 人物系図 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 900 580" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+      <span><i style="background:var(--kon);"></i>政争・対立</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+    </div>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 大堰から二条院へ、藤壺の御所と法要の場</h2></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="700" height="380" fill="var(--paper)"/>
+
+        <g class="scene-room" onclick="showScenePopup('大堰の山荘','明石の君・姫君母娘が住む大堰川ほとりの邸。冬の物思いの舞台であり、雪の朝、源氏が姫君を迎えに訪れ、母子が「末遠き二葉の松に」の歌を交わして別れる、この帖でもっとも悲哀の深い場面の舞台となる。明石の君はここにひとり残される。')">
+        <rect x="30" y="30" width="290" height="90" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.6" rx="4"/>
+        <text x="175" y="65" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">大堰の山荘</text>
+        <text x="175" y="85" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（明石の君がひとり残される邸）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('二条院','源氏の本邸。紫の上が暮らし、明石の姫君が引き取られて養育される場。姫君は当初母を探して泣くが、やがて紫の上によく懐き、盛大な袴着の儀式が執り行われる。母・明石の君と切り離された姫君にとって、新しい生活の中心となる場所。')">
+        <rect x="380" y="30" width="290" height="90" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.4" rx="4"/>
+        <text x="525" y="65" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">二条院</text>
+        <text x="525" y="85" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（姫君を紫の上が養育する邸）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('藤壺の御所（三条の宮）と法要の場','藤壺が晩年を過ごした三条の宮。正月から病に臥し、心配した冷泉帝が見舞いの行幸をするが、3月に37歳で崩御する。源氏は悲しみのあまり念誦堂に籠って泣き暮らし、四十九日の法要が営まれたのち、夜居の僧都が冷泉帝に出生の秘密を打ち明ける舞台ともなる。')">
+        <rect x="205" y="220" width="290" height="90" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.4" rx="4"/>
+        <text x="350" y="255" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">藤壺の御所（三条の宮）</text>
+        <text x="350" y="275" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（崩御と四十九日法要の場）</text>
+        </g>
+
+        <text x="350" y="345" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">大堰（明石の君の悲しみ）― 二条院（姫君の新生活）― 三条の宮（藤壺の崩御と秘密の露見）、という三つの場（推定・想像図）</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">この帖は、大堰での母子の別れ、二条院での姫君の新生活、そして三条の宮での藤壺の崩御と秘密の露見という、三つの場所を舞台に喜びと悲しみが交錯して進む。姫君が失う母と、冷泉帝が失う（そして初めて知る）父の存在が、対照的に描かれている点も読みどころである。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>太政大臣（だいじょうだいじん）</dt>
+      <dd>律令官制における最高位の官職。本帖で亡くなる太政大臣は、葵の上・頭中将の父であるかつての左大臣。冷泉帝の即位時に63歳で太政大臣に就任し（「澪標」）、66歳で薨去した（「薄雲」）。源氏の若き日からの後見人でもあった。</dd>
+      <dt>崩御（ほうぎょ）</dt>
+      <dd>天皇や太皇太后・皇太后・皇后など、皇族の中でも特に高い身位にある人物が亡くなること。本帖では、冷泉帝の母である藤壺（女院・入道后の宮）の死去に用いられている。</dd>
+      <dt>夜居の僧都（よいのそうず）</dt>
+      <dd>夜通し御前に控えて加持祈祷を行う高僧を指す。藤壺の母后の代から祈りの僧として仕え、藤壺からも厚く信頼されていた70歳ほどの老僧で、冷泉帝に出生の秘密を明かす重要な役割を担う。</dd>
+      <dt>四十九日（しじゅうくにち）</dt>
+      <dd>人の死後49日目に行う法要。仏教では、この日をもって死者の魂の行き先が定まるとされる。藤壺の四十九日の法要が済んだころ、夜居の僧都が冷泉帝に出生の秘密を打ち明ける。</dd>
+      <dt>念誦堂（ねんずどう）</dt>
+      <dd>読経や念仏を行うための持仏堂。藤壺の崩御を深く悲しんだ源氏が、そこに籠って泣き暮らしたと描かれる、私的な祈りと悲嘆の場。</dd>
+    </dl>
+    <div class="waka-grid">
+      <div class="waka solo">
+        <div class="speaker">光源氏（藤壺の崩御を悼んで・帖名の由来となった歌）</div>
+        <div class="poem">入り日さす　峰にたなびく　薄雲は　もの思ふ袖の　色にやあるらむ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">夕日が差す峰にたなびく薄雲は、悲しみに沈む私の喪服の袖の色と、同じ色に見えることだろうか。</div>
+        <div class="source">出典：『源氏物語』薄雲巻（原典）。Wikipedia「薄雲（源氏物語）」が本帖の巻名の由来として明記し、與謝野晶子訳（青空文庫）・james.3zoku.com の対訳（歌意「入り日さす峰にたなびく薄雲は悲しみにくれるわたしの袖の色のようだ」）でも歌意が一致することを確認。表記は資料によって「色やまがへる」「色にやあるらむ」の異同があるが、いずれも青空文庫・古典サイトで確認できる伝本の表記のゆれである。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">明石の君 → 乳母（雪深い大堰にて）</div>
+        <div class="poem">雪深み　深山の道は　晴れずとも　なほふみ通へ　あと絶えずして</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">雪が深くて奥山の道が晴れなくても、それでも雪を踏み分けて手紙を通わせてください。便りが絶えることのないように。</div>
+        <div class="source">出典：『源氏物語』薄雲巻（原典）。logiqa.jp の定期テスト対策ページと四季の美（shikinobi.com）の対訳で、原文・現代語訳の一致を確認</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">乳母 → 明石の君（返し）</div>
+        <div class="poem">雪間なき　吉野の山を　たづねても　心の通ふ　あと絶えめやは</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">雪の晴れ間のない吉野の山を訪ねるようなことになっても、心の通い合う便りが絶えることなどありましょうか、決してありません。</div>
+        <div class="source">出典：『源氏物語』薄雲巻（原典）。logiqa.jp の定期テスト対策ページで原文・現代語訳を確認</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">明石の君 → 光源氏（姫君との別れの車寄せにて）</div>
+        <div class="poem">末遠き　二葉の松に　引き別れ　いつか木高き　かげを見るべき</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">将来まだ長い、二葉の松のように幼いこの子と別れて、いつになったら大きく育った姿を見ることができるのでしょうか。</div>
+        <div class="source">出典：『源氏物語』薄雲巻（原典）。四季の美（shikinobi.com）・roudokus.com・logiqa.jp・text.yarukifinder.com など複数の対訳サイトで原文・歌意の一致を確認</div>
+      </div>
+      <div class="waka solo">
+        <div class="speaker">光源氏 → 明石の君（返し）</div>
+        <div class="poem">生ひそめし　根も深ければ　武隈の　松に小松の　千代を並べむ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">この子が生まれた宿縁も深いのだから、武隈の相生の松に小松を並べるように、いつか親子ともに末永く時を重ねましょう。</div>
+        <div class="source">出典：『源氏物語』薄雲巻（原典）。四季の美（shikinobi.com）・roudokus.com・logiqa.jp・text.yarukifinder.com など複数の対訳サイトで原文・歌意の一致を確認</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>冬の大堰、明石の君の物思い</h3><p>冬になるにつれ、大堰川のほとりの住まいはいよいよ心細さを増していく。明石の君は「不思議なほどにさまざまな物思いをする運命だったわが身だ」と嘆きながら、いつも以上に幼い姫君を撫でつけ、その将来を思い続ける日々を送る。</p></div>
+      <div class="tl-item"><h3>尼君の説得、姫君を委ねる決意</h3><p>思いやり深い明石の尼君は、姫君の将来を思うなら紫の上のもとで育てられるほうがよいと、娘である明石の君を説得する。田舎育ちの身分の低さが姫君の将来の妨げになることを恐れる明石の君も、母の言葉に心を動かされ、辛い決断を受け入れようとする。</p></div>
+      <div class="tl-item"><h3>雪の朝の贈答歌、迫る別れの予感</h3><p>雪や霰の降りしきる中、明石の君は普段は出ない端近まで進み出て汀の氷を眺めながら物思いに沈む。乳母との間で「雪深み深山の道は晴れずとも」「雪間なき吉野の山を」の歌を交わし、便りが絶えないことを願い合う。その姿は、身分こそ低くとも気高く、女房たちの目にも忘れがたく映る。</p></div>
+      <div class="tl-item"><h3>源氏、大堰を訪れ姫君を迎える</h3><p>雪が少し解けたころ、源氏が大堰を訪れる。今日こそ姫君を迎えに来たのだと悟った明石の君は胸がふさがれる思いがしつつも、これは自分自身が受け入れた道であって人のせいにはできないと思い定める。源氏は明石の君の「心の闇」を思いやり、繰り返し言葉を尽くしてその夜を明かす。</p></div>
+      <div class="tl-item"><h3>母子の別れ、大堰から二条院へ</h3><p>何も知らない姫君は無邪気に車に乗ることを急ぎ、母の袖を引いて「乗り給へ」とかわいらしくねだる。明石の君は「末遠き二葉の松に引き別れ」の歌を最後まで詠み切れぬほど泣き崩れ、源氏も「生ひそめし根も深ければ」と慰めの歌を返す。暗くなってから一行は二条院に到着し、姫君は道中で寝入っていたが、しばらくすると母の姿が見えないことに気づき、しくしくと泣き出す。</p></div>
+      <div class="tl-item"><h3>姫君、紫の上に懐き、盛大な袴着</h3><p>紫の上は乳母を呼んで姫君を慰め、やがて姫君は紫の上によく懐くようになる。紫の上はこの上なくかわいらしい子を得たと喜び、実の子のように大切に世話をする。二条院では姫君の袴着の儀式が盛大に執り行われ、紫の上も姫君の愛らしさに、明石の君への複雑な思いを少しずつ和らげていく。</p></div>
+      <div class="tl-item"><h3>太政大臣の死去と相次ぐ天変地異</h3><p>翌年、葵の上・頭中将の父であり、かつての左大臣、のちに冷泉帝即位時に太政大臣となっていた人物が、66歳で亡くなる。政界の重鎮を失ったこの年は、それに続いて世の中に異変が多く、朝廷にも神仏のお告げがしきりにあり、天候にも異常な現象が見られて、人々は不安を募らせる。</p></div>
+      <div class="tl-item"><h3>藤壺の崩御</h3><p>正月から病に臥していた藤壺を、冷泉帝は深く案じて三条の宮への見舞いの行幸を行うが、3月、藤壺は37歳でついに崩御する。源氏の悲しみは計り知れず、悲嘆のあまり念誦堂に籠って泣き暮らし、夕日にたなびく薄雲を見て「入り日さす峰にたなびく薄雲は」の歌を、誰に知られることもなくひとり詠む。</p></div>
+      <div class="tl-item"><h3>夜居の僧都、冷泉帝に出生の秘密を告白</h3><p>藤壺の四十九日の法要が済んだころ、藤壺の母后の代から祈りの僧として仕え、藤壺からも深く信頼されていた70歳ほどの夜居の僧都が、冷泉帝に密かに重大な事実を打ち明ける。帝が藤壺の胎内にあったとき、母后が深く思い悩んで祈祷を命じたこと、そして帝の実父が光源氏であることを、僧都は「黙っていてはかえって罪になる」と覚悟のうえで奏上する。</p></div>
+      <div class="tl-item"><h3>冷泉帝の譲位の申し出と源氏の固辞</h3><p>出生の秘密を知った冷泉帝は激しく動揺し、実の父を臣下のままにしていることが相次ぐ天変地異の原因ではないかと思い悩む。帝は源氏に帝位を譲ろうと申し出るが、源氏は「決してあってはならないことです」と、いつもと変わらぬ様子できっぱりと固辞する。一方で源氏は、帝の態度の変化から、秘密が漏れたことを内心で察して穏やかならぬ思いを抱く。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 明石の君の決断</div>
+      <h3>受け身ではなく、自ら選び取った別れ</h3>
+      <p>明石の君は、姫君を奪われる一方的な被害者として描かれてはいません。乳母との歌のやり取りや「人やりならず（人のせいではなく、自分の意志によること）」という心内語が示すように、彼女は身分の低さゆえの限界を冷静に見つめたうえで、娘の将来のために自らこの別れを引き受けています。悲しみの深さと、判断の主体性が同時に描かれている点が、この場面の読みどころです。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 薄雲という象徴</div>
+      <h3>誰にも知られない、ひとりだけの喪の歌</h3>
+      <p>帖名の由来となった「入り日さす峰にたなびく薄雲は」の歌は、地の文で「これはだれも知らぬ源氏の歌である」と念押しされています。公的な立場にある源氏が、藤壺への思いを誰にも見せられないまま、ひとり胸のうちだけで悼む姿は、この巻全体を覆う、声に出せない悲しみの象徴として描かれています。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 明石の君の母性と身分の葛藤</div>
+      <h3>「限りなき人」に劣らぬ気高さとして描かれる庶民性</h3>
+      <p>雪の朝、汀の氷を眺めて物思いに沈む明石の君の姿は、地の文で「限りなき人と聞こゆとも、かうこそはおはすらめ（この上なく高貴な方と申し上げても、きっとこのようであろう）」と評されています。身分の低さを自ら「口惜し」と意識する明石の君を、語り手はむしろ最高の身分の女性にも劣らぬ気高さで描いており、身分と母性という物語全体を貫くテーマが、ここで逆説的に肯定されているとも読めます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 藤壺の死が源氏に与えた影響</div>
+      <h3>喪失と、政治的立場の強化という二面性</h3>
+      <p>藤壺の崩御は、源氏にとって生涯の恋の対象であり精神的な支柱でもあった存在の喪失です。しかし同時に、この死をきっかけに冷泉帝が出生の秘密を知り、譲位を申し出るまでに至ったことで、結果として源氏の朝廷での立場はいっそう強固なものになっていきます。個人的な深い悲しみと、物語構造上の政治的転換とが、一つの死のうちに同居している点は注目に値します。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 出生の秘密という主題</div>
+      <h3>忠誠ゆえに明かされる、隠されてきた真実</h3>
+      <p>夜居の僧都が長年守り通してきた秘密を明かすのは、帝を裏切るためではなく、天変地異を案じ、藤壺と冷泉帝双方への忠誠と責任感からの行動として描かれています。桐壺帝の代から三代にわたって隠し通されてきた真実が、皮肉にも最も忠実な人物の口から語られるという逆説は、この物語全体を貫く「隠されたものはいつか明るみに出る」というテーマの、ひとつの到達点といえるでしょう。</p>
+    </div>
+    <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+  </section>
+
+  <!-- 7. 特筆事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+    <div class="note-card">
+      <h3>物語前半の中心人物・藤壺の退場</h3>
+      <p>桐壺帝の后として登場して以来、光源氏の恋と苦悩の中心にあり続けた藤壺が、この帖でついに世を去る。物語前半を通じて源氏の運命を大きく動かし続けてきた人物の退場は、『源氏物語』全体の構成上、ひとつの大きな区切りとなる出来事である。</p>
+    </div>
+    <div class="note-card">
+      <h3>冷泉帝の出生の秘密が明かされる転換点</h3>
+      <p>桐壺帝の代から隠され続けてきた冷泉帝の出生の秘密が、ここで初めて当事者である帝自身に明かされる。この事実の露見は、帝からの譲位の申し出と源氏の固辞という直接の展開にとどまらず、後の「藤裏葉」での源氏の准太上天皇待遇にもつながる、物語全体を貫く長い伏線の起点として位置づけられる。</p>
+    </div>
+    <div class="note-card">
+      <h3>明石の姫君の引き取りが意味する未来</h3>
+      <p>明石の姫君が紫の上のもとに正式に引き取られたことは、単なる養育者の変更にとどまらない。祖父・明石入道がかつて見た夢に託した「将来の国母」という願いに向けて、身分の低い母のもとを離れ、高貴な養母のもとで教育を受ける道が、この帖から本格的に開かれている。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 19;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  genji:      {x:150, y:70,  label:'光源氏'},
+  murasaki:   {x:520, y:70,  label:'紫の上'},
+  fujitsubo:  {x:150, y:230, label:'藤壺（崩御）'},
+  reizei:     {x:520, y:230, label:'冷泉帝'},
+  akashikimi: {x:150, y:390, label:'明石の君'},
+  akashihime: {x:520, y:390, label:'明石の姫君'},
+  yoi:        {x:335, y:540, label:'夜居の僧都'}
+};
+const edges = [
+  {a:'genji', b:'murasaki', label:'正妻・夫婦', type:'kinship'},
+  {a:'genji', b:'fujitsubo', label:'禁じられた恋・実子をもうけた仲', type:'emotion'},
+  {a:'fujitsubo', b:'reizei', label:'実母（出生の秘密）', type:'kinship'},
+  {a:'genji', b:'reizei', label:'実父（出生の秘密）', type:'kinship'},
+  {a:'genji', b:'akashikimi', label:'姫君の母・明石以来の縁', type:'kinship'},
+  {a:'genji', b:'akashihime', label:'実の父', type:'kinship'},
+  {a:'akashikimi', b:'akashihime', label:'実母', type:'kinship'},
+  {a:'murasaki', b:'akashihime', label:'養母子（この帖で実現）', type:'alliance'},
+  {a:'murasaki', b:'akashikimi', label:'姫君を通じた複雑な思い', type:'emotion'},
+  {a:'yoi', b:'fujitsubo', label:'加持祈祷の僧・忠誠', type:'loyalty'},
+  {a:'yoi', b:'reizei', label:'出生の秘密を奏上（忠誠ゆえ）', type:'loyalty'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  const w = Math.max(96, n.label.length*13);
+  g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
