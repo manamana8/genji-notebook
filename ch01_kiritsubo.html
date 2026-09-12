@@ -390,6 +390,7 @@
 </main>
 
 <button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+<script src="chapters-data.js"></script>
 
 <script>
 function showScenePopup(title, desc){
@@ -400,21 +401,6 @@ function showScenePopup(title, desc){
 }
 
 /* ===== header nav (shared) ===== */
-const chapters = [
- {n:1,t:"桐壺",f:"ch01_kiritsubo.html",done:true},
- {n:2,t:"帚木",f:"ch02_hahakigi.html",done:true},
- {n:3,t:"空蝉"},{n:4,t:"夕顔"},{n:5,t:"若紫"},{n:6,t:"末摘花"},
- {n:7,t:"紅葉賀"},{n:8,t:"花宴"},{n:9,t:"葵"},{n:10,t:"賢木"},{n:11,t:"花散里"},
- {n:12,t:"須磨"},{n:13,t:"明石"},{n:14,t:"澪標"},{n:15,t:"蓬生"},{n:16,t:"関屋"},
- {n:17,t:"絵合"},{n:18,t:"松風"},{n:19,t:"薄雲"},{n:20,t:"朝顔"},{n:21,t:"少女"},
- {n:22,t:"玉鬘"},{n:23,t:"初音"},{n:24,t:"胡蝶"},{n:25,t:"蛍"},{n:26,t:"常夏"},
- {n:27,t:"篝火"},{n:28,t:"野分"},{n:29,t:"行幸"},{n:30,t:"藤袴"},{n:31,t:"真木柱"},
- {n:32,t:"梅枝"},{n:33,t:"藤裏葉"},{n:34,t:"若菜上"},{n:35,t:"若菜下"},{n:36,t:"柏木"},
- {n:37,t:"横笛"},{n:38,t:"鈴虫"},{n:39,t:"夕霧"},{n:40,t:"御法"},{n:41,t:"幻"},
- {n:42,t:"匂宮"},{n:43,t:"紅梅"},{n:44,t:"竹河"},{n:45,t:"橋姫"},{n:46,t:"椎本"},
- {n:47,t:"総角"},{n:48,t:"早蕨"},{n:49,t:"宿木"},{n:50,t:"東屋"},{n:51,t:"浮舟"},
- {n:52,t:"蜻蛉"},{n:53,t:"手習"},{n:54,t:"夢浮橋"}
-];
 const CURRENT = 1;
 const tabsEl = document.getElementById('tabs');
 const jumpEl = document.getElementById('jump');
