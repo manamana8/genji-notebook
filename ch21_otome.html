@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第21帖 少女 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --gray:#8c8579;
+    --kon:#2c3a63;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+  .person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:var(--kon);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:18px; height:3px; display:inline-block;}
+  .legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka.solo{grid-column:1 / -1;}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+  .waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第21帖</div>
+    <h1>少女</h1>
+    <div class="kana">おとめ</div>
+    <p class="lead">光源氏33歳の夏から35歳冬にかけての、数年にわたる物語。源氏と葵の上の子・夕霧が12歳で元服するが、源氏はあえて夕霧を低い六位にとどめ、大学に入れて学問に専念させる。夕霧は祖母・大宮のもとで姉弟のように育った内大臣（頭中将）の娘・雲居雁と幼い恋仲になるが、六位風情の婿では釣り合わぬとする内大臣に仲を裂かれ、雲居雁は父の邸へ引き取られてしまう。同じ頃、源氏の養女である前斎宮は冷泉帝の中宮（秋好中宮）に立后し、源氏は太政大臣に、内大臣はかつての頭中将から内大臣にそれぞれ昇進する。傷心の夕霧は五節の舞姫として献上された惟光の娘（のちの藤典侍）に心惹かれて文を送るが、思いは実らない。夕霧はやがて進士の試験に合格して侍従に任じられる。そして源氏は、六条御息所の旧邸を含む六条に四町を占める広大な邸・六条院を完成させ、紫の上・花散里・秋好中宮・明石の君をそれぞれ四季の御殿に迎え、その栄華は頂点を迎える。</p>
+  </div>
+
+  <!-- 1. 主な登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">33〜35歳</span></div><p>内大臣を経て太政大臣に昇進し、権勢の頂点に立つ。息子・夕霧をあえて低い位にとどめて学問を仕込む一方、六条院を完成させ、これまで縁を結んだ女君たちをそれぞれの御殿に迎える、栄華の総仕上げを行う。</p></div>
+      <div class="person"><div class="row"><span class="name">夕霧</span><span class="age">12歳（元服）</span></div><p>光源氏と葵の上の子。父の方針により六位にとどめられ大学で学問に励む「まめ人」の造形の原点となる人物。祖母・大宮のもとで育った雲居雁を慕うが、身分違いを理由に仲を裂かれ、初めての恋の挫折を経験する。</p></div>
+      <div class="person"><div class="row"><span class="name">雲居雁</span><span class="age">14歳前後</span></div><p>内大臣（頭中将）の次女。両親の離別後、父方の祖母・大宮のもとで夕霧と姉弟のように育てられた。夕霧との仲を父に引き裂かれ、霧の中を飛ぶ雁に自分を重ねてつぶやいた独詠が、後世「雲居雁」という呼び名の由来となった。</p><p class="unconfirmed-age">夕霧より2歳年上とされるが、原典に明確な年齢記載はなく、複数の解説サイトによる推定です。</p></div>
+      <div class="person"><div class="row"><span class="name">内大臣（頭中将）</span><span class="age">源氏と同世代</span></div><p>これまで「頭中将」の名で登場してきた源氏の親友であり競争相手。立后争いで源氏に敗れ右大将から内大臣に昇進する。娘・雲居雁と六位の夕霧との仲を知って激怒し、大宮のもとから娘を引き取ってしまう。</p></div>
+      <div class="person"><div class="row"><span class="name">大宮</span><span class="age">高齢（不詳）</span></div><p>亡き葵の上と内大臣（頭中将）の母。三条の邸で孫の夕霧と雲居雁を分け隔てなく養育してきたが、息子・内大臣に二人の仲を咎められ、孫を引き離される悲しみを味わう。</p><p class="unconfirmed-age">原典に具体的な年齢の記載はなく、確認できません。</p></div>
+      <div class="person"><div class="row"><span class="name">藤典侍（五節の君）</span><span class="age">年齢不詳</span></div><p>源氏の腹心・惟光の娘で、宮中行事「五節」の舞姫として献上される。夕霧はその美しさに惹かれて文を送るが、彼女は宮仕えの身となることが決まっており、この帖では想いは実らない。のちに夕霧の妻の一人となる人物。</p></div>
+    </div>
+  </section>
+
+  <!-- 2. 人物系図 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 900 430" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+      <span><i style="background:var(--kon);"></i>政争・対立</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+    </div>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 三条の大宮邸から、二条東院・六条院へ</h2></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="700" height="380" fill="var(--paper)"/>
+
+        <g class="scene-room" onclick="showScenePopup('三条の大宮邸','夕霧と雲居雁が幼い頃から姉弟のように育てられた、祖母・大宮の邸。二人の恋仲が発覚し、内大臣が雲居雁を自邸に引き取ると宣言したことで、この邸は二人が引き裂かれる場ともなった。')">
+        <rect x="30" y="30" width="290" height="90" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.6" rx="4"/>
+        <text x="175" y="65" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">三条の大宮邸</text>
+        <text x="175" y="85" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（夕霧と雲居雁が育った場）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('二条東院','源氏が夕霧のために新たに学問所を設けた邸。あえて六位にとどめられた夕霧が、世間の見る目を気にせず学問に打ち込めるようにという、源氏なりの教育的配慮が込められている。')">
+        <rect x="380" y="30" width="290" height="90" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.4" rx="4"/>
+        <text x="525" y="65" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">二条東院</text>
+        <text x="525" y="85" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（夕霧の学問所）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('六条院（四町・四季の御殿）','六条御息所の旧邸を含む、六条に四町を占める源氏の新邸。春（東南）に紫の上、夏（東北）に花散里、秋（西南）に秋好中宮、冬（西北）に明石の君を迎え、四季それぞれの趣向で造園された、源氏の栄華を象徴する大邸宅。')">
+        <rect x="205" y="220" width="290" height="90" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.4" rx="4"/>
+        <text x="350" y="255" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">六条院（四町・四季の御殿）</text>
+        <text x="350" y="275" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（源氏の栄華の象徴）</text>
+        </g>
+
+        <text x="350" y="345" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">三条の大宮邸（幼い恋と別れ）― 二条東院（夕霧の学問）― 六条院（源氏の栄華の完成）、という三つの場（推定・想像図）</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">この帖は、夕霧と雲居雁が幼少期を過ごした三条の大宮邸を起点に、夕霧が学問に打ち込む二条東院、そして源氏の栄華が完成する六条院という三つの場を通じて、「若い世代の挫折」と「父の世代の絶頂」とが対照的に描かれている点が読みどころである。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>元服（げんぷく）</dt>
+      <dd>貴族の男子が成人したことを示す儀式。夕霧はこの帖の冒頭、12歳で元服を迎えるが、源氏の意向で通常より低い六位を授けられた。</dd>
+      <dt>六位（ろくい）</dt>
+      <dd>官位の一つで、上流貴族の子弟としては異例に低い位。源氏はあえて夕霧をこの位にとどめ、大学で学問を修めさせることで、世間知らずの貴公子にしないための教育方針とした。</dd>
+      <dt>五節（ごせち）</dt>
+      <dd>新嘗祭・大嘗祭などの宮中行事で行われる舞と、それを舞う舞姫（少女）たちの行事の総称。本帖の巻名「少女（をとめ）」は、この五節の舞姫を意味する歌語に由来する。</dd>
+      <dt>太政大臣・内大臣（だいじょうだいじん・ないだいじん）</dt>
+      <dd>いずれも朝廷の最高幹部の官職。本帖で源氏は太政大臣に、これまで「頭中将」「右大将」と呼ばれてきた人物は内大臣にそれぞれ昇進し、以後「内大臣」と呼ばれるようになる。</dd>
+      <dt>六条院（ろくじょういん）</dt>
+      <dd>源氏が六条に造営した、四町を占める広大な邸。春夏秋冬をテーマに四つの区画に分け、紫の上・花散里・秋好中宮・明石の君をそれぞれの御殿に迎えた、源氏の栄華を象徴する邸宅。</dd>
+    </dl>
+    <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">光源氏 → 夕霧（帖名の由来となった歌）</div>
+        <div class="poem">をとめごも　神さびぬらし　天つ袖　ふるき世の友　よはひ経ぬれば</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">五節の舞姫たちも、年を経て神々しくなったようだ。昔からの友であるこの私も、これだけ年を重ねたのだから。</div>
+        <div class="source">出典：『源氏物語』少女巻（原典）。松岡正剛「千夜千冊」および複数の古典解説サイトで、五節の舞を見た源氏が自らの若い日を思い出して詠んだ、帖名由来の一首として確認。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">夕霧 → 光源氏（返し・帖名の由来となったもう一首）</div>
+        <div class="poem">日かげにも　しるかりけめや　をとめごが　あまの羽袖に　かけし心は</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">日の光にもはっきりとわかったことでしょうか、五節の舞姫の天の羽衣の袖に、私がひそかに心を寄せていたことは。</div>
+        <div class="source">出典：『源氏物語』少女巻（原典）。同じく複数の古典解説サイトで、父・源氏の歌に対する夕霧の返しとして確認。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">夕霧 → 雲居雁（引き裂かれる場での贈歌）</div>
+        <div class="poem">くれなゐの　涙にふかき　袖の色を　あさみどりにや　いひしをるべき</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">貴女を恋い慕って血の涙に深く染まった私のこの袖の色を、六位の袍の浅緑色だと言っておとしめてよいものでしょうか。</div>
+        <div class="source">出典：『源氏物語』少女巻（原典）。原文朗読サイト「roudokus.com」に訳とともに掲載。乳母に六位風情と見下されたことへの夕霧の悔しさが詠まれている。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">雲居雁 → 夕霧（返し）</div>
+        <div class="poem">いろいろに　身のうきほどの　知らるるは　いかに染めける　中の衣ぞ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">さまざまなことにつけて、わが身の巡り合わせのつらさが思い知らされますが、私たち二人の仲は、いったいどのように定められているのでしょうか。</div>
+        <div class="source">出典：『源氏物語』少女巻（原典）。同じく「roudokus.com」に訳とともに掲載。二人がこの歌を詠み終える前に内大臣が現れ、仲を裂かれる場面の直前の贈答歌。</div>
+      </div>
+      <div class="waka solo">
+        <div class="speaker">雲居雁のつぶやき（古歌の一部を引いたもの・呼び名の由来）</div>
+        <div class="poem">霧深く　雲居の雁も　わがごとや　晴れせずものは　悲しかるらむ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">霧の深い空を飛ぶ雁も、私と同じ気持ちなのだろうか。心の霧が晴れないのは、さぞ悲しいことだろう。</div>
+        <div class="unconfirmed">出典未詳の古歌の一部を、雲居雁が夕霧と引き裂かれた悲しみに寄せて口ずさんだものとされる（源氏釈所引）。この一節が「雲居雁」という呼び名の由来となったが、原典本文には彼女の固有名は記されておらず、後世の呼称であることに注意。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>夕霧、12歳で元服</h3><p>光源氏と葵の上の子・夕霧が12歳で元服を迎える。世間は源氏の子だけに高い位を予想するが、源氏はあえて夕霧を低い六位にとどめ、大学に入れて学問を修めさせるという異例の方針をとる。</p></div>
+      <div class="tl-item"><h3>二条東院での学問修行</h3><p>源氏は夕霧のために二条東院に学問所を整え、漢学に専念させる。世間知らずの貴公子にせず、実務に堪える人材に育てたいという源氏なりの教育方針が示される。</p></div>
+      <div class="tl-item"><h3>夕霧と雲居雁の幼い恋</h3><p>三条の大宮邸で姉弟のように育てられてきた夕霧と、内大臣（頭中将）の娘・雲居雁は、成長するにつれて互いに恋心を抱くようになる。周囲もうすうす気づいてはいたが、あえて知らぬふりを続けていた。</p></div>
+      <div class="tl-item"><h3>内大臣の激怒、雲居雁の引き取り</h3><p>女房たちの噂話から二人の仲を知った内大臣は激怒し、六位風情の婿では釣り合わないとして、大宮のもとから雲居雁を自邸へ引き取ると宣言する。大宮は孫を引き離される悲しみに嘆く。</p></div>
+      <div class="tl-item"><h3>引っ越し当日、束の間の対面と贈答歌</h3><p>雲居雁が父の邸へ移る当日、乳母の計らいで夕霧と雲居雁は夕闇に紛れて束の間対面する。互いに涙ながらに別れを惜しみ、贈答歌を交わすが、最後まで言い終わらぬうちに内大臣が現れ、女房に「六位風情との縁」と揶揄されながら二人は引き裂かれてしまう。</p></div>
+      <div class="tl-item"><h3>立后争いと源氏・内大臣の昇進</h3><p>冷泉帝の中宮を誰にするかという立后争いが起こり、源氏が後見する前斎宮（六条御息所の娘）が、内大臣の娘・弘徽殿女御を抑えて秋好中宮として立后する。源氏は太政大臣に、内大臣（頭中将）はこれを機に内大臣に昇進する。</p></div>
+      <div class="tl-item"><h3>五節の舞姫・藤典侍への恋文</h3><p>冬、新嘗祭の五節の舞が行われ、源氏の腹心・惟光がその娘を舞姫として献上する。夕霧はその美しさに心惹かれて文を送るが、彼女は宮仕えする身の上と決まっており、思いは実らないまま終わる。</p></div>
+      <div class="tl-item"><h3>夕霧、進士に合格し侍従に</h3><p>学問に励んだ夕霧は、翌年春、帝の御前で行われる試験（進士）に合格し、五位の侍従に任じられる。六位にとどめられた雌伏の期間を経て、着実に官途を歩み始める。</p></div>
+      <div class="tl-item"><h3>六条院の完成、四季の御殿への配置</h3><p>源氏は、亡き六条御息所の旧邸を含む六条の地に、四町を占める広大な邸・六条院を完成させる。春夏秋冬をテーマとした四つの御殿に、紫の上（春）・花散里（夏）・秋好中宮（秋）・明石の君（冬）をそれぞれ迎え入れ、源氏の栄華はひとつの頂点を迎える。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 源氏があえて夕霧を六位にとどめた意図</div>
+      <h3>権勢の中にあっても崩さない、実務教育への信念</h3>
+      <p>絶頂にある源氏があえて我が子を低い位にとどめ、学問を修めさせるという選択は、単なる厳しさではなく、家柄だけに頼らない実務能力を子に身につけさせたいという、源氏なりの教育観の表れとして描かれている点が読みどころです。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 雲居雁の「わがごとや」に込めた心情</div>
+      <h3>自分の言葉ではなく、古歌に託した悲しみ</h3>
+      <p>雲居雁が夕霧との別れの悲しみを、自作の歌ではなく古歌の一節を口ずさむ形で表したことは、幼さゆえにまだ自分の言葉で心情を歌に詠みきれない、少女らしい心の動きとして読み取ることができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 頭中将との因縁の再燃</div>
+      <h3>親友であり競争相手でもある関係が、子の世代に持ち越される</h3>
+      <p>立后争いで源氏に敗れた内大臣が、その鬱憤を晴らすように娘と夕霧の仲を裂く展開は、若い頃からの源氏との競争関係が、そのまま子の世代の恋愛にまで影を落とす構図として読むことができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 六条院の完成が告げるもの</div>
+      <h3>栄華の頂点は、同時に物語の折り返し地点でもある</h3>
+      <p>四季の御殿に女君たちを配した六条院の完成は、源氏の栄華がひとつの頂点に達したことを象徴する一方、物語全体から見ればここを境に、次第に翳りや代償が描かれていく折り返し地点としての性格も持つとされます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 「まめ人」夕霧の造形の起点</div>
+      <h3>色好みの父とは対照的な、実直な息子の物語の始まり</h3>
+      <p>六位にとどめられ、雲居雁との恋に挫折し、なお五節の君への恋も実らないという、この帖で重ねて描かれる夕霧の不器用な恋愛は、のちに「まめ人」（実直な人）として父・源氏と対照的に語られる夕霧像の出発点として位置づけられます。</p>
+    </div>
+    <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+  </section>
+
+  <!-- 7. 特筆事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+    <div class="note-card">
+      <h3>六条院の完成は、物語前半の集大成</h3>
+      <p>春夏秋冬の四町からなる六条院の完成は、これまで源氏が関わってきた紫の上・花散里・明石の君・秋好中宮という主要な女君たちが一堂に会する場を作り上げる、物語前半の集大成といえる出来事である。</p>
+    </div>
+    <div class="note-card">
+      <h3>「雲居雁」という呼び名の由来となった帖</h3>
+      <p>本帖で彼女が口ずさんだ「雲居の雁もわがごとや」という古歌の一節が、後世「雲居雁」という呼び名の由来となった。原典本文には固有名として明記されていない点に留意したい。</p>
+    </div>
+    <div class="note-card">
+      <h3>藤典侍との出会いは、後年への伏線</h3>
+      <p>この帖では実らなかった夕霧と五節の君（のちの藤典侍）との縁は、物語がさらに進んだのちに夕霧の妻の一人として再び結ばれることになる、長期的な伏線としての性格を持つ。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 21;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  genji:      {x:120, y:60,  label:'光源氏'},
+  omiya:      {x:450, y:40,  label:'大宮'},
+  naidaijin:  {x:780, y:60,  label:'内大臣（頭中将）'},
+  yugiri:     {x:120, y:230, label:'夕霧'},
+  kumoi:      {x:450, y:230, label:'雲居雁'},
+  tonaishi:   {x:780, y:230, label:'藤典侍（五節の君）'},
+  koremitsu:  {x:780, y:380, label:'惟光'}
+};
+const edges = [
+  {a:'genji', b:'yugiri', label:'父子（あえて六位にとどめる）', type:'kinship'},
+  {a:'genji', b:'omiya', label:'岳母（亡き葵の上の母）', type:'kinship'},
+  {a:'omiya', b:'yugiri', label:'祖母・孫（三条邸で養育）', type:'kinship'},
+  {a:'omiya', b:'kumoi', label:'祖母・孫（三条邸で養育）', type:'kinship'},
+  {a:'kumoi', b:'naidaijin', label:'父娘', type:'kinship'},
+  {a:'koremitsu', b:'tonaishi', label:'父娘', type:'kinship'},
+  {a:'yugiri', b:'kumoi', label:'幼馴染の恋、引き裂かれる', type:'emotion'},
+  {a:'yugiri', b:'tonaishi', label:'五節の舞姫への恋文、片思い', type:'emotion'},
+  {a:'genji', b:'naidaijin', label:'立后争いでの対立、夕霧の身分をめぐる確執', type:'conflict'},
+  {a:'koremitsu', b:'genji', label:'忠臣（娘を五節の舞姫として献上）', type:'loyalty'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  const w = Math.max(96, n.label.length*13);
+  g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
