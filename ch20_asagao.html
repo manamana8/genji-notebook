@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第20帖 朝顔 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --gray:#8c8579;
+    --kon:#2c3a63;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+  .person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:var(--kon);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:18px; height:3px; display:inline-block;}
+  .legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka.solo{grid-column:1 / -1;}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+  .waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第20帖</div>
+    <h1>朝顔</h1>
+    <div class="kana">あさがお</div>
+    <p class="lead">光源氏32歳の秋から冬にかけての物語。藤壺の崩御と同じ頃、源氏の叔父・桃園式部卿宮も世を去り、その娘である朝顔の姫君は賀茂の斎院を退いて桃園邸にこもった。若い頃から朝顔に執着し続けていた源氏は、彼女と同居する老いた叔母・女五の宮の見舞いにかこつけて頻繁に桃園邸へ通い、紫の上を不安にさせる。朝顔も源氏に好意を抱いてはいたが、深い仲になれば六条御息所と同じく不幸になるだろうと恐れ、最後まで源氏を拒み続けた。朝顔への思いに区切りをつけた源氏は、雪の降り積もった夜、二条院で紫の上をなぐさめながら、藤壺をはじめこれまで関わった女性たちのことを語って過去を振り返る。その夜、源氏の夢に藤壺が現れ、出生の秘密が漏れたことを恨み言のように告げる。翌日、源氏は人知れず藤壺のために供養を営み、来世での再会を願うのだった。</p>
+  </div>
+
+  <!-- 1. 主な登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">32歳</span></div><p>内大臣として権勢を誇る一方、身近な人々を次々と失う年回りを迎えている。朝顔への十数年来の恋心にひとつの区切りをつけつつ、雪の夜には紫の上への愛情を確かめ、過去の女性たちへの思いを静かに語る、内省的な姿が描かれる。</p></div>
+      <div class="person"><div class="row"><span class="name">朝顔の姫君（前斎院）</span><span class="age">推定32歳前後</span></div><p>桃園式部卿宮の娘で光源氏のいとこにあたる、賀茂の斎院を退いたばかりの女性。教養高く筆跡も美しいが、源氏と深い仲になれば不幸になると恐れ、好意を抱きながらも最後まで肉体関係を拒み通す、この帖の実質的なヒロイン。</p><p class="unconfirmed-age">正確な年齢は原典に明記がなく、複数の解説サイトで「光源氏とほぼ同年齢」とされる推定にとどまる。確定的な年齢は確認できません。</p></div>
+      <div class="person"><div class="row"><span class="name">紫の上</span><span class="age">24歳</span></div><p>源氏の正妻格。朝顔との噂に嫉妬し塞ぎ込むが、源氏になだめられ、これまでの女性たちの話を聞くうちに藤壺の面影を自分に重ねられていることに気づく。この帖を境に物語のヒロインとして存在感を増していく人物とされる。</p></div>
+      <div class="person"><div class="row"><span class="name">源典侍</span><span class="age">70歳前後</span></div><p>「紅葉賀」「葵」に続き三度目の登場となる、年老いてなお色好みで知られる女官。出家した女五の宮の弟子格として桃園邸に同居しており、この帖であらためて「源典侍といひし人」として素性が明かされる。</p><p class="unconfirmed-age">「紅葉賀」初登場時に57～58歳とされることから、19歳から32歳までの13年を加えた推定年齢。原典に直接の年齢記載はなく、推定です。</p></div>
+    </div>
+  </section>
+
+  <!-- 2. 人物系図 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 900 430" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+      <span><i style="background:var(--kon);"></i>政争・対立</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+    </div>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 桃園邸から二条院へ、退いた斎院という立場</h2></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="700" height="380" fill="var(--paper)"/>
+
+        <g class="scene-room" onclick="showScenePopup('桃園邸','亡き桃園式部卿宮の邸。娘の朝顔の姫君が、伯母である女五の宮、そして女五の宮の弟子格として同居する源典侍とともに暮らす。源氏は女五の宮の見舞いを口実に頻繁にこの邸を訪れ、朝顔への求愛を重ねるが、朝顔は御簾の内から一歩も出ようとしない。')">
+        <rect x="30" y="30" width="290" height="90" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.6" rx="4"/>
+        <text x="175" y="65" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">桃園邸</text>
+        <text x="175" y="85" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（朝顔・女五の宮・源典侍の住まい）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('二条院','源氏の本邸。雪の降り積もった夜、源氏は童女に雪まろばしをさせて庭を眺めながら、塞ぎ込む紫の上をなぐさめる。藤壺をはじめこれまでの女性たちのことを語り合ううち、その夜源氏の夢に藤壺が現れる、この帖のもう一つの中心舞台。')">
+        <rect x="380" y="30" width="290" height="90" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.4" rx="4"/>
+        <text x="525" y="65" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">二条院</text>
+        <text x="525" y="85" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（紫の上と過ごす雪の夜）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('賀茂の斎院（退任後の対比）','朝顔がかつて長く務めた賀茂神社の斎院。神に仕える身であった間は源氏との仲を厳しく戒められていたが、父の死により退任し喪に服す今、以前より源氏に近づかれやすい立場になった。神域を退いてなお源氏を拒み通す朝顔の意志の強さが、かつての斎院という立場と対比的に描かれる。')">
+        <rect x="205" y="220" width="290" height="90" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.4" rx="4"/>
+        <text x="350" y="255" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">賀茂の斎院（退任後）</text>
+        <text x="350" y="275" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（かつての立場との対比）</text>
+        </g>
+
+        <text x="350" y="345" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">桃園邸（朝顔への求愛）― 二条院（紫の上との雪の夜）― 賀茂の斎院（退いた身という対比）、という三つの場（推定・想像図）</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">この帖は、源氏が朝顔を訪ねる桃園邸と、紫の上と過ごす二条院という二つの場を往還しながら進み、神域を退いてなお心を動かさない朝顔の強さが、彼女のかつての斎院という立場と静かに対比されている点が読みどころである。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>斎院（さいいん）</dt>
+      <dd>賀茂神社に奉仕するために選ばれた、未婚の内親王または女王。朝顔の姫君は朱雀帝の時代から長く賀茂の斎院を務めていたが、父・桃園式部卿宮の死去にともない退任し、桃園邸にこもった。</dd>
+      <dt>式部卿宮（しきぶきょうのみや）</dt>
+      <dd>式部省の長官である式部卿に任じられた親王。本帖で亡くなる桃園式部卿宮は桐壺帝の弟であり、源氏の叔父、朝顔の姫君の父にあたる。</dd>
+      <dt>桃園（もものその）</dt>
+      <dd>桃園式部卿宮の邸があった地名、およびその邸自体を指す通称。朝顔の姫君はここで伯母の女五の宮、源典侍とともに暮らし、「桃園邸」「朝顔の姫君」という呼び名の由来ともなっている。</dd>
+      <dt>雪まろばし（ゆきまろばし）</dt>
+      <dd>降り積もった雪を丸めて大きな玉や築山のようなものを作る、平安時代の雪遊び。本帖では、月の澄んだ雪の夜、源氏が童女たちを庭に下ろしてこれをさせ、その様子を紫の上とともに眺める場面が描かれる。</dd>
+    </dl>
+    <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">光源氏 → 朝顔の姫君（帖名の由来となった贈歌）</div>
+        <div class="poem">見しおりの　露忘られぬ　朝顔の　花のさかりは　過ぎやしぬらん</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">昔お逢いした折の、あの露のように忘れられないあなたの面影は、朝顔の花の盛りのように、もう過ぎ去ってしまったのだろうか。</div>
+        <div class="source">出典：『源氏物語』朝顔巻（原典）。Wikipedia「朝顔（源氏物語）」が本帖の巻名の由来の一首として明記。「見しおりの」「見し折りの」、「過ぎやしぬらん」「過ぎやしるらん」などの表記の異同が複数のサイトに見られるが、いずれも同一歌の伝本による表記のゆれと確認できる。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">朝顔の姫君 → 光源氏（返し・帖名の由来となったもう一首）</div>
+        <div class="poem">秋はてて　霧の籬に　むすぼほれ　あるかなきかに　うつる朝顔</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">秋も終わって霧のかかる垣根にまつわりつき、あるかないかも分からないほどかすかに色あせて咲いている朝顔（＝この身）でございます。</div>
+        <div class="source">出典：『源氏物語』朝顔巻（原典）。Wikipedia「朝顔（源氏物語）」および複数の古典解説サイトで、光源氏の歌と対をなす帖名由来の一首として確認。「霧の籬に」を「露のまがきに」とする表記も見られるが、大勢の資料は「霧」としている。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>桃園式部卿宮の死去、朝顔の斎院退任</h3><p>藤壺の崩御とほぼ同じ頃、源氏の叔父にあたる桃園式部卿宮が世を去る。長く賀茂の斎院を務めていた娘の朝顔の姫君は、父の喪に服すため斎院を退き、伯母の女五の宮が暮らす桃園邸にこもることになった。</p></div>
+      <div class="tl-item"><h3>源氏、桃園邸へ通い始める</h3><p>若い頃から朝顔に執着し続けてきた源氏は、老いた女五の宮の見舞いという口実のもと、頻繁に桃園邸を訪れるようになる。斎院という神域を退いた今、以前より朝顔に近づきやすくなったことを、源氏は内心喜んでいる。</p></div>
+      <div class="tl-item"><h3>女五の宮の期待と朝顔の頑なさ</h3><p>女五の宮は、これほどの源氏が朝顔に執心していることを喜び、二人の結婚を期待して間を取り持とうとする。しかし朝顔自身は、源氏と深い仲になれば六条御息所のように不幸な結末をたどるだろうと恐れ、好意を抱きながらも決して心を開こうとはしない。</p></div>
+      <div class="tl-item"><h3>帖名由来の贈答歌</h3><p>昔の秋に見た朝顔の花のような朝顔の面影が忘れられないと訴える源氏に対し、朝顔は、秋も果てて霧の垣根にかすかに色あせて咲く花のような今の身の上だと、やんわりと身を引く歌を返す。二人の関係を象徴するこの贈答歌が、帖名「朝顔」の由来となった。</p></div>
+      <div class="tl-item"><h3>紫の上、朝顔との噂に思い悩む</h3><p>源氏が桃園邸に通う噂を聞いた紫の上は、朝顔が正妻に迎えられるのではないかと不安になり、塞ぎ込んでしまう。身分の高い朝顔が長年源氏に思われ続けてきたことを思うと、紫の上の心はいっそう乱れる。</p></div>
+      <div class="tl-item"><h3>朝顔、最後まで源氏を拒む</h3><p>源氏はなおも朝顔への未練を捨てきれず言い寄るが、朝顔の返事はいつもそっけなく、うちとけたものにはならない。世間の物笑いになることを恐れる源氏の焦りをよそに、朝顔はプラトニックな関係を貫き通す姿勢を崩さない。</p></div>
+      <div class="tl-item"><h3>雪の夜、二条院での雪まろばし</h3><p>月がくまなく澄みわたる雪の夜、二条院の庭には一面雪が降り積もる。源氏は童女たちを庭に下ろして雪まろばしをさせ、その様子を眺めながら、朝顔への思いにひとつの区切りをつけたことを紫の上に語って聞かせる。</p></div>
+      <div class="tl-item"><h3>過去の女性たちをめぐる語らい</h3><p>雪の庭を眺めながら、源氏は藤壺をはじめ、六条御息所、明石の君など、これまで関わってきた女性たちの人柄や思い出を紫の上に語って聞かせる。紫の上は自分と亡き藤壺の面影が重ねられていることにふと気づき、複雑な思いを抱く。</p></div>
+      <div class="tl-item"><h3>藤壺、源氏の夢枕に立つ</h3><p>藤壺への思いを語りながら床についたその夜、源氏の夢に藤壺が現れる。冷泉帝の出生の秘密が漏れたことを知り、その苦しみを恨み言のように源氏に告げる藤壺の姿に、源氏は涙を流して目覚める。</p></div>
+      <div class="tl-item"><h3>密やかな供養と来世への願い</h3><p>翌朝、源氏は人知れず藤壺のための供養を営み、この世で叶わなかった思いを来世でこそ遂げたいと静かに願う。朝顔への恋の終わりと、藤壺への尽きせぬ思いとが重なり合う中で、この帖は幕を閉じる。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 朝顔の拒絶の理由</div>
+      <h3>好意と恐れが同居する、賢明な自衛</h3>
+      <p>朝顔は源氏に好意を抱きながらも、六条御息所の悲劇を知るがゆえに、深い仲になることを恐れて拒み続けます。これは単なる冷淡さではなく、源氏の恋愛遍歴とその結末を冷静に見極めたうえでの、きわめて理性的な自己防衛として描かれている点が読みどころです。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 帖名由来歌に込められた対比</div>
+      <h3>「忘れられない面影」と「あるかなきかの花」</h3>
+      <p>源氏の歌が「忘れられない盛りの面影」を詠むのに対し、朝顔の返歌は「あるかないかに霧に紛れる花」を詠み、みずからをはかない存在として位置づけます。求める側と、距離を保とうとする側の温度差が、そのまま一対の歌に映し出されています。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 紫の上の成長という物語構造</div>
+      <h3>不安を抱えながら、なお愛される女性へ</h3>
+      <p>本帖では、朝顔をめぐる噂に苦しむ紫の上の姿が丁寧に描かれます。研究者の間では、この朝顔巻あたりから紫の上の人物像が深まり、あらためて物語の女主人公として据え直されたとする見方もあります。ゆらぐ妻の座への不安を抱えながらも、源氏に愛情を確かめられ、成熟した女性へと歩み出す転換点として、この帖を読むことができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 藤壺への思慕との重なり</div>
+      <h3>朝顔への恋の終わりが呼び覚ます、消えない面影</h3>
+      <p>朝顔への思いに区切りをつけたはずの源氏が、その夜、藤壺の夢を見るという展開は示唆的です。朝顔という現実の女性への恋が終わることで、かえって生涯消えることのない藤壺への思慕が前景化する構図には、源氏の恋愛遍歴の総決算的な性格がうかがえます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 夢の中の藤壺という装置</div>
+      <h3>罪の記憶は、誰にも語れないまま残り続ける</h3>
+      <p>夢の中で藤壺が源氏を恨むのは、生前ついに互いに語り合うことのできなかった、出生の秘密という罪の記憶そのものです。目覚めている源氏には決して口にできないこの罪悪感が、夢という形でしか表出できない点に、二人の関係の根深い秘密性が象徴されていると読むこともできます。</p>
+    </div>
+    <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+  </section>
+
+  <!-- 7. 特筆事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+    <div class="note-card">
+      <h3>源氏の恋愛遍歴を振り返る、総括的な回想の場</h3>
+      <p>雪の夜、源氏が紫の上に語って聞かせる過去の女性たちの思い出は、これまで物語で描かれてきた恋愛遍歴を読者とともに振り返る、総括的な回想の場としての性格を持つ。物語前半の総決算的な一場面として位置づけられる。</p>
+    </div>
+    <div class="note-card">
+      <h3>朝顔は、のちの女三の宮登場の前触れ</h3>
+      <p>身分高く、源氏の正妻候補として何度も名前が挙がりながら結ばれることのなかった朝顔の存在は、7年後に源氏が正室として迎える女三の宮の登場を先取りするような位置づけを持つとの見方がある。</p>
+    </div>
+    <div class="note-card">
+      <h3>紫の上の物語としての転換点</h3>
+      <p>朝顔をめぐる不安と、雪の夜に源氏から愛情を確かめられる経験を経て、紫の上はこれ以降、いっそう物語の中心的な存在として描かれていく。本帖はその成長の始まりを告げる巻として読むことができる。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 20;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  genji:      {x:150, y:70,  label:'光源氏'},
+  murasaki:   {x:520, y:70,  label:'紫の上'},
+  asagao:     {x:150, y:230, label:'朝顔の姫君'},
+  gennaishi:  {x:520, y:230, label:'源典侍'},
+  nyogo:      {x:335, y:390, label:'女五の宮'}
+};
+const edges = [
+  {a:'genji', b:'murasaki', label:'正妻・夫婦（朝顔を巡る不安と弁明）', type:'kinship'},
+  {a:'genji', b:'asagao', label:'十数年に及ぶ求愛と拒絶', type:'emotion'},
+  {a:'genji', b:'nyogo', label:'甥・見舞いを口実に通う', type:'kinship'},
+  {a:'genji', b:'gennaishi', label:'老いても衰えぬ戯れの贈答', type:'emotion'},
+  {a:'asagao', b:'nyogo', label:'姪と伯母・桃園邸に同居', type:'kinship'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  const w = Math.max(96, n.label.length*13);
+  g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
