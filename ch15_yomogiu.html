@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第15帖 蓬生 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --gray:#8c8579;
+    --kon:#2c3a63;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{max-width:60ch; color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:var(--kon);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:18px; height:3px; display:inline-block;}
+  .legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka.solo{grid-column:1 / -1;}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+  .waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第15帖</div>
+    <h1>蓬生</h1>
+    <div class="kana">よもぎう</div>
+    <p class="lead">光源氏29歳の物語。須磨・明石への蟄居中、後見を失った末摘花の暮らしは困窮を極め、邸は蓬や浅茅に埋もれるほど荒れ果てる。受領の北の方となった叔母は姫を娘の女房に誘い出そうとするが、末摘花は応じず、頼みの乳母子・侍従も叔母に伴われて筑紫へ去っていく。それでも一途に源氏を待ち続けた末摘花のもとに、ある春の夜、花散里を訪ねる道すがら偶然通りかかった源氏が立ち寄り、二人は再会を果たす。</p>
+  </div>
+
+  <!-- 1. 主な登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">29歳</span></div><p>須磨・明石での蟄居を経て都に復権した内大臣。政務に追われ、困窮する末摘花への文も途絶えがちになっていたが、花散里を訪ねる道すがら偶然荒れた邸に目をとめ、末摘花のことを思い出す。忘れられてもなお待ち続けた彼女の一途さに心を動かされ、変わらぬ後見を約束する。</p></div>
+      <div class="person"><div class="row"><span class="name">末摘花</span><span class="age">源氏と同世代</span></div><p>亡き常陸宮の姫君。源氏が須磨・明石に去った後、後見を失い邸は荒れ果て、生活は困窮を極める。叔母から娘の女房にと誘われても、亡き父宮の御影が残る古い邸を離れることを拒み、ひたすら源氏の帰りと訪れを待ち続ける。その変わらぬ心が、この帖の中心に置かれている。</p></div>
+      <div class="person"><div class="row"><span class="name">侍従</span><span class="age">末摘花と同世代</span></div><p>末摘花の乳母子で、困窮する邸に最後まで仕え続けた女房。末摘花が心を許す数少ない相手であったが、叔母の夫が大宰大弐となり赴任するのに伴い、叔母に連れられて筑紫へ下ることになる。頼みとしていた侍従を失うことは、末摘花の孤立をいっそう深める出来事として描かれる。</p></div>
+      <div class="person"><div class="row"><span class="name">大弐の北の方（叔母）</span><span class="age">末摘花の母方の叔母</span></div><p>受領の北の方となっている末摘花の叔母。夫が大宰大弐に任じられ任地へ下るにあたり、身寄りのない末摘花を不憫がるふりをしつつ、実際には見下した態度で娘の女房として連れ出そうとする。末摘花に拒まれると、代わりに乳母子の侍従だけを伴って筑紫へ去っていく。</p></div>
+      <div class="person"><div class="row"><span class="name">惟光</span><span class="age">源氏の乳母子</span></div><p>須磨蟄居の前から変わらず源氏に付き従う従者。花散里への道すがら、荒れた邸の様子や末摘花の消息を確かめる役目を果たし、久しぶりの再会の場を静かに支える。源氏の身近な相談相手として、この帖でもさりげなくその存在感を示す。</p></div>
+    </div>
+  </section>
+
+  <!-- 2. 人物系図 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+      <span><i style="background:var(--kon);"></i>政争・対立</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+    </div>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 荒れ果てた邸と、それぞれの行く末</h2></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="700" height="300" fill="var(--paper)"/>
+
+        <g class="scene-room" onclick="showScenePopup('末摘花邸の荒廃','故常陸宮邸である末摘花の邸は、後見を失って以来、庭には蓬や浅茅が地面も見えないほど生い茂り、簀子や高欄は雨ざらしのまま崩れ落ちている。築地塀もところどころ崩れて柳が乱れ伏し、外から見通せるほどである。それでも邸内には亡き父宮の面影が残るとして、末摘花はこの荒れ果てた住まいを離れようとしない。')">
+        <rect x="30" y="30" width="290" height="70" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.6" rx="4"/>
+        <text x="175" y="58" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">末摘花邸（故常陸宮邸）</text>
+        <text x="175" y="78" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（蓬・浅茅に覆われた荒廃の庭）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('花散里へ向かう道すがらの偶然','春のある夜、源氏は花散里のもとを訪ねようと牛車で出かける途中、松に藤の花が咲きかかる見覚えのある木立に目をとめる。それが末摘花の邸であると気づいた源氏は、惟光に様子を確かめさせ、荒れ果てながらも変わらず住み続ける末摘花のことを思い出して立ち寄ることを決める。')">
+        <rect x="380" y="30" width="290" height="70" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.4" rx="4"/>
+        <text x="525" y="58" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">花散里へ向かう道すがら</text>
+        <text x="525" y="78" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（松と藤の木立に導かれた再会）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('叔母に誘われた邸との対比','叔母は夫が大宰大弐に任じられ、任国へ下るにあたり、身寄りのない末摘花を自分の娘の女房として連れて行こうとする。生活の安定は約束されるものの、宮家の誇りを捨てて受領一族に仕える立場に甘んじることを意味する。末摘花はこの誘いを拒み、貧しくとも父宮の邸にとどまる道を選ぶ。')">
+        <rect x="205" y="180" width="290" height="70" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.4" rx="4"/>
+        <text x="350" y="208" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">叔母邸・筑紫（大宰府）</text>
+        <text x="350" y="228" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（誘いを拒んだもう一つの生き方）</text>
+        </g>
+
+        <text x="350" y="285" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">源氏29歳・春の再会を中心に（推定・想像図）</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">この帖では、荒廃した邸にとどまり続けるという「動かない選択」と、叔母や侍従がそれぞれ選んだ「動く選択」とが対比的に描かれている。末摘花が守り続けたのは物理的な豊かさではなく、亡き父の面影と、いつか帰るはずの人への約束であったと読むことができる。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>蓬生（よもぎう）</dt>
+      <dd>蓬（よもぎ）が生い茂ること。この帖の名は、後見を失った末摘花の邸が蓬や浅茅に埋もれるほど荒れ果てた様子に因む。荒廃と、そこにひとり留まり続ける人の心とを重ねた帖名である。</dd>
+      <dt>大弐（だいに）</dt>
+      <dd>大宰府の次官である大宰大弐の略称。九州の統治・外交を担う大宰府の実質的な長として重んじられた職。末摘花の叔母の夫がこの職に任じられ、任地の筑紫へ下ることになる。</dd>
+      <dt>築地（ついじ）</dt>
+      <dd>土を突き固めて造った塀。邸の敷地を囲む築地塀は、手入れをする者がいなければ崩れやすく、末摘花邸ではところどころ崩れ落ち、柳が乱れ伏すほど荒廃した様子が描かれている。</dd>
+      <dt>常陸宮（ひたちのみや）</dt>
+      <dd>末摘花の亡き父。皇族でありながら経済的には豊かでなく、その邸は末摘花一代でさらに困窮する。「常陸宮邸」は末摘花の邸そのものを指す呼び名としても用いられる。</dd>
+    </dl>
+    <div class="waka-grid">
+      <div class="waka solo">
+        <div class="speaker">光源氏（独詠）</div>
+        <div class="poem">尋ねても<br>我こそとはめ<br>道もなく<br>深きよもぎの<br>もとの心を</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">道もないほど深く生い茂った蓬の下に住むあなたを、たとえ他の誰も訪ねなくとも、私だけは尋ねて行きましょう。荒れ果てた邸へ分け入る源氏が独りごちた一首で、帖名「蓬生」の由来となった歌とされる。</div>
+        <div class="source">出典：『源氏物語』蓬生巻（原典）。ArtWiki「蓬生」ほか複数の解説サイトで原文の一致を確認</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">光源氏 → 末摘花</div>
+        <div class="poem">藤波の<br>うち過ぎがたく<br>見えつるは<br>まつこそ宿の<br>しるしなりけれ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">藤の花房が見過ごしがたいほど美しく見えたのは、それが絡みついている「松」こそが、あなたが私を「待つ」しるしだったからなのですね。「松」に「待つ」を掛け、長年待ち続けた末摘花の心をくみ取って詠んだ一首。</div>
+        <div class="source">出典：『源氏物語』蓬生巻（原典）。原文朗読サイト（roudokus.com「蓬生12」）で原文の一致を確認</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">末摘花 → 光源氏（返し）</div>
+        <div class="poem">年を経て<br>待つしるしなき<br>わが宿を<br>花のたよりに<br>過ぎぬばかりか</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">長い年月、あなたを待ち続けても何のしるしもなかったこの家を、あなたはただ花をご覧になるついでに通りかかっただけなのでしょう。待ち続けた歳月の重さと、今なお拭えぬ寂しさとがにじむ返歌。</div>
+        <div class="source">出典：『源氏物語』蓬生巻（原典）。複数の解説サイトで原文の一致を確認</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>後見を失った末摘花の困窮</h3><p>光源氏が須磨・明石へ蟄居している間、唯一の後見を失った末摘花の暮らしは急速に困窮していく。仕えていた女房たちも次々と去り、邸の手入れをする者もいなくなって、庭には浅茅が地面も見えないほど茂り、蓬は軒先まで高さを争うように生い茂っていく。</p></div>
+      <div class="tl-item"><h3>叔母からの誘い</h3><p>受領の北の方となっている末摘花の叔母は、身寄りのない姫を不憫がるふりをしながら、実のところは見下した態度で、自分の娘の女房として引き取ろうと誘いをかける。宮家の姫としての誇りを失いたくない末摘花は、貧しさの中にあってもこの誘いに応じようとしない。</p></div>
+      <div class="tl-item"><h3>源氏の帰京、それでも届かぬ訪れ</h3><p>やがて源氏は赦されて都へ帰り、政治的にも復権を果たしていくが、多忙な日々の中で末摘花への文も訪れも途絶えがちのままである。末摘花はそれでも変わらず源氏を待ち続けるが、周囲の女房たちの中には、この待ちぼうけを愚かしく思う者も出てくる。</p></div>
+      <div class="tl-item"><h3>叔母の夫、大宰大弐に</h3><p>そのうちに叔母の夫が大宰大弐に任じられ、一家で任地の筑紫へ下ることになる。叔母は再び末摘花を誘うが、末摘花はやはり首を縦に振らない。業を煮やした叔母は、代わりに末摘花が頼りにしていた乳母子の侍従だけを無理に連れて、筑紫へと下っていってしまう。</p></div>
+      <div class="tl-item"><h3>ただ一人残される末摘花</h3><p>頼みとしていた侍従までも去り、邸に残る女房もわずかとなった末摘花は、いっそう深い孤立の中に置かれる。それでも邸を離れず、亡き父宮の面影が残る住まいにとどまり続け、いつか源氏が思い出してくれる日をひたすら待ち続ける。</p></div>
+      <div class="tl-item"><h3>春の夜、花散里への道すがら</h3><p>年が改まった春のある夜、源氏は花散里のもとを訪ねようと牛車で出かける。その途中、大きな松に藤の花が咲きかかり、月明かりに匂い立つように美しい木立に目をとめた源氏は、それが見覚えのある常陸宮邸であることに気づき、末摘花のことを久しぶりに思い出す。</p></div>
+      <div class="tl-item"><h3>荒れ果てた邸への訪れと再会</h3><p>惟光に様子を確かめさせた源氏は、荒れ果てながらも変わらず末摘花が住み続けていることを知り、「尋ねても我こそとはめ」と独りごちながら邸へと分け入る。長い無沙汰を詫びる源氏に、末摘花は多くを語らないが、その変わらぬ姿に源氏はあらためて心を動かされる。</p></div>
+      <div class="tl-item"><h3>藤の花に寄せる贈答歌</h3><p>去り際、源氏は松にかかる藤の花を「まつこそ宿のしるしなりけれ」と詠み、末摘花を待ち続けた心になぞらえる。末摘花は「花のたよりに過ぎぬばかりか」と、待ち続けた歳月の重さをにじませて返す。この贈答をきっかけに、源氏は末摘花の邸をあらためて後見していくことを約束する。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 荒廃が語る、末摘花の選択</div>
+      <h3>「動かない」ことが示す、静かな一途さ</h3>
+      <p>叔母の誘いにも、侍従が去っていくことにも動じず、末摘花が荒れ果てた邸にとどまり続ける姿は、経済的な安定よりも父宮の面影と源氏への約束を選び取った結果として読み取れます。この帖における末摘花の「動かなさ」は、消極的な諦めではなく、彼女なりの一つの意志の表れと見ることができるでしょう。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 源氏の忘却と再発見</div>
+      <h3>忙しさに紛れた忘却と、偶然による再会</h3>
+      <p>源氏が末摘花を思い出すきっかけが、意図的な訪問ではなく花散里へ向かう道すがらの偶然であった点は、政治的復権に追われる源氏の忙しさと、その陰で忘れられがちな女君たちの存在を対比的に示していると読めます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 誠実さ・一途さというテーマ</div>
+      <h3>花散里・空蟬との対比に見る、源氏の「見捨てなさ」</h3>
+      <p>この帖は、まさに花散里を訪ねる途中の出来事として語られる点が示唆的です。地位や美貌で華やぐ女君ではなく、花散里や空蟬のように地味ながら誠実であり続ける女性たちを、源氏が生涯にわたって見捨てずに後見し続けることが、この帖を通じて改めて印象づけられます。末摘花への訪れも、その「見捨てなさ」の系譜に連なるものと見ることができるでしょう。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 侍従の選択という対照</div>
+      <h3>去っていく者と、留まり続ける者</h3>
+      <p>乳母子でありながら叔母に伴われて筑紫へ去っていく侍従の選択は、末摘花の「留まる」選択と好対照をなしています。どちらが正しいというものではなく、身分も後ろ盾も持たない女性たちがそれぞれの状況で下さねばならなかった、生き方の選択の重さを浮かび上がらせる対照として読むことができます。</p>
+    </div>
+    <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+  </section>
+
+  <!-- 7. 特筆事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+    <div class="note-card">
+      <h3>源氏の「見捨てない」誠実さを示す帖</h3>
+      <p>「蓬生」は、華やかな恋の駆け引きではなく、忘れられかけた女君のもとへ立ち返り、後見を約束し直すという地味ながら重要な場面を描く帖である。源氏の人物像における「一度関わった女性を見捨てない」という側面が、この帖を通じて改めて確認される。</p>
+    </div>
+    <div class="note-card">
+      <h3>末摘花という人物の再評価</h3>
+      <p>第6帖「末摘花」では容姿の点で戯画的に描かれた末摘花が、この帖では一転して、困窮の中でも変わらぬ心を貫く女性として描かれる。滑稽さの陰にあった誠実さが物語の中であらためて光を当てられる、人物造形の深化が見られる帖である。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 15;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  genji:      {x:450, y:70,  label:'光源氏'},
+  koremitsu:  {x:730, y:70,  label:'惟光'},
+  suetsumuhana:{x:450, y:230, label:'末摘花'},
+  jiju:       {x:180, y:230, label:'侍従'},
+  aunt:       {x:180, y:380, label:'大弐の北の方（叔母）'}
+};
+const edges = [
+  {a:'genji', b:'koremitsu', label:'須磨以来変わらぬ従者', type:'loyalty'},
+  {a:'genji', b:'suetsumuhana', label:'困窮の中でも見捨てぬ誠実さ', type:'emotion'},
+  {a:'suetsumuhana', b:'jiju', label:'乳母子・心の支え', type:'kinship'},
+  {a:'suetsumuhana', b:'aunt', label:'母方の叔母', type:'kinship'},
+  {a:'suetsumuhana', b:'aunt', label:'娘の女房にと誘うも拒否される', type:'conflict'},
+  {a:'jiju', b:'aunt', label:'大弐赴任に伴い連れられていく', type:'alliance'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  const w = Math.max(96, n.label.length*13);
+  g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
