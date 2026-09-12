@@ -268,7 +268,7 @@
       <button data-f="loyalty">主従・忠誠</button>
     </div>
     <div class="diagram-wrap">
-      <svg id="relmap" viewBox="0 0 900 430" xmlns="http://www.w3.org/2000/svg"></svg>
+      <svg id="relmap" viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div class="legend">
       <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
@@ -468,13 +468,13 @@ if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
 
 /* ===== relationship diagram ===== */
 const nodes = {
-  genji:      {x:120, y:60,  label:'光源氏'},
-  omiya:      {x:450, y:40,  label:'大宮'},
-  naidaijin:  {x:780, y:60,  label:'内大臣（頭中将）'},
-  yugiri:     {x:120, y:230, label:'夕霧'},
-  kumoi:      {x:450, y:230, label:'雲居雁'},
-  tonaishi:   {x:780, y:230, label:'藤典侍（五節の君）'},
-  koremitsu:  {x:780, y:380, label:'惟光'}
+  genji:      {x:130, y:60,  label:'光源氏'},
+  naidaijin:  {x:770, y:60,  label:'内大臣（頭中将）'},
+  omiya:      {x:450, y:180, label:'大宮'},
+  yugiri:     {x:130, y:320, label:'夕霧'},
+  kumoi:      {x:450, y:320, label:'雲居雁'},
+  koremitsu:  {x:450, y:460, label:'惟光'},
+  tonaishi:   {x:770, y:460, label:'藤典侍（五節の君）'}
 };
 const edges = [
   {a:'genji', b:'yugiri', label:'父子（あえて六位にとどめる）', type:'kinship'},
