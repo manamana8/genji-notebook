@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第16帖 関屋 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --gray:#8c8579;
+    --kon:#2c3a63;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{max-width:60ch; color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:var(--kon);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:18px; height:3px; display:inline-block;}
+  .legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka.solo{grid-column:1 / -1;}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+  .waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第16帖</div>
+    <h1>関屋</h1>
+    <div class="kana">せきや</div>
+    <p class="lead">光源氏29歳、秋の物語。桐壺院崩御の翌年に伊予介から常陸介となり任国へ下った空蝉は、任期を終えて夫と共に帰京の途につく。折しも源氏は石山寺への参詣の途上にあり、二人は逢坂の関で十二年ぶりに行き合う。直に言葉を交わすことはかなわないまま、源氏は空蝉の弟・右衛門佐（かつての小君）を介して歌を贈り、空蝉もまた抑えきれずに返歌をしたためる。ほどなく夫の常陸介は病のうちに世を去り、義理の子である河内守（かつての紀伊守）の懸想を厭った空蝉は、人知れず出家の道を選ぶ。</p>
+  </div>
+
+  <!-- 1. 主な登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">29歳</span></div><p>須磨・明石の蟄居を経て帰京し、政治的に大きく復権した内大臣。石山寺への参詣の途上、逢坂の関で偶然にも常陸から上京する空蝉の一行と行き合い、十二年前の忘れがたい思いを胸によみがえらせる。直接言葉を交わすことはできないまま、右衛門佐を介して歌を贈り、変わらぬ執着と誠実さの両面をのぞかせる。</p></div>
+      <div class="person"><div class="row"><span class="name">空蝉</span><span class="age">源氏より年上</span></div><p>かつて源氏の求愛を拒み通した女性で（第2・3帖参照）、伊予介（のち常陸介）の後妻として任国に下っていた。任期を終えて帰京する道中、逢坂の関で源氏と行き合い、直に会うことはかなわぬまま、胸の内で昔日の思いがあふれる。ほどなく夫と死別し、義理の息子・河内守の懸想を厭って出家する。</p></div>
+      <div class="person"><div class="row"><span class="name">常陸介（元伊予介）</span><span class="age">空蝉の夫・老年</span></div><p>桐壺院崩御の翌年に伊予介から常陸介に任じられ、空蝉を伴って常陸国へ下向していた。帰京の翌年、老いと病のうちに、後に残す空蝉の身の上だけを案じ、子どもたちに後事を託して世を去る。</p></div>
+      <div class="person"><div class="row"><span class="name">河内守（元紀伊守）</span><span class="age">常陸介の先妻の子</span></div><p>常陸介の先妻の子で、空蝉にとっては義理の息子にあたる。父の遺言を口実に、義母である空蝉にかねてよりの下心を見せて言い寄る。この懸想が、空蝉が出家を決意する直接のきっかけとなる。</p></div>
+      <div class="person"><div class="row"><span class="name">右衛門佐（元小君）</span><span class="age">空蝉の実弟</span></div><p>空蝉の実弟で、かつて姉と源氏の仲を取り持った「小君」その人。源氏の須磨蟄居に際しては世の風向きを読んで供をせず、姉とともに常陸へ下ったが、帰京後もなお源氏の家人として遇され続けている。逢坂での再会ののち、源氏と空蝉の間で歌を取り次ぐ役を再び担う。</p></div>
+    </div>
+  </section>
+
+  <!-- 2. 人物系図 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+      <span><i style="background:var(--kon);"></i>政争・対立</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+    </div>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 境の関で交わる、二つの道</h2></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="700" height="300" fill="var(--paper)"/>
+
+        <g class="scene-room" onclick="showScenePopup('逢坂の関 ― 十二年ぶりのすれ違い','近江と山城の境に置かれた古代の関所で、「逢う」との掛詞から出会いと別れの歌枕として知られる。石山寺へ向かう源氏の一行と、常陸から帰京する空蝉の一行が、まさにこの地で行き合う。空蝉たちは杉の木陰に車を寄せて源氏の行列をやり過ごし、直に言葉を交わすことのないまま、それぞれの道を行く。')">
+        <rect x="30" y="30" width="290" height="70" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.6" rx="4"/>
+        <text x="175" y="58" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">逢坂の関</text>
+        <text x="175" y="78" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（出会いと別れの歌枕・境の地）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('石山寺 ― 源氏の参詣先','近江国（現在の滋賀県大津市）にある寺院で、源氏はかねての祈願成就のためにここへ参詣する途上にあった。逢坂の関はその道すがらに位置し、二人の再会は源氏の側から見れば全くの偶然の出来事として描かれる。')">
+        <rect x="380" y="30" width="290" height="70" fill="#f4ead6" stroke="var(--yamabuki)" stroke-width="1.4" rx="4"/>
+        <text x="525" y="58" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">石山寺（参詣先）</text>
+        <text x="525" y="78" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（源氏の祈願成就の旅の途上）</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('常陸介邸（帰京後）','帰京した常陸介一行が身を落ち着けた邸。ここで老いた常陸介は病に伏し、空蝉の後事を子どもたちに託して世を去る。その後、義理の子・河内守がこの邸で空蝉に言い寄り、空蝉はそれを厭って人知れず出家する。')">
+        <rect x="205" y="180" width="290" height="70" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.4" rx="4"/>
+        <text x="350" y="208" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">常陸介邸（帰京後の京の邸）</text>
+        <text x="350" y="228" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（死別と、出家という結末）</text>
+        </g>
+
+        <text x="350" y="285" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">源氏29歳・秋の逢坂の再会を中心に（推定・想像図）</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">この帖では、常陸から都へという地理的な移動そのものが、源氏との再会と、その後の空蝉の運命の転換点とを重ね合わせる形で描かれている。逢坂の関という「境界」の地で交わされたわずかな言葉が、次いで彼女の人生の最後の局面（夫の死、出家）へと接続していく構成になっている。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>逢坂の関（おうさかのせき）</dt>
+      <dd>近江と山城の境、逢坂山に置かれた古代の関所。伊勢の鈴鹿関、美濃の不破関とともに三関の一つに数えられる。「逢う」との掛詞から、出会いと別れを詠む歌枕として古来多くの和歌に用いられ、蝉丸の「これやこの行くも帰るも別れては知るも知らぬもあふ坂の関」（『小倉百人一首』）などが知られる。</dd>
+      <dt>石山寺（いしやまでら）</dt>
+      <dd>近江国（現在の滋賀県大津市）にある寺院。源氏が祈願成就のために参詣する先として登場する。後世、紫式部がこの寺に参籠して『源氏物語』の着想を得たという伝説でも知られる。</dd>
+      <dt>常陸介（ひたちのすけ）</dt>
+      <dd>常陸国（現在の茨城県）の実質的な長官。常陸は上総・上野と並ぶ「親王任国」で、親王が形式上の守（かみ）を務めるため、次官である介が実務上の最高責任者となった。空蝉の夫・伊予介は、桐壺院崩御の翌年にこの職に任じられている。</dd>
+      <dt>右衛門佐（うえもんのすけ）</dt>
+      <dd>右衛門府の次官（従五位上相当）。かつて空蝉の弟として源氏と姉との仲を取り持った「小君」その人で、成長して右衛門佐となった後も、源氏の家人として遇され続けている。</dd>
+    </dl>
+    <div class="waka-grid">
+      <div class="waka solo">
+        <div class="speaker">空蝉（独詠・胸の内）</div>
+        <div class="poem">行くと来と<br>せきとめがたき<br>涙をや<br>絶えぬ清水と<br>人は見るらむ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">常陸へ行く時も、都へ帰って来る今も、せきとめることのできずあふれる私の涙を、人は絶えることのない関の清水と見るのだろうか。源氏の行列を見送りながら、空蝉が誰にも打ち明けられずに胸の内で詠んだ一首。</div>
+        <div class="source">出典：『源氏物語』関屋巻（原典）。小学館「日本古典文学全集」準拠の原文（roudokus.com「関屋01」）で原文の一致を確認</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">光源氏 → 空蝉（右衛門佐を介して）</div>
+        <div class="poem">わくらばに<br>行きあふみちを<br>たのみしも<br>なほかひなしや<br>しほならぬ海</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">たまたま貴女と行き逢ったのが「近江路」であることに、その「逢う」という言葉に望みをかけておりましたのに、やはりかいのないことでしたね。塩気のない湖（琵琶湖）には貝もすまないように、貴女に逢うことはかなわなかった。「あふみ」に「近江」と「逢ふ身」、「かひ」に「効」と「貝」を掛ける。</div>
+        <div class="source">出典：『源氏物語』関屋巻（原典）。小学館「日本古典文学全集」準拠の原文（roudokus.com「関屋02」）で原文の一致を確認</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">空蝉 → 光源氏（返し）</div>
+        <div class="poem">あふさかの<br>関やいかなる<br>関なれば<br>繁きなげきの<br>中をわくらん</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">「逢う」という名を持つ逢坂の関とは、いったいどんな関なのでしょうか。木々の生い茂るその中を、これほど深い嘆きをかき分けて過ぎて行かねばならないとは。「あふさか」に「逢ふ」、「繁き」に木の茂りと嘆きの多さを掛ける。かつて頑なに拒み続けた空蝉が、思いを抑えきれずに返した一首。</div>
+        <div class="source">出典：『源氏物語』関屋巻（原典）。小学館「日本古典文学全集」準拠の原文（roudokus.com「関屋02」）で原文の一致を確認</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>伊予介、常陸介となり空蝉と共に下向</h3><p>桐壺院が崩御された翌年、伊予介は常陸介に任じられ、任国へ下ることになる。かつて源氏の求愛を拒み通した空蝉も、夫に伴われて都を離れ、常陸国へと向かう。</p></div>
+      <div class="tl-item"><h3>須磨蟄居の噂を遠国で聞く空蝉</h3><p>源氏が須磨で侘び住まいをしているという噂は、遠い常陸にも伝わってくる。空蝉は人知れずその身を案じるが、便りを伝えるすべもなく、確かな消息のないまま年月だけが重なっていく。</p></div>
+      <div class="tl-item"><h3>源氏の帰京、常陸介一行の帰路</h3><p>源氏が赦されて京に帰り住んだ翌年の秋、任期を終えた常陸介も、空蝉を伴って帰京の途につく。</p></div>
+      <div class="tl-item"><h3>逢坂の関での偶然の行き合い</h3><p>常陸介一行が逢坂の関に入るまさにその日、源氏は石山寺へ祈願成就の参詣に出かけていた。道が混み合うのを避けようと夜明け前から急いだ空蝉たちだが、女車の多さに進みが遅れ、結局は源氏の壮麗な行列と鉢合わせることになる。一行は杉の木陰に車を寄せ、畏まって源氏の行列をやり過ごす。</p></div>
+      <div class="tl-item"><h3>紅葉の中、十二年ぶりの再会</h3><p>九月末、紅葉と霜枯れの草が入り混じる関屋のあたりに、常陸介一行の色とりどりの旅姿が現れる。源氏は御車の簾を下ろしたまま、空蝉の実弟・右衛門佐（かつての小君）を呼び寄せ、「今日の御関迎えは忘れますまいな」とだけ言葉をかける。空蝉もまた、人知れず昔のことを思い出し、胸を打たれずにはいられない。</p></div>
+      <div class="tl-item"><h3>空蝉、胸の内でひとり歌を詠む</h3><p>直に言葉を交わすことのかなわぬまま行き過ぎていく源氏の一行を見送りながら、空蝉は「行くと来とせきとめがたき涙をや」と、誰にも知られることのない一首を心の中で詠む。</p></div>
+      <div class="tl-item"><h3>源氏、右衛門佐を介して歌を贈る</h3><p>石山寺からの帰り道、源氏は右衛門佐を召し寄せ、「わくらばに行きあふみちを」の歌を空蝉のもとへ届けさせる。右衛門佐は畏れ多く思いながらも姉のもとへ文を持って行き、返事を促す。</p></div>
+      <div class="tl-item"><h3>空蝉、思いを抑えきれず返歌する</h3><p>かつては頑なに拒み続けていた空蝉だが、この珍しい便りに心を動かされ、「あふさかの関やいかなる関なれば」と返歌をしたためる。源氏はその後も折々に便りをして、空蝉の心を揺り動かし続ける。</p></div>
+      <div class="tl-item"><h3>常陸介の死と、空蝉の出家</h3><p>やがて常陸介は老いと病のうちに、空蝉の身の上だけを子どもたちに託して世を去る。その後、義理の子である河内守（かつての紀伊守）が、父の遺言を口実に空蝉へ言い寄るようになる。この懸想を厭った空蝉は、誰にも打ち明けることなく、ひとり出家の道を選ぶ。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ すれ違いが語るもの</div>
+      <h3>「出会いと別れ」の歌枕で、再びすれ違う二人</h3>
+      <p>逢坂の関という、古来「出会いと別れ」を象徴する歌枕の地で、二人が言葉を交わせないまま再びすれ違うという構図そのものが、この二人の関係の本質を映し出しているように読めます。結ばれることのないまま、しかし互いに忘れられない縁として、物語の中に刻まれ続ける関係のあり方です。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 空蝉の変化</div>
+      <h3>拒み続けた女が、思わず返す歌</h3>
+      <p>帚木・空蝉の帖でかたくなに源氏を拒み続けた空蝉が、十二年の歳月を経て、今度は自ら思いを抑えきれずに返歌をするに至る心の変化は印象的です。身分の隔たり、老いた夫への義理、そして拭いきれない源氏への思いとが、この一首に凝縮されていると見ることができるでしょう。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 右衛門佐と右近将監の対比</div>
+      <h3>日和見と忠義、明暗を分けた二人の弟</h3>
+      <p>源氏の須磨下向に際し、世の風向きを読んで供をしなかった右衛門佐（元小君）と、あえて供奉した弟・右近将監とは、対照的な人物として描かれます。忠義を貫いた者が後に重んじられる一方、日和見に走った者が当時を悔いるという構図は、この物語が人を評価する一つの軸を示していると読めます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 出家という選択の反復</div>
+      <h3>「自らの意志での退場」というもう一つの答え</h3>
+      <p>空蝉が最終的に選ぶ出家という道は、前帖「蓬生」で末摘花が荒れ果てた邸にとどまり続けたのとは対照的な、女性による「自らの意志での退場」の一形態と見ることができます。物語全体を通じて、後に女三の宮や浮舟らが出家という手段で困難な状況を断ち切っていく系譜の、一つの先駆けとしてこの場面を位置づけることも可能でしょう。</p>
+    </div>
+    <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+  </section>
+
+  <!-- 7. 特筆事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+    <div class="note-card">
+      <h3>「帚木」「空蝉」「関屋」三巻を貫く空蝉の物語</h3>
+      <p>空蝉は帚木・空蝉・関屋の三巻にのみ本格的に登場する人物であり、この関屋巻をもって、源氏との直接的な関わりを描く物語としては一つの区切りを迎える。この後、空蝉は二条東院に迎えられることになる（そのいきさつは本帖ではなく次々帖「松風」の冒頭で語られる）が、物語上の中心的な役割としては、22帖「玉鬘」・23帖「初音」でわずかに言及されるのみとなる。</p>
+    </div>
+    <div class="note-card">
+      <h3>逢坂の関という舞台装置</h3>
+      <p>逢坂の関は、蝉丸の和歌などでも知られる「出会いと別れ」の歌枕であり、帚木・空蝉巻で結ばれることのなかった二人が、この場所で十二年ぶりにすれ違うという配置には、紫式部の意図的な呼応が読み取れる。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 16;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  genji:      {x:450, y:70,  label:'光源氏'},
+  uemon:      {x:730, y:70,  label:'右衛門佐（元小君）'},
+  utsusemi:   {x:450, y:230, label:'空蝉'},
+  hitachi:    {x:180, y:230, label:'常陸介（元伊予介）'},
+  kawachi:    {x:180, y:380, label:'河内守（元紀伊守）'}
+};
+const edges = [
+  {a:'genji', b:'uemon', label:'昔の小君・歌の取次役', type:'loyalty'},
+  {a:'genji', b:'utsusemi', label:'十二年ぶりの再会に募る思い', type:'emotion'},
+  {a:'utsusemi', b:'uemon', label:'実の姉弟', type:'kinship'},
+  {a:'utsusemi', b:'hitachi', label:'老いた夫婦・死別', type:'kinship'},
+  {a:'hitachi', b:'kawachi', label:'実の父子', type:'kinship'},
+  {a:'kawachi', b:'utsusemi', label:'義母への懸想を厭われる', type:'conflict'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  const w = Math.max(96, n.label.length*13);
+  g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
