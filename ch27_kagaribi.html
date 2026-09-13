@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第27帖 篝火 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --gray:#8c8579;
+    --kon:#2c3a63;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+  .person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:var(--kon);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:18px; height:3px; display:inline-block;}
+  .legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka.solo{grid-column:1 / -1;}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+  .waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第27帖</div>
+    <h1>篝火</h1>
+    <div class="kana">かがりび</div>
+    <p class="lead">光源氏36歳、初秋の六条院。内大臣が引き取った近江の君の悪評が世間の噂になっているのを耳にした玉鬘は、源氏に養われている自らの幸運をしみじみと思い、次第に源氏へ心を開いてゆく。七月初旬の夕月夜、源氏は玉鬘のもとを訪れ、消えかかる庭前の篝火に自らの恋情を重ねて歌を詠む。折しも東の対から聞こえてきた夕霧・柏木らの合奏に源氏が加わり、御簾の内の玉鬘に密かな思いを寄せる柏木は、思うように琴を弾けずにいた。</p>
+  </div>
+
+  <!-- 1. 主な登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">36歳</span></div><p>六条院の主。近江の君の一件で玉鬘の幸運をあらためて実感させつつ、抑えきれない恋情を篝火に寄せて歌に詠む。理性は保ちながらも、玉鬘への思いを深めている。</p></div>
+      <div class="person"><div class="row"><span class="name">玉鬘</span><span class="age">22歳</span></div><p>六条院・西の対に住む源氏の養女。近江の君の噂を聞き、自らの境遇の幸運を思って源氏に少しずつ心を開くが、寄せられる恋情には当惑し、和歌でやんわりと拒む。</p></div>
+      <div class="person"><div class="row"><span class="name">夕霧</span><span class="age">15歳</span></div><p>光源氏の実子。東の対で柏木らと笛を合わせていたところを源氏に招かれ、合奏に加わる。玉鬘とは血縁関係にはなく、本帖に恋愛感情を示す記述は確認できません。</p></div>
+      <div class="person"><div class="row"><span class="name">柏木</span><span class="age">年齢確認できません</span></div><p>内大臣の長男。玉鬘の実の異母兄にあたるが、その事実を互いに知らぬまま、以前より玉鬘に密かな恋心を寄せている。合奏で和琴を渡されるが、御簾の内に玉鬘がいると思うと緊張して控えめにしか弾けない。</p><p class="unconfirmed-age">年齢は本帖に明記がなく、複数資料の一致も確認できません（一部資料は21歳とするが、他資料での裏付けは確認できず）。</p></div>
+      <div class="person"><div class="row"><span class="name">内大臣（もとの頭中将）</span><span class="age">年齢確認できません</span></div><p>玉鬘・柏木の実父。近江の君の粗野な言動が世間の噂となっており、本帖では玉鬘・源氏の会話の中で話題として言及される（本帖に直接登場する場面はない）。</p></div>
+    </div>
+  </section>
+
+  <!-- 2. 人物系図 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 900 540" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+      <span><i style="background:var(--kon);"></i>政争・対立</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※この帖の本文には、政争・対立、政略同盟、主従・忠誠にあたる関係の記述は見当たらないため、系図には血縁・婚姻／感情の2種類のみを図示しています（凡例は5種類とも共通表示）。なお、本文で「兄弟の縁がありながら名乗り合わない」と特筆されるのは柏木とその弟・弁少将（ともに内大臣の子、玉鬘の実の異母兄弟）であり、夕霧はこれに含まれません。夕霧は源氏の実子で玉鬘とは血縁がなく、本帖に恋愛感情の記述もないため、夕霧―玉鬘間の線は「同じ六条院に育つ名目上の間柄」として血縁・婚姻の凡例（グレー実線）で示し、感情の線（臙脂破線）は柏木―玉鬘間にのみ用いています。</p>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 玉鬘の御殿前庭と東の対</h2></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 760 460" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="760" height="460" fill="var(--paper)"/>
+
+        <text x="380" y="30" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--murasaki-deep)">六条院・夏の町の一夜</text>
+
+        <!-- Room 1: 玉鬘の御殿前庭 -->
+        <g class="scene-room" onclick="showScenePopup('①玉鬘の御殿の前庭（篝火のもとで源氏と玉鬘が和琴を合わせる場面）','七月初旬、夕月の早く沈む夕べ、光源氏は玉鬘のもとを訪れ、一日中和琴を教えて過ごした。二人は琴を枕辺に置いて寄り添い、源氏はこのような清らかな関係も珍しいと思いつつ夜を明かしかねるが、女房たちに怪しまれることを憚って帰ろうとする。ちょうど前栽の篝火が消えかかっていたので、お供の右近大夫に命じて篝火を焚き足させ、その炎に寄せて「篝火にたちそふ恋の煙こそ世には絶えせぬ炎なりけれ」と恋情を歌に詠む。玉鬘は「行方なき空に消ちてよ篝火のたよりにたぐふ煙とならば」と返し、やんわりと思いを退ける。')">
+        <rect x="70" y="100" width="280" height="240" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
+        <text x="80" y="120" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--suou)">六条院・夏の町</text>
+        <text x="210" y="200" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">玉鬘の御殿（西の対）前庭</text>
+        <text x="210" y="223" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">篝火のもとでの和琴・添い寝</text>
+        <text x="210" y="245" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">恋の歌の贈答</text>
+        <circle cx="320" cy="120" r="12" fill="var(--murasaki)"/>
+        <text x="320" y="125" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">①</text>
+        </g>
+
+        <!-- Room 2: 東の対 -->
+        <g class="scene-room" onclick="showScenePopup('②庭先・東の対（夕霧・柏木兄弟が笛を吹き、御簾越しに玉鬘を意識する場）','同じ頃、東の対（花散里の御殿）の方角から、夕霧が柏木・弁少将らと笛や箏を合わせる音が聞こえてくる。源氏は使いを出して三人をこちらに招き寄せ、自らも和琴を掻き鳴らし、夕霧が笛を吹いた。源氏は和琴を柏木に譲るが、御簾の内に玉鬘が耳を澄ませていると思うと、柏木は名手の父・内大臣に劣らぬ腕前でありながら、控えめにしか弾けない。玉鬘は、実の兄弟と知らずに近くにいる柏木・弁少将の姿に、人知れず感慨を深くする。')">
+        <rect x="410" y="100" width="280" height="240" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
+        <text x="420" y="120" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--suou)">六条院・夏の町</text>
+        <text x="550" y="200" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">東の対（庭先）</text>
+        <text x="550" y="223" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">夕霧・柏木・弁少将の合奏</text>
+        <text x="550" y="245" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">御簾越しに玉鬘を意識</text>
+        <circle cx="660" cy="120" r="12" fill="var(--murasaki)"/>
+        <text x="660" y="125" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">②</text>
+        </g>
+
+        <!-- connecting line: same courtyard, short distance -->
+        <line x1="350" y1="220" x2="410" y2="220" stroke="var(--gray)" stroke-width="1.4" stroke-dasharray="3,5"/>
+        <text x="380" y="205" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9" fill="var(--ink-soft)">同じ庭続き</text>
+
+        <text x="380" y="415" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">玉鬘の御殿の前庭と東の対は同じ六条院・夏の町内にあり、音の聞こえる程度の近さで隣り合っている</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">①では源氏と玉鬘が篝火を挟んで恋の歌を交わし、②ではその音色に誘われて源氏が夕霧・柏木らを招き入れる。同じ庭続きの中で、恋情の吐露と、意図せず玉鬘に近づく実の兄弟の姿とが、篝火の灯りひとつを介してひと続きに描かれている点が、この帖の構成上の読みどころである。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>篝火（かがりび）</dt>
+      <dd>庭先などに焚く屋外照明用のかがり火。鉄製の籠に薪を入れて燃やす。当時、夜間の庭を照らす実用の灯りであると同時に、和歌では絶えず燃え上がる恋情の比喩としてもしばしば用いられた。本帖の巻名の由来。</dd>
+      <dt>和琴（わごん）</dt>
+      <dd>日本古来の6弦の琴。中国伝来の琴（きん）や箏（そう）と区別される国風の楽器で、貴族の教養の一つとして稽古された。本帖では源氏が玉鬘に和琴を教える場面、また柏木が和琴を弾く場面に登場する。</dd>
+      <dt>御簾（みす）</dt>
+      <dd>寝殿造りの邸宅で、室内と簀子・庭先とを隔てるために掛けられた簾（すだれ）。女性は御簾の内にいて姿を見せないのが作法とされ、御簾越しに音や気配だけで相手を意識する場面が本帖でも描かれる。</dd>
+      <dt>東の対（ひがしのたい）</dt>
+      <dd>寝殿造りにおいて、中心の寝殿の東側に配置された対の屋（付属棟）。六条院では東北の町（夏の町）に花散里が住み、その一角に若い公達が集う場面が描かれる。本帖では夕霧・柏木らの合奏の場となる。</dd>
+    </dl>
+    <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">光源氏 → 玉鬘（篝火に寄せた恋の歌）</div>
+        <div class="poem">篝火に　たちそふ恋の　煙こそ　世には絶えせぬ　炎なりけれ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">篝火とともに立ちのぼる煙のように、私の恋心もまた、この世で絶えることのない炎なのです。</div>
+        <div class="source">出典：『源氏物語』篝火巻（原典）。Wikipedia「篝火」の項、渋谷栄一氏『源氏物語の世界』を引用する「古典の改め」サイト、青空文庫（与謝野晶子訳）の該当箇所で原文を確認。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">玉鬘（光源氏への返歌）</div>
+        <div class="poem">行方なき　空に消ちてよ　篝火の　たよりにたぐふ　煙とならば</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">篝火のついでに立ちのぼる煙のようなお心でしたら、行方も知れぬ大空に消してしまってくださいまし。</div>
+        <div class="source">出典：『源氏物語』篝火巻（原典）。Wikipedia「篝火」の項、「古典の改め」サイト、青空文庫（与謝野晶子訳）の該当箇所で原文を確認。</div>
+      </div>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※この帖にはこの贈答歌以外に具体的な字句を伴う和歌の記述は見当たりません。</p>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>近江の君の悪評を耳にした玉鬘、自らの幸運を思う</h3><p>内大臣が引き取った近江の君の粗野な言動が世間の噂になっているのを聞き、玉鬘は源氏に引き取られ大切に育てられている自分の境遇をしみじみと幸運に思い、迷惑な恋心を寄せられてはいるものの、次第に源氏に心を開くようになっていた。</p></div>
+      <div class="tl-item"><h3>七月初旬の夕月夜、源氏が玉鬘のもとで終日和琴を教える</h3><p>秋になり涼しい風が吹き始めたころ、源氏は玉鬘のもとに足繁く通い、一日中そこで過ごして和琴を教えるようになっていた。五、六日ごろの夕月は早く西の山に沈み、荻の葉音が身に染みる情趣深い夜であった。</p></div>
+      <div class="tl-item"><h3>琴を枕に寄り添い、篝火に恋の歌を詠む</h3><p>源氏と玉鬘は琴を枕辺に置いて寄り添い横になる。源氏はこのような清らかな間柄も珍しいものだとため息まじりに夜を明かしかねるが、女房に怪しまれることを憚って帰ろうとし、消えかかっていた前栽の篝火を右近大夫に命じて焚き足させ、その炎に寄せて恋の歌を詠む。玉鬘は困惑しながらも、やんわりと思いを退ける歌を返した。</p></div>
+      <div class="tl-item"><h3>東の対からの合奏に気づき、夕霧・柏木らを招き寄せる</h3><p>そこへ東の対の方角から、夕霧が柏木・弁少将らと笛や箏を合わせる音が聞こえてくる。源氏は使いを出して三人を招き入れ、自らも和琴を掻き鳴らし、夕霧が笛を吹いた。</p></div>
+      <div class="tl-item"><h3>柏木、御簾の内の玉鬘を意識して控えめにしか弾けず</h3><p>源氏は和琴を柏木に譲る。琴の名手である父・内大臣に劣らぬ腕前でありながら、御簾の内に玉鬘が耳を澄ませていると思うと、柏木は思うぞんぶんには弾けず控えめな音になる。玉鬘は、実の兄弟と知らずに近くにいる柏木・弁少将の姿に、人知れず感慨を深くするのであった。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 篝火という比喩の巧みさ</div>
+      <h3>消えかかる灯りに恋情を重ねる</h3>
+      <p>源氏は、消えかかった篝火を焚き足させるという行為そのものを歌の契機とし、絶えず燃え上がる恋の炎に重ねて詠んでいる。一時的な灯りである篝火を、絶えることのない恋情の比喩として用いる着想に、源氏の言葉の巧みさが表れている。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 玉鬘の心境の変化</div>
+      <h3>近江の君との対比が生む安堵</h3>
+      <p>近江の君の悪評を耳にしたことで、玉鬘は自らが源氏のもとで大切に育てられている境遇の幸運さを再確認し、警戒心をいくらか緩めている。恋情を寄せられる困惑と、養い育てられた恩への感謝とが、玉鬘の中で揺れ動いている様子がうかがえる。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 源氏の理性と恋情のせめぎ合い</div>
+      <h3>一線を越えない自制</h3>
+      <p>源氏は琴を枕に玉鬘と寄り添い、夜を明かしかねるほどに心を動かされながらも、女房に怪しまれることを憚って結局は帰ろうとする。抑えがたい恋情を抱きつつも、玉鬘の世間的な立場（表向きは実の親子）を守ろうとする自制が働いている点に、源氏の恋の危うさと分別とが同居する複雑さが読み取れる。これは本文の描写にもとづくAIの読み解きであり、断定的な解釈ではありません。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 柏木の伏線</div>
+      <h3>知らぬまま近づく異母兄妹</h3>
+      <p>柏木は玉鬘が実の異母妹であることを知らぬまま、以前から恋心を寄せている。御簾の内の玉鬘を意識して和琴を控えめにしか弾けない柏木の姿は、後の帖（藤袴・真木柱など）で玉鬘をめぐる求婚譚がさらに展開していく伏線として機能していると考えられる。血縁を知らぬままに惹かれ合う（あるいは意識し合う）という構図は、『源氏物語』全体を通じて繰り返し用いられる劇的皮肉の型でもある。これはAIによる物語構造上の読み解きであり、原典に明記された作者の意図ではありません。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 夕霧の立ち位置について</div>
+      <h3>血縁も恋愛感情もない第三者として居合わせる</h3>
+      <p>本文で「名乗り合わない兄弟」として特筆されるのは柏木とその弟・弁少将であり、夕霧は玉鬘と血縁関係になく、本帖にも恋愛感情を示す記述は確認できません。ただし夕霧は、この後の「野分」帖で源氏と玉鬘の親密な様子を目撃し疑念を抱く役回りを担うことになります。本帖で柏木らとともに合奏の場に居合わせたことが、その後の夕霧の視点を準備する布石になっている、という見方も可能ですが、これは物語全体の構成を踏まえたAIの推測であり、本帖の本文自体が夕霧の心情を描いているわけではない点にはご留意ください。</p>
+    </div>
+    <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+  </section>
+
+  <!-- 7. 特筆事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+    <div class="note-card">
+      <h3>「玉鬘十帖」における位置づけ</h3>
+      <p>篝火は「玉鬘十帖」（第22帖〜第31帖）の第6帖にあたる。前帖「常夏」の近江の君の滑稽譚から一転し、恋の情趣を主題とする短い帖である。</p>
+    </div>
+    <div class="note-card">
+      <h3>巻名「篝火」の由来</h3>
+      <p>巻名は、源氏と玉鬘が交わした「篝火にたちそふ恋の煙こそ世には絶えせぬ炎なりけれ」「行方なき空に消ちてよ篝火のたよりにたぐふ煙とならば」の贈答歌に由来する。</p>
+    </div>
+    <div class="note-card">
+      <h3>短いながらも伏線を担う帖</h3>
+      <p>篝火は分量の少ない帖だが、柏木が玉鬘に寄せる恋心（後の「藤袴」「真木柱」への伏線）と、この場に居合わせた夕霧が後に源氏と玉鬘の関係へ疑念を抱く「野分」帖への布石とを、ひとつの合奏の場面に凝縮して示している点に、物語全体の中での意味がある。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 27;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  genji:      {x:450, y:80,  label:'光源氏'},
+  yugiri:     {x:660, y:190, label:'夕霧'},
+  kashiwagi:  {x:660, y:390, label:'柏木'},
+  naidaijin:  {x:450, y:480, label:'内大臣'},
+  tamakazura: {x:240, y:190, label:'玉鬘'}
+};
+const edges = [
+  {a:'genji', b:'tamakazura', label:'篝火に寄せて恋の歌を贈答、抑えがたい恋情', type:'emotion'},
+  {a:'genji', b:'yugiri', label:'実の父子', type:'kinship'},
+  {a:'kashiwagi', b:'naidaijin', label:'実の父子（長男）', type:'kinship'},
+  {a:'naidaijin', b:'tamakazura', label:'実の父娘。近江の君の悪評が話題に上るが、まだ対面できず', type:'kinship'},
+  {a:'kashiwagi', b:'tamakazura', label:'実は異母兄妹と知らぬまま、密かな恋心を寄せる', type:'emotion'},
+  {a:'yugiri', b:'tamakazura', label:'血縁なし。同じ六条院に育つ名目上の間柄（恋愛感情の記述は確認できず）', type:'kinship'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  const w = Math.max(96, n.label.length*13);
+  g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
