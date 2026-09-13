@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第29帖 行幸 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --gray:#8c8579;
+    --kon:#2c3a63;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+  .person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:var(--kon);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:18px; height:3px; display:inline-block;}
+  .legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka.solo{grid-column:1 / -1;}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+  .waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第29帖</div>
+    <h1>行幸</h1>
+    <div class="kana">みゆき</div>
+    <p class="lead">光源氏36歳の冬から37歳の春にかけての物語。十二月、冷泉帝が大原野へ行幸し、玉鬘も見物に出かける。実父・内大臣の姿を初めて目にした玉鬘だったが、それ以上に、源氏によく似た冷泉帝の輝くばかりの端麗さに目を奪われる。その心の動きを見透かした源氏は、玉鬘に尚侍としての出仕を勧める一方、裳着の儀を急ぎ、腰結の役を実父・内大臣に頼む決意を固める。長年隠し通してきた玉鬘の出自を、源氏はついに大宮、そして内大臣自身に打ち明けることになる。</p>
+  </div>
+
+  <!-- 1. 主な登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">36〜37歳</span></div><p>六条院の主。玉鬘への抑えがたい恋情を抱えたまま、大原野行幸を機に玉鬘の裳着と尚侍出仕を進め、ついに実父・内大臣へ玉鬘の出自を明かす決意を固める。</p></div>
+      <div class="person"><div class="row"><span class="name">玉鬘</span><span class="age">22〜23歳</span></div><p>源氏の養女。大原野行幸の行列を見物し、初めて実父・内大臣の姿を目にするが、それ以上に源氏によく似た冷泉帝の端麗さに強く心を惹かれる。裳着を控え、源氏から尚侍としての出仕を勧められる。</p></div>
+      <div class="person"><div class="row"><span class="name">冷泉帝</span><span class="age">18〜19歳</span></div><p>桐壺院と藤壺の子とされているが、実父は光源氏。大原野行幸で美々しい行列の中心となり、その輝くばかりの容姿で玉鬘の心を強く惹きつける。</p></div>
+      <div class="person"><div class="row"><span class="name">内大臣</span><span class="age">年齢確認できません</span></div><p>もとの頭中将で、玉鬘の実父。源氏から裳着の腰結役を依頼されるが、当初は母・大宮の病を口実に辞退する。後に玉鬘が実娘だと明かされ、喜んで役を引き受け、裳着当日にようやく玉鬘と対面する。</p></div>
+      <div class="person"><div class="row"><span class="name">大宮</span><span class="age">年齢確認できません</span></div><p>内大臣の母で、夕霧・雲居雁の祖母。病を理由に一度は腰結役辞退の口実に使われるが、源氏から玉鬘の素性を打ち明けられ、内大臣を三条宮に招いて対面を取り持つ。</p></div>
+      <div class="person"><div class="row"><span class="name">紫の上</span><span class="age">28〜29歳</span></div><p>六条院春の町の主。本帖では玉鬘や内大臣をめぐる一連の出来事の中心には立たないが、源氏の妻として物語の背景に位置づけられる。</p></div>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※このほか、玉鬘に思いを寄せる髭黒の右大将（31〜32歳）、内大臣の息子で玉鬘に求婚する柏木（21〜22歳）、光源氏の実子・夕霧（15〜16歳）、内大臣のもう一人の娘で玉鬘の境遇を羨む近江の君（年齢確認できません）も登場します。年齢はダ・ヴィンチWeb、および「3分で読む源氏物語」サイトの記述の一致を確認しました。</p>
+  </section>
+
+  <!-- 2. 人物系図 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+      <span><i style="background:var(--kon);"></i>政争・対立</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※この帖の本文には、政争・対立、主従・忠誠にあたる関係の記述は見当たらないため、系図には血縁・婚姻／感情／政略同盟の3種類のみを図示しています（凡例は5種類とも共通表示）。源氏―内大臣・源氏―大宮の線は、玉鬘の出自公表を通じて新たに結ばれる協力関係として「政略同盟」に分類しました。</p>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 大原野の行幸と六条院</h2></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+            <polygon points="0 0, 10 4, 0 8" fill="var(--murasaki)"/>
+          </marker>
+        </defs>
+        <rect x="0" y="0" width="760" height="420" fill="var(--paper)"/>
+        <text x="380" y="30" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--murasaki-deep)">大原野の行幸と六条院 ― 玉鬘をめぐる二つの舞台</text>
+
+        <!-- ①大原野 -->
+        <g class="scene-room" onclick="showScenePopup('①大原野（郊外・雪の行幸路）','十二月、冷泉帝の大原野への行幸が行われた。世間は皆この行列を見ようと沿道に押し寄せる。雪がちらつく朝、玉鬘も見物に訪れ、初めて実父・内大臣の姿を目にするが、それ以上に、源氏によく似ながらさらに気高い冷泉帝の端麗な容姿に目を奪われる。行列の中には玉鬘に思いを寄せる髭黒の右大将の姿もあったが、玉鬘はまったく見向きもしなかった。')">
+          <rect x="60" y="70" width="280" height="220" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
+          <text x="70" y="92" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--suou)">郊外・大原野</text>
+          <text x="200" y="170" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">冷泉帝　行幸の行列</text>
+          <text x="200" y="195" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">雪の中、玉鬘が見物に訪れる</text>
+          <circle cx="315" cy="90" r="13" fill="var(--murasaki)"/>
+          <text x="315" y="95" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">①</text>
+        </g>
+
+        <!-- ②六条院 -->
+        <g class="scene-room" onclick="showScenePopup('②六条院（玉鬘の裳着準備と内大臣との対面）','六条院に戻った源氏は、玉鬘に尚侍としての出仕を勧めるとともに、裳着の儀を急ぐ。腰結役を実父・内大臣に頼もうとするが、真相を知らない内大臣は母大宮の病を理由に一旦辞退する。そこで源氏は自ら三条宮の大宮を訪ね、玉鬘の出自を明かして仲を取り持つよう依頼する。大宮に招かれた内大臣も真相を知らされて喜んで役を引き受け、裳着当日、六条院で玉鬘と内大臣はついに対面を果たす。')">
+          <rect x="420" y="70" width="280" height="220" fill="#efe7d8" stroke="var(--suou)" stroke-width="1.8"/>
+          <text x="430" y="92" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--suou)">六条院</text>
+          <text x="560" y="170" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">玉鬘の裳着準備</text>
+          <text x="560" y="195" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">内大臣との対面の場</text>
+          <circle cx="675" cy="90" r="13" fill="var(--murasaki)"/>
+          <text x="675" y="95" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">②</text>
+        </g>
+
+        <!-- 移動の矢印：②→①→② -->
+        <line x1="340" y1="150" x2="418" y2="150" stroke="var(--murasaki)" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <line x1="418" y1="210" x2="340" y2="210" stroke="var(--murasaki)" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+        <text x="380" y="340" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">②六条院を出て見物に向かい① → 行幸を見て心動かされたのち②六条院へ戻り、裳着・対面へと物語が進みます</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">大原野は現在の京都市西京区にあたる郊外の台地で、朝廷の狩猟や行幸の地として知られていました。六条院は源氏が四季になぞらえて造営した邸で、玉鬘の裳着や内大臣との対面はこの六条院を舞台に進みます。両者は地理的にも物語上も対照的な場所として描かれています。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>行幸（ぎょうこう／みゆき）</dt>
+      <dd>天皇が皇居の外へお出ましになること。本帖では冷泉帝が十二月に大原野へ行幸したことが巻名の由来となっている。</dd>
+      <dt>大原野（おおはらの）</dt>
+      <dd>現在の京都市西京区にあたる台地。平安時代には朝廷の狩猟の地として知られ、藤原氏の氏神を祀る大原野神社もある。物語中でも複数の天皇の行幸の地として描かれる。</dd>
+      <dt>裳着（もぎ）</dt>
+      <dd>女子の成人を祝う儀式で、初めて裳（も）という腰から下にまとう衣を身につける。婚姻や出仕を控えた年齢の女性が行うことが多く、玉鬘もこれを機に尚侍としての出仕を控えている。</dd>
+      <dt>腰結（こしゆい）</dt>
+      <dd>裳着の儀式で、裳の紐を結ぶ役目。後見人や身分の高い人物が務めることが多く、本帖では源氏が実父である内大臣にこの役を依頼する。</dd>
+      <dt>尚侍（ないしのかみ）</dt>
+      <dd>内侍司の長官にあたる女官の職名。本来は天皇の側近くに仕える職だが、後には有力貴族の娘が入内に準じる形で任じられることもあった。源氏は玉鬘にこの職としての出仕を勧める。</dd>
+    </dl>
+    <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">玉鬘</div>
+        <div class="poem">うちぎらし　朝ぐもりせし　みゆきには　さやかに空の　光やは見し</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">霧が立ちこめるように朝曇りし、雪も降っていたあの行幸の日には、空の光（帝の輝くばかりのお姿）をはっきりと見ることができたでしょうか、という趣旨の歌。</div>
+        <div class="source">出典：『源氏物語』行幸巻（原典）。Wikipedia「源氏物語巻名歌」記事で原文を確認。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">光源氏（玉鬘への返歌）</div>
+        <div class="poem">あかねさす　光は空に　くもらぬを　などてみゆきに　目をきらしけむ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">日の光は空に曇りなく差していたのに（帝のお姿は輝くばかりであったのに）、どうして雪に目をくらませて見損なったのか、と玉鬘に軽くたしなめるように応じる趣旨の歌。</div>
+        <div class="source">出典：『源氏物語』行幸巻（原典）。Wikipedia「源氏物語巻名歌」記事で原文を確認。</div>
+      </div>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※この二首は、いずれも巻名「行幸」の由来となった歌としてWikipedia「源氏物語巻名歌」に原文が掲載されており、確認できました。本帖にはこのほかにも和歌が含まれるとされますが、原文の字句まで確認できたのはこの二首です。</p>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>源氏、玉鬘の行く末を思案する</h3><p>玉鬘への恋情をなお抑えきれずにいた源氏だったが、この危うい関係がいつまでも続けられるものではないとも感じていた。玉鬘の行く末について、尚侍としての出仕や裳着の準備など、あれこれと思いを巡らせる日々が続く。</p></div>
+      <div class="tl-item"><h3>十二月、大原野への行幸が告げられる</h3><p>冷泉帝が大原野へ行幸するとの知らせが都中に広まり、世間は皆この晴れがましい行列を一目見ようと沸き立つ。六条院でも、この機会に玉鬘を見物に出そうという話が持ち上がる。</p></div>
+      <div class="tl-item"><h3>行幸当日、雪の中を行列が進む</h3><p>当日は霧が立ちこめるように朝曇りし、雪もちらつく寒い日であった。それでも人々は沿道に押し寄せ、行列を一目見ようと押すな押すなの騒ぎとなる。玉鬘もこの見物に訪れていた。</p></div>
+      <div class="tl-item"><h3>玉鬘、初めて実父・内大臣の姿を見る</h3><p>行列の中には、玉鬘がまだ知らぬ実の父・内大臣（かつての頭中将）の姿もあった。玉鬘はこのとき初めて実父の姿を目にすることになるが、まだ自分がその娘であることは互いに知らない。</p></div>
+      <div class="tl-item"><h3>冷泉帝の端麗さに、玉鬘の目が釘付けになる</h3><p>しかし玉鬘の心をそれ以上に強く惹きつけたのは、源氏によく似ながらも、さらに気高く輝くばかりの美しさをたたえた冷泉帝の姿であった。他のどのような貴人や若い殿上人が通っても、帝の美しさとは比べものにならないと感じられるほどであった。</p></div>
+      <div class="tl-item"><h3>髭黒の姿にも、玉鬘は目もくれない</h3><p>行列の中には、かねて玉鬘に思いを寄せる髭黒の右大将の姿もあったが、黒々とした髭姿の彼に玉鬘はまったく見向きもしなかった。帝の輝くばかりの姿を目にした後では、無理もないことであったろう。</p></div>
+      <div class="tl-item"><h3>源氏、玉鬘に尚侍としての出仕を勧める</h3><p>行幸から戻った玉鬘の心の動きを見透かしたかのように、源氏は玉鬘に尚侍としての宮仕えを勧める。玉鬘の胸の内には、冷泉帝への憧れとも呼べる感情が芽生え始めていた。</p></div>
+      <div class="tl-item"><h3>源氏、裳着を急ぎ、腰結役を思案する</h3><p>源氏は玉鬘の裳着の儀を急ぐことを決意する。この機会に、長年隠し通してきた玉鬘の出自を実父・内大臣に明かし、腰結の役を頼もうと考えるようになる。</p></div>
+      <div class="tl-item"><h3>内大臣、母・大宮の病を口実に一旦辞退する</h3><p>源氏から腰結役を依頼された内大臣だったが、玉鬘が自分の実の娘であるとはまだ知らない。母・大宮の病を理由に、この依頼を一旦辞退してしまう。</p></div>
+      <div class="tl-item"><h3>源氏、自ら大宮を見舞い、真相を明かす</h3><p>この機を逃すまいと、源氏は自ら三条宮の大宮のもとへ見舞いに訪れる。そこで、事情あって引き取っていた娘が実は内大臣の実の娘であったことを、大宮に打ち明ける。</p></div>
+      <div class="tl-item"><h3>大宮、内大臣を三条宮へ招く</h3><p>大宮は内大臣に「話したいことがあるので三条宮へ来てほしい」との手紙を送る。内大臣は、夕霧と雲居雁の縁談についての話だろうと思いながらも、身なりを整えて三条宮へ向かう。</p></div>
+      <div class="tl-item"><h3>源氏、内大臣に玉鬘の出自を打ち明ける</h3><p>三条宮で顔を合わせた源氏は、内大臣に玉鬘の素性を明かす。かつての恋人・夕顔との間に生まれた娘であり、長年自らの養女として育ててきたことを打ち明けられ、内大臣は驚きとともに喜びを覚える。</p></div>
+      <div class="tl-item"><h3>内大臣、喜んで腰結役を引き受ける</h3><p>真相を知った内大臣は、今度は喜んで腰結の役を引き受ける。母大宮の病を口実にした先の辞退とはうって変わった態度の変化であった。</p></div>
+      <div class="tl-item"><h3>裳着の当日、玉鬘と内大臣がついに対面する</h3><p>裳着の当日、玉鬘は実父・内大臣とついに対面を果たす。長年互いに知らぬまま生きてきた父娘が、ようやく親子として向き合う瞬間であった。</p></div>
+      <div class="tl-item"><h3>真相が世間に漏れ、近江の君が玉鬘を羨む</h3><p>やがて玉鬘の出自をめぐる事の次第は世間にも漏れ伝わる。内大臣のもう一人の娘・近江の君は、玉鬘ばかりが誰からも大切にされる様子を羨ましく思い、ますます周囲からからかわれることになった。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 血縁より輝きに惹かれる玉鬘</div>
+      <h3>実父よりも帝に目を奪われる皮肉</h3>
+      <p>玉鬘は行幸の場で初めて実父・内大臣の姿を見るが、本文が印象的に描くのはむしろ、血のつながりのない冷泉帝への強い憧れである。血縁という「事実」よりも、目の前の輝きという「印象」に心を動かされる玉鬘の反応は、この巻全体を貫く一つの対比として読み取れる。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 源氏の「尚侍」推挙のねらい</div>
+      <h3>手放しがたい思いと現実的な処遇のはざまで</h3>
+      <p>源氏が玉鬘に尚侍としての出仕を勧めるのは、玉鬘の将来を考えた現実的な選択であると同時に、玉鬘を手元に近い立場に置き続けたいという思いの表れとも読める。裳着を急ぐ判断とあわせて、玉鬘の処遇をめぐる源氏の思惑が本帖の一つの軸になっている。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 源氏が長年の秘密を明かす決意の背景</div>
+      <h3>恋情の限界と、友への複雑な思い</h3>
+      <p>源氏が長年隠してきた玉鬘の出自を、この時期になってようやく内大臣に明かす決意をした背景には、玉鬘への恋情がこれ以上は続けられないという自覚と、かつての友人でありライバルでもあった内大臣に対する複雑な感情が絡み合っていると考えられる。これは物語の流れを踏まえたAIの読み解きであり、本文がそこまで明言しているわけではありません。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 玉鬘の出自が明かされることの物語的な意味</div>
+      <h3>「玉鬘十帖」の折り返し点</h3>
+      <p>玉鬘の出自が公になることは、彼女をめぐる秘密が解かれ、物語が新たな局面へと進む大きな転換点である。長く伏せられてきた事実が明かされることで、玉鬘自身の立場だけでなく、内大臣・近江の君といった周辺人物の関係も動き出していく。これは物語構成上の見立てであり、原典が明示的にそう位置づけているわけではありません。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 内大臣の態度の変わりよう</div>
+      <h3>「娘」という肩書きが変える態度</h3>
+      <p>母の病を口実に腰結役を一旦辞退した内大臣が、真相を知った途端に喜んで役を引き受ける様子は、当時の父娘関係が血縁の確認によっていかに大きく左右されるものであったかを浮き彫りにする。これは本文の展開から読み取れるAIの解釈であり、内大臣の内心の動機そのものが本文に詳しく説明されているわけではありません。</p>
+    </div>
+    <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+  </section>
+
+  <!-- 7. 特筆事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+    <div class="note-card">
+      <h3>「玉鬘十帖」における位置づけ</h3>
+      <p>行幸は「玉鬘十帖」（第22帖〜第31帖）の第8帖にあたる。玉鬘の出自が公になる大きな転換点であり、それまで秘められてきた事情が解かれていく、この一連の物語群の折り返し点として位置づけられる。</p>
+    </div>
+    <div class="note-card">
+      <h3>大原野行幸という史実に基づく場面設定</h3>
+      <p>大原野は平安時代の朝廷の狩猟・行幸の地として知られ、大原野神社は藤原氏の氏神として歴代の天皇の行幸を受けた実在の地である。物語の中の行幸の場面も、こうした史実上の慣習を踏まえて描かれている。</p>
+    </div>
+    <div class="note-card">
+      <h3>次帖以降への伏線</h3>
+      <p>玉鬘の出自が明かされ、内大臣との対面が果たされたことで、物語は玉鬘の裳着・入内をめぐる後続の帖（「藤袴」「真木柱」）へとつながっていく。近江の君の羨望が描かれる場面も、玉鬘十帖の後半における人間関係の広がりを予感させる。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 29;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+/* 7 nodes: genji at center, 6 others arranged hexagonally to avoid any line
+   passing over an unrelated node. */
+const nodes = {
+  genji:       {x:450, y:300, label:'光源氏'},
+  murasaki:    {x:450, y:80,  label:'紫の上'},
+  reizei:      {x:640, y:190, label:'冷泉帝'},
+  tamakazura:  {x:640, y:410, label:'玉鬘'},
+  oumi:        {x:450, y:520, label:'近江の君'},
+  naidaijin:   {x:260, y:410, label:'内大臣'},
+  oomiya:      {x:260, y:190, label:'大宮'}
+};
+const edges = [
+  {a:'genji', b:'murasaki', label:'夫婦', type:'kinship'},
+  {a:'genji', b:'tamakazura', label:'表向きは養父娘。冷めやらぬ恋情', type:'emotion'},
+  {a:'genji', b:'naidaijin', label:'玉鬘の出自を明かし、腰結を通じて結ぶ協力関係', type:'alliance'},
+  {a:'genji', b:'oomiya', label:'大宮を頼り、内大臣との仲を取り持ってもらう', type:'alliance'},
+  {a:'tamakazura', b:'reizei', label:'端麗な面差しに心惹かれる玉鬘', type:'emotion'},
+  {a:'tamakazura', b:'naidaijin', label:'行幸で初めて姿を見る実の父娘', type:'kinship'},
+  {a:'naidaijin', b:'oomiya', label:'母子', type:'kinship'},
+  {a:'naidaijin', b:'oumi', label:'父娘', type:'kinship'},
+  {a:'tamakazura', b:'oumi', label:'大切にされる玉鬘を羨む近江の君', type:'emotion'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  const w = Math.max(96, n.label.length*13);
+  g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
