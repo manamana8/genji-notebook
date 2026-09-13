@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第25帖 蛍 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --gray:#8c8579;
+    --kon:#2c3a63;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+  .person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:var(--kon);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:18px; height:3px; display:inline-block;}
+  .legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka.solo{grid-column:1 / -1;}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+  .waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第25帖</div>
+    <h1>蛍</h1>
+    <div class="kana">ほたる</div>
+    <p class="lead">光源氏36歳、五月雨の頃から夏にかけての物語。玉鬘に熱心に求婚する蛍兵部卿宮から便りが届き、源氏はこれ幸いと玉鬘に返事を書かせる。喜び勇んで六条院を訪れた宮の前で、源氏は几帳の内にひそませておいた蛍を一斉に放ち、その光で束の間玉鬘の姿を浮かび上がらせる。思いがけぬ美しさに心を奪われた宮は和歌で切々と訴えるが、玉鬘はつれない返事をするばかりであった（この逸話から宮は「蛍宮」と呼ばれるようになる）。五月五日の節句には玉鬘のもとに数多くの薬玉が贈られ、源氏は夏の町で騎射の宴を催してその夜は花散里のもとに泊まる。長雨が続くころ、物語に夢中になる玉鬘に源氏は物語をめぐる持論を語って聞かせるが、そのやり取りの延長でなお言い寄る手をやめようとはしない。その頃、玉鬘の実父・内大臣もまた、夢占によって亡き夕顔との娘の行方を気にかけ始めていた。</p>
+  </div>
+
+  <!-- 1. 主な登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">36歳</span></div><p>六条院の主。蛍兵部卿宮の恋心を焚きつける演出をしながら、自らも養女である玉鬘への思いを抑えきれず、後見人と恋人のはざまで揺れ続けている。</p></div>
+      <div class="person"><div class="row"><span class="name">玉鬘</span><span class="age">22歳</span></div><p>六条院・夏の町に住む源氏の養女。蛍兵部卿宮ら求婚者からの文に応対しながら、養父源氏からの度重なる言い寄りにも困惑を深める。物語を愛読し、源氏との物語論のやり取りの相手ともなる。</p></div>
+      <div class="person"><div class="row"><span class="name">蛍兵部卿宮</span><span class="age">年齢不詳</span></div><p>光源氏の異母弟。玉鬘に熱心に求婚する一人で、几帳越しに蛍の光でその姿を垣間見て以来、恋慕を募らせる。この逸話にちなみ「蛍宮」とも呼ばれるようになった。</p><p class="unconfirmed-age">正確な年齢は本帖に記載がなく、確認できません。</p></div>
+      <div class="person"><div class="row"><span class="name">紫の上</span><span class="age">28歳</span></div><p>六条院・春の町の女主人。本帖では表舞台には立たないが、長雨の頃、六条院の女性たちとともに物語に読みふける一人として触れられる。</p></div>
+      <div class="person"><div class="row"><span class="name">花散里</span><span class="age">年齢不詳</span></div><p>源氏の妻の一人、夏の町の主。五月五日の夜、久しぶりに自邸を訪れた源氏を迎え、穏やかな一夜を過ごす。</p><p class="unconfirmed-age">正確な年齢は本帖に記載がなく、確認できません。</p></div>
+      <div class="person"><div class="row"><span class="name">内大臣（もとの頭中将）</span><span class="age">年齢不詳</span></div><p>玉鬘の実父。夢占によって、亡き夕顔との間にもうけた娘が他人の養女になっているらしいと告げられ、行方を気にかけ始めるが、それが源氏のもとにいる玉鬘だとはまだ知らない。</p><p class="unconfirmed-age">正確な年齢は本帖に記載がなく、確認できません。</p></div>
+    </div>
+  </section>
+
+  <!-- 2. 人物系図 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 900 510" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+      <span><i style="background:var(--kon);"></i>政争・対立</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※この帖の本文には、政争・対立、政略同盟、主従・忠誠にあたる関係の記述は見当たらないため、系図には血縁・婚姻／感情の2種類のみを図示しています（凡例は5種類とも共通表示）。</p>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 六条院・夏の町、玉鬘の御殿</h2></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 760 460" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="760" height="460" fill="var(--paper)"/>
+
+        <text x="380" y="30" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--murasaki-deep)">六条院・夏の町　玉鬘の御殿</text>
+
+        <!-- outer building outline -->
+        <rect x="60" y="70" width="640" height="300" fill="none" stroke="var(--gray)" stroke-width="1.4" stroke-dasharray="5,4"/>
+
+        <!-- Room 1: 母屋・几帳の内側（蛍を放つ場面） -->
+        <g class="scene-room" onclick="showScenePopup('①母屋・几帳の内側（夜、蛍を放つ場面）','五月雨の合間のある夜、色よい返事に喜び勇んで六条院を訪れた蛍兵部卿宮は、几帳を隔てて玉鬘と対座した。宮がそれと知らぬまま座についたその時、几帳の内側に忍ばせておいた源氏が、あらかじめ袋に隠し持っていた数十匹の蛍を一斉に放つ。淡い光にほのかに浮かび上がった玉鬘の横顔を目にした宮は、想像以上の美しさに動揺し、その場で「鳴く声も聞こえぬ虫の思ひだに」と和歌を詠みかけた。')">
+        <rect x="90" y="100" width="270" height="240" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
+        <text x="100" y="120" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--suou)">母屋・几帳の内側</text>
+        <text x="225" y="215" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">玉鬘の几帳</text>
+        <text x="225" y="238" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">蛍を放つ夜の場面</text>
+        <circle cx="335" cy="120" r="12" fill="var(--murasaki)"/>
+        <text x="335" y="125" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">①</text>
+        </g>
+
+        <!-- Room 2: 物語論の部屋 -->
+        <g class="scene-room" onclick="showScenePopup('②五月雨の夜、物語論を交わす部屋','長雨が続き、六条院の女性たちがそろって物語に読みふけっていたころ、玉鬘の部屋にも絵入りの物語草子が散らかっていた。訪れた源氏はそれを見てからかい半分に物語を批評してみせるが、やがて「日本紀などは、ただかたそばぞかし。これらにこそ道々しく詳しきことはあらめ」と、正史よりも物語にこそ人の世の真実が描かれているのだと持論を語り出す。気安いやり取りの延長で、源氏は自らの恋情もなお抑えきれずにいる。')">
+        <rect x="400" y="100" width="270" height="240" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
+        <text x="410" y="120" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--suou)">玉鬘の常在の間</text>
+        <text x="535" y="215" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">物語草子の間</text>
+        <text x="535" y="238" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">物語論の場面</text>
+        <circle cx="645" cy="120" r="12" fill="var(--murasaki)"/>
+        <text x="645" y="125" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">②</text>
+        </g>
+
+        <!-- connecting corridor -->
+        <line x1="360" y1="220" x2="400" y2="220" stroke="var(--gray)" stroke-width="1.6" stroke-dasharray="4,4"/>
+        <text x="380" y="205" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">渡殿</text>
+
+        <text x="380" y="415" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">同じ玉鬘の御殿（六条院東北・夏の町）の中で、①夜の蛍の場面と②長雨の物語論の場面が展開する</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">いずれの場面も、六条院東北・夏の町にある玉鬘の御殿を舞台とする点で共通している。同じ空間が、几帳を隔てた求婚の駆け引きの場にも、物語をめぐる知的な対話の場にもなっている点が、この帖の読みどころである。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>蛍（ほたる）</dt>
+      <dd>巻名の由来となった昆虫。本帖では源氏が几帳の内に放ち、その光で玉鬘の姿を蛍兵部卿宮に一瞬だけ見せる演出に用いられた。この逸話から兵部卿宮は「蛍宮」と呼ばれるようになる。</dd>
+      <dt>几帳（きちょう）</dt>
+      <dd>平安時代、室内の目隠しや間仕切りに用いた調度。二本の柱に台をつけ、薄い布（帷子）を掛け渡したもの。本帖では玉鬘と蛍兵部卿宮を隔てる道具として重要な役割を果たす。</dd>
+      <dt>物語論（ものがたりろん）</dt>
+      <dd>長雨の間、物語に熱中する玉鬘に対して源氏が語って聞かせる、物語の意義についての持論。「日本紀などはただかたそばぞかし」の一節で知られ、正史（『日本書紀』など）よりも物語にこそ人の世の真実が描かれていると説く。本居宣長が『紫文要領』でこの場面を作品全体の「大綱総論」と位置づけたことでも知られる。</dd>
+      <dt>五月雨（さみだれ）</dt>
+      <dd>陰暦五月頃に降り続く長雨。現在の梅雨にあたる。本帖前半の蛍兵部卿宮との贈答や、後半の物語論の場面の背景となる季節。</dd>
+      <dt>薬玉（くすだま）</dt>
+      <dd>端午の節句（五月五日）に、蘭・菖蒲などの香草を丸めて糸を垂らして飾った玉。邪気払いや長寿祈願の意味を持つ。本帖では玉鬘のもとに数多く贈られたと記される。</dd>
+    </dl>
+    <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">蛍兵部卿宮 → 玉鬘（蛍の光を浴びた夜に詠みかけた歌）</div>
+        <div class="poem">鳴く声も　聞こえぬ虫の　思ひだに　人の消つには　消ゆるものかは</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">鳴く声も聞こえない蛍の光さえ、人が消そうとしても消えないのに、まして私のこの恋心をどうして消すことができましょうか。</div>
+        <div class="source">出典：『源氏物語』蛍巻（原典）。Wikisource、令和和歌所、新古今和歌集の部屋（源氏物語和歌一覧）など複数のサイトで原文を確認。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">玉鬘（蛍兵部卿宮への返歌）</div>
+        <div class="poem">声はせで　身をのみ焦がす　蛍こそ　言ふよりまさる　思ひなるらめ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">声には出さずにただ身を焦がして光る蛍のほうこそ、言葉に出して訴える人より深い思いを抱いているのでしょう。</div>
+        <div class="source">出典：『源氏物語』蛍巻（原典）。同上のサイトで原文を確認。</div>
+      </div>
+      <div class="waka solo">
+        <div class="speaker">蛍兵部卿宮 → 玉鬘（五月五日、端午の節句に贈った歌）</div>
+        <div class="poem">今日さへや　引く人もなき　水隠れに　生ふる菖蒲の　根のみ泣かれむ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">菖蒲を引くべき今日でさえ、私は引いてくれる人（あなた）もなく、水に隠れて生える菖蒲のように、声も立てずただ泣くばかりなのでしょうか。</div>
+        <div class="unconfirmed">出典：『源氏物語』蛍巻（原典）。「新古今和歌集の部屋」の源氏物語和歌一覧で原文を確認。この歌に対する玉鬘の返歌も伝わるとされますが、正確な字句は確認できませんでした。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>五月雨の頃、蛍兵部卿宮から玉鬘への文</h3><p>玉鬘への恋慕やまぬ蛍兵部卿宮は、五月雨で気も塞ぐ嘆きを添え、もう少し親しくしてほしいという文を玉鬘のもとに送ってくる。</p></div>
+      <div class="tl-item"><h3>源氏、玉鬘に返事を書かせる</h3><p>これを見た源氏は「この宮の風流な求愛なら見所がある、無下にしてはいけない」と述べ、玉鬘の代筆役である宰相の君を呼び、自ら口授して返事を書かせる。玉鬘がどのような反応を示すかを興味深く見守っていた。</p></div>
+      <div class="tl-item"><h3>喜び勇んで六条院を訪れる蛍兵部卿宮</h3><p>色よい返事を受け取った宮は喜び勇んで六条院にやってくる。玉鬘は几帳を隔てて宮と対座することになった。</p></div>
+      <div class="tl-item"><h3>源氏、几帳の内に蛍を放つ</h3><p>好機をうかがっていた源氏は、あらかじめ袋に隠しておいた数十匹の蛍を、几帳の内側で一斉に放つ。淡い光に浮かび上がった玉鬘の姿を、宮は思いがけず目にしてしまう。</p></div>
+      <div class="tl-item"><h3>蛍の光に心を奪われる宮、和歌の応酬</h3><p>予想以上の美しさに動揺した宮は、その場で「鳴く声も聞こえぬ虫の思ひだに」の歌を詠みかける。玉鬘は「声はせで身をのみ焦がす蛍こそ」と、つれなくも巧みに切り返す。この逸話から、宮は以後「蛍宮」と呼ばれるようになる。</p></div>
+      <div class="tl-item"><h3>五月五日、端午の節句</h3><p>玉鬘のもとには数多くの薬玉が贈られる。蛍兵部卿宮からも重ねて菖蒲の歌を添えた恋文が届くが、玉鬘の心は動かない。源氏は夏の町で騎射の宴を催し、その夜は花散里のもとに泊まる。</p></div>
+      <div class="tl-item"><h3>花散里との穏やかな一夜</h3><p>久しぶりに自邸に源氏を迎えた花散里は、人づてに聞くばかりだった六条院の華やかな催しを、この日は自らの町で体験できたことを密かに喜ぶ。源氏もまた、この夫人との落ち着いた関係にしみじみとした思いを抱く。</p></div>
+      <div class="tl-item"><h3>長雨の中、物語に読みふける六条院の女性たち</h3><p>やがて五月雨の長雨が続き、紫の上をはじめ六条院の女性たちは、絵入りの物語草子を写したり読みふけったりして日々を過ごす。玉鬘の部屋にも物語が散らかっている。</p></div>
+      <div class="tl-item"><h3>源氏の物語論、なおもやまぬ懸想</h3><p>物語に夢中な玉鬘をからかいながら、源氏は「日本紀などはただかたそばぞかし。これらにこそ道々しく詳しきことはあらめ」と、正史よりも物語にこそ人の世の真実が描かれていると持論を語る。しかしそのやり取りの延長で、源氏は玉鬘への恋情をなおも抑えきれず、言い寄る手をやめようとはしない。</p></div>
+      <div class="tl-item"><h3>玉鬘の実父・内大臣、娘の行方を気にかけ始める</h3><p>その頃、玉鬘の実父である内大臣も、夢占によってかつて夕顔との間にもうけた娘が、今は他人の養女になっているらしいとの告げを受ける。まさかその娘が源氏のもとにいる玉鬘その人だとは知らぬまま、内大臣は密かにその行方を気にかけ始める。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 源氏の演出に見える二重の思惑</div>
+      <h3>手引きのようで、実は独占欲</h3>
+      <p>蛍の光で玉鬘を見せるという演出は、表向きは蛍兵部卿宮への手引きのようでありながら、源氏自身が玉鬘の美しさを再確認し、他者の反応を通じてその価値を確かめる行為だったとも読める。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 和歌の応酬に見る玉鬘の気丈さ</div>
+      <h3>相手の歌の論理を逆手に取る返歌</h3>
+      <p>兵部卿宮の熱烈な歌に対し、玉鬘は「声はせで身をのみ焦がす蛍こそ」と、相手の比喩をそのまま逆手に取って軽くいなす。困難な立場に置かれながらも機知を失わない玉鬘の人物像がうかがえる。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 物語論は紫式部自身の物語観の反映か</div>
+      <h3>「日本紀などはただかたそばぞかし」</h3>
+      <p>源氏が語る物語論は、作中人物の言葉でありながら、正史よりも物語にこそ人の世の真実が描かれるという、紫式部自身の創作観と重なるものとして古くから注目されてきた。本居宣長は『紫文要領』でこの場面を作品全体の「大綱総論」と位置づけている。ただしこれは後世の研究者による解釈であり、紫式部本人がどこまで自覚的にそう意図していたかは確認できません。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 源氏の玉鬘への恋情が持つ危うさ</div>
+      <h3>知的な対話の延長にある恋情</h3>
+      <p>物語論という穏やかで知的なやり取りの延長線上でも、源氏は依然として玉鬘への恋心を抑えきれずにいる。後見人という庇護の関係と実際の恋情とが分かちがたく結びついている点に、源氏という人物の恋愛観の一貫した危うさが表れていると考えられる。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜「蛍宮」というあだ名が示す立場の弱さ</div>
+      <h3>恋の主導権を握れない高貴な弟宮</h3>
+      <p>蛍兵部卿宮は源氏の異母弟であり高い身分を持ちながら、玉鬘をめぐる求婚譚の中では源氏の演出に踊らされる役回りに終始する。本帖で得た「蛍宮」というあだ名自体が、恋の主導権を握れない彼の立場を象徴しているとも読める。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 内大臣の捜索が示す物語の伏線</div>
+      <h3>読者だけが知る劇的皮肉</h3>
+      <p>本帖末尾でさりげなく語られる内大臣の夢占とその後の捜索は、玉鬘の出自が明らかになっていく後の帖（「行幸」「藤袴」など）への伏線として機能している。真相をすでに知る読者にとって、この場面は劇的皮肉を伴って読める。</p>
+    </div>
+    <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+  </section>
+
+  <!-- 7. 特筆事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+    <div class="note-card">
+      <h3>「玉鬘十帖」における位置づけ</h3>
+      <p>蛍は「玉鬘十帖」（第22帖〜第31帖）の第4帖にあたり、前帖「胡蝶」で本格化した求婚譚の中心に、蛍兵部卿宮との恋の駆け引きを据えて描く帖である。</p>
+    </div>
+    <div class="note-card">
+      <h3>巻名「蛍」の由来</h3>
+      <p>巻名は、源氏が几帳の内に蛍を放って玉鬘の姿を蛍兵部卿宮に見せた、本帖前半の有名な場面に由来する。この逸話から蛍兵部卿宮は「蛍宮」の呼び名を得た。</p>
+    </div>
+    <div class="note-card">
+      <h3>物語論という自己言及的な場面</h3>
+      <p>本帖後半の物語論は、物語の登場人物が物語そのものの意義を論じるという、極めて自己言及的な場面である。物語全体から見ても異色の一節であり、紫式部の文学観を間接的に伝える箇所として古来注目されてきた。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 25;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  genji:         {x:450, y:280, label:'光源氏'},
+  murasaki:      {x:450, y:70,  label:'紫の上'},
+  hotaru:        {x:649.7, y:215.1, label:'蛍兵部卿宮'},
+  naidaijin:     {x:573.5, y:449.9, label:'内大臣'},
+  tamakazura:    {x:326.5, y:449.9, label:'玉鬘'},
+  hanachirusato: {x:250.3, y:215.1, label:'花散里'}
+};
+const edges = [
+  {a:'genji', b:'murasaki', label:'正妻、春の町の女主人', type:'kinship'},
+  {a:'genji', b:'hanachirusato', label:'妻の一人、夫婦の営みは既に絶えた信頼関係', type:'kinship'},
+  {a:'genji', b:'hotaru', label:'異母弟', type:'kinship'},
+  {a:'genji', b:'tamakazura', label:'後見人という立場と恋情のはざま、蛍の演出後もなお言い寄る', type:'emotion'},
+  {a:'tamakazura', b:'hotaru', label:'蛍の光に姿を見られ、恋慕を募らせる求婚', type:'emotion'},
+  {a:'tamakazura', b:'naidaijin', label:'実の父娘だが、互いにまだそれと知らない', type:'kinship'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  const w = Math.max(96, n.label.length*13);
+  g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
