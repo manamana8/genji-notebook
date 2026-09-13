@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第28帖 野分 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --gray:#8c8579;
+    --kon:#2c3a63;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+  .person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:var(--kon);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:18px; height:3px; display:inline-block;}
+  .legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka.solo{grid-column:1 / -1;}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+  .waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第28帖</div>
+    <h1>野分</h1>
+    <div class="kana">のわき</div>
+    <p class="lead">光源氏36歳、初秋八月の六条院。里下がり中の秋好中宮が丹精込めた秋の庭を愛でていたところへ、例年よりも激しい野分（台風）が吹き荒れる。風の見舞いに訪れた夕霧は、屏風が押し畳まれ御格子も上げられた隙間から、生まれて初めて紫の上の姿を垣間見て、その美貌に強い衝撃を受ける。翌朝、源氏に伴われて六条院の女君たちを見舞って回るうち、玉鬘のもとでは親子とは思えないほど睦まじい源氏の様子を目にして動揺し、とりどりに美しい女性たちの面影に心乱れながら、恋人・雲居雁のもとへ見舞いの和歌を送る。</p>
+  </div>
+
+  <!-- 1. 主な登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">36歳</span></div><p>六条院の主。野分の翌朝、夕霧を伴い女君たちを見舞って回るが、玉鬘への抑えがたい恋情を隠しきれない振る舞いを、当の息子に覗き見られてしまう。</p></div>
+      <div class="person"><div class="row"><span class="name">紫の上</span><span class="age">28歳</span></div><p>六条院春の町の主。台風で屏風が畳み寄せられ御格子も上げられていた隙間から、夕霧にその姿を垣間見られる。後に源氏から見られたかもしれないと告げられ、頬を赤らめる。</p></div>
+      <div class="person"><div class="row"><span class="name">夕霧</span><span class="age">15歳</span></div><p>光源氏の実子。風の見舞いに訪れた六条院で、はからずも紫の上を垣間見てその美貌に心奪われる。翌朝は父に伴われて女君たちを巡り、玉鬘への父の睦まじすぎる態度にも驚き動揺する。</p></div>
+      <div class="person"><div class="row"><span class="name">玉鬘</span><span class="age">22歳</span></div><p>六条院夏の町・西の対に住む源氏の養女。見舞いに訪れた源氏と、親子らしからぬ睦まじい様子でいるところを夕霧に覗き見られる。</p></div>
+      <div class="person"><div class="row"><span class="name">明石の姫君</span><span class="age">8歳</span></div><p>光源氏と明石の君の娘。紫の上に養育されている。見舞いに訪れた夕霧一人に、あどけなさの残る美しさと評される。</p></div>
+      <div class="person"><div class="row"><span class="name">秋好中宮</span><span class="age">年齢確認できません</span></div><p>六条御息所の娘で冷泉帝の中宮。里下がり中の六条院秋の町で野分に遭い、丹精込めた秋の花園が無残に荒れるのを嘆く。</p></div>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※このほか、大宮邸で娘・雲居雁の縁談や近江の君の不出来を嘆く内大臣（もとの頭中将、年齢確認できません）も登場します。</p>
+  </section>
+
+  <!-- 2. 人物系図 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 900 540" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+      <span><i style="background:var(--kon);"></i>政争・対立</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※この帖の本文には、政争・対立、政略同盟、主従・忠誠にあたる関係の記述は見当たらないため、系図には血縁・婚姻／感情の2種類のみを図示しています（凡例は5種類とも共通表示）。夕霧―紫の上・夕霧―玉鬘の線は、いずれも本帖で初めて生じた／表面化した心の動揺を示す感情の線（臙脂破線）です。</p>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 野分が襲った六条院</h2></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 760 500" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+            <polygon points="0 0, 10 4, 0 8" fill="var(--murasaki)"/>
+          </marker>
+        </defs>
+        <rect x="0" y="0" width="760" height="500" fill="var(--paper)"/>
+        <text x="380" y="30" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--murasaki-deep)">六条院四町図 ― 野分の一夜と翌朝の見舞い</text>
+
+        <!-- 冬の町（西北）明石の君：参考として表示のみ -->
+        <rect x="150" y="60" width="230" height="160" fill="#efe7d8" stroke="var(--line)" stroke-width="1.4"/>
+        <text x="160" y="80" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">西北・冬の町</text>
+        <text x="265" y="150" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">明石の君</text>
+
+        <!-- 秋の町（西南）秋好中宮：参考として表示のみ -->
+        <rect x="150" y="220" width="230" height="160" fill="#efe7d8" stroke="var(--line)" stroke-width="1.4"/>
+        <text x="160" y="240" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">西南・秋の町</text>
+        <text x="265" y="310" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">秋好中宮</text>
+
+        <!-- 左2区画をまとめてクリック可能に：badge③ -->
+        <g class="scene-room" onclick="showScenePopup('③秋の町（秋好中宮）・冬の町（明石の君）','翌朝、源氏は夕霧を伴い、まず秋の町の秋好中宮を見舞う。中宮は丹精込めて手入れした庭の秋草が、野分によって無残に荒れ果てたことを嘆いていた。続いて冬の町の明石の君のもとへも見舞いに立ち寄ったとされる。いずれも本文の記述は簡潔で、玉鬘の場面ほど詳しくは描かれていません。')">
+          <rect x="150" y="60" width="230" height="320" fill="transparent" stroke="var(--suou)" stroke-width="1.8" stroke-dasharray="4,3"/>
+          <circle cx="365" cy="235" r="13" fill="var(--murasaki)"/>
+          <text x="365" y="240" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">③</text>
+        </g>
+
+        <!-- 夏の町（東北）花散里・玉鬘：badge② -->
+        <g class="scene-room" onclick="showScenePopup('②夏の町（玉鬘の御殿・花散里の御殿）','同じ朝、源氏は夕霧を伴ってこの町に住む玉鬘のもとを訪れる。夕霧は御簾のほころびからそっと中を覗き見、親子とは思えないほど睦まじく戯れる源氏と玉鬘の様子に驚き、目が離せなくなる。玉鬘の美しさは紫の上に迫るほどだと夕霧は思う。同じ町に住む花散里のもとへも見舞いに立ち寄ったとされます。')">
+          <rect x="380" y="60" width="230" height="160" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
+          <text x="390" y="80" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--suou)">東北・夏の町</text>
+          <text x="495" y="130" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">玉鬘・花散里の御殿</text>
+          <text x="495" y="153" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">夕霧、御簾越しに覗き見る</text>
+          <circle cx="590" cy="80" r="13" fill="var(--murasaki)"/>
+          <text x="590" y="85" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">②</text>
+        </g>
+
+        <!-- 春の町（東南）紫の上・明石の姫君：badge① -->
+        <g class="scene-room" onclick="showScenePopup('①春の町（紫の上・明石の姫君の御殿）','野分の夜、屏風が押し畳まれ御格子も上げられていた隙間から、風の見舞いに訪れた夕霧は廂の御座にいる紫の上の姿をはからずも垣間見てしまう。気品高く美しいその姿は、春の曙の霞の間に咲き乱れる樺桜を見るような心地がしたという。紫の上は台風に痛めつけられる庭の花を気にかけて奥へ入りかね、結果として姿をさらすことになった。この町では明石の姫君も養育されており、翌朝には夕霧一人がその様子を見舞っています。')">
+          <rect x="380" y="220" width="230" height="160" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
+          <text x="390" y="240" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--suou)">東南・春の町</text>
+          <text x="495" y="290" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">紫の上・明石の姫君の御殿</text>
+          <text x="495" y="313" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">夕霧、紫の上を垣間見る</text>
+          <circle cx="590" cy="240" r="13" fill="var(--murasaki)"/>
+          <text x="590" y="245" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">①</text>
+        </g>
+
+        <!-- 移動の矢印：①→③→② -->
+        <line x1="577" y1="240" x2="378" y2="235" stroke="var(--murasaki)" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <line x1="378" y1="200" x2="577" y2="93" stroke="var(--murasaki)" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+        <text x="380" y="470" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">①野分の夜（春の町）→ ③翌朝まず秋・冬の町を見舞う → ②最後に夏の町の玉鬘を訪ねる、という順で描かれています</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">六条院は東南＝春（紫の上）・東北＝夏（花散里・玉鬘）・西南＝秋（秋好中宮）・西北＝冬（明石の君）の四町からなります。野分の夜にまず①春の町での垣間見が起こり、翌朝の見舞いの順番は複数の解説サイト・講義録で③秋・冬の町→②夏の町（玉鬘）の順とおおむね一致していたため、この順に矢印を示しています。ただし夕霧単独での明石の姫君・大宮への見舞いや、内大臣が大宮邸で語る場面は、六条院の外（三条宮）や本図の対象外の細部にあたるため、この図には含めていません。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>野分（のわき）</dt>
+      <dd>秋、二百十日前後に吹く暴風。今日でいう台風にあたる古語で、本帖の巻名の由来。第1帖「桐壺」にも「野分立ちて」の一節があり、桐壺帝が亡き桐壺更衣を思い出す場面で用いられている。</dd>
+      <dt>垣間見（かいまみ）</dt>
+      <dd>御簾や几帳、屏風などの隙間からそっと覗き見ること。『源氏物語』では空蟬・若紫の場面などに続き、本帖の紫の上・玉鬘の場面が代表的な垣間見の一つに数えられる。</dd>
+      <dt>御格子（みこうし）</dt>
+      <dd>寝殿造りの建物と外部とを隔てる、上下に開閉できる格子状の建具。御簾とともに屋内と屋外を仕切る役割を持つ。本帖では強風のため格子が上げられ、屏風も畳み寄せられていたことが、夕霧が紫の上を垣間見る直接のきっかけとなった。</dd>
+      <dt>里下がり（さとさがり）</dt>
+      <dd>后妃や女房などが宮中を離れ、実家や里邸に滞在すること。本帖の秋好中宮も、里下がり中に六条院で野分に遭った。</dd>
+    </dl>
+    <div class="waka-grid">
+      <div class="waka solo">
+        <div class="speaker">夕霧 → 雲居雁（見舞いの和歌）</div>
+        <div class="poem">風騒ぎ　むら雲まがふ　夕べにも　わするる間なく　わすられぬ君</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">風が吹き荒れ、群雲が乱れ飛ぶような夕べにも、片時も忘れることなく、あなたのことが忘れられずにおります。</div>
+        <div class="source">出典：『源氏物語』野分巻（原典）。森永エンゼルカレッジ「源氏物語全講会」第115回の講義本文で原文を確認。</div>
+      </div>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※この帖には和歌が複数首含まれるとされますが、本文中で具体的な字句を確認できたのはこの一首のみです。他の和歌については出典・字句を確認できなかったため、掲載を見送りました。</p>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>秋好中宮の里下がりと、丹精込めた秋の庭</h3><p>八月、里下がり中の秋好中宮の御前には、例年よりも見所の多い秋の花が植えられていた。春秋の優劣を論じる人々の間でも、この庭を見て秋を讃美する者が増えていたほどであった。折しも中宮の亡き父の忌月にあたるため、源氏は管弦の遊びを控え、静かに花を眺めて過ごしていた。</p></div>
+      <div class="tl-item"><h3>野分、六条院を激しく吹き荒れる</h3><p>そこへ例年よりもけたたましい野分（台風）が近づき、空の色を変えて吹き出す。庭の草花は倒れ、女君たちは恐ろしさに夜も眠れないほどであった。</p></div>
+      <div class="tl-item"><h3>夕霧、風の見舞いに訪れ紫の上を垣間見る</h3><p>父・源氏のもとへ風の見舞いに参上した夕霧は、強風のために屏風が押し畳まれ御格子も上げられていた隙間から、廂の御座にいる紫の上の姿をはからずも目にする。気品高く美しいその姿は、春の曙の霞の間に咲き乱れる樺桜を見るような心地であったという。</p></div>
+      <div class="tl-item"><h3>夕霧、祖母大宮邸へも見舞いに向かう</h3><p>夕霧は三条宮の祖母・大宮のもとにも風の見舞いに参上する。夜通し吹き続ける風の中、恋人である雲居雁のことも忘れるほど、初めて見た紫の上の面影が頭から離れなかった。</p></div>
+      <div class="tl-item"><h3>翌朝、源氏と夕霧、秋好中宮・明石の君を見舞う</h3><p>野分が去った翌朝、源氏は夕霧を伴い、里下がり中の秋好中宮をはじめとする六条院の女君たちの見舞いに回る。中宮は丹精込めた秋の庭が野分で無残に荒れたことを嘆いていた。続いて明石の君のもとへも立ち寄ったとされる。</p></div>
+      <div class="tl-item"><h3>玉鬘のもとで、親子らしからぬ源氏の様子を覗き見る</h3><p>玉鬘の御殿を訪れた際、夕霧は御簾のほころびからそっと中を覗き見る。親子とは思えないほど睦まじく戯れる源氏と玉鬘の様子に、これは一体どういうことかと目が離せなくなる。玉鬘の美しさは、紫の上に迫るほどだと夕霧は思うのだった。</p></div>
+      <div class="tl-item"><h3>花散里への見舞い、夕霧単独で明石の姫君を訪ねる</h3><p>同じ夏の町に住む花散里のもとへも見舞いに立ち寄ったとされる。その後、夕霧は一人で明石の姫君のもとを訪ね、あどけなさの残る美しさに心を動かされる。</p></div>
+      <div class="tl-item"><h3>夕霧、雲居雁へ見舞いの和歌を贈る</h3><p>とりどりに花のように美しい女君たちの面影に心乱れながらも、夕霧は律義に恋人・雲居雁への見舞いの和歌を書きつけ、そのあたりにあった刈萱に結んで贈った。</p></div>
+      <div class="tl-item"><h3>大宮邸に戻ると、内大臣が娘たちのことを語っていた</h3><p>夕方、三条宮に帰った夕霧は、そこに来ていた内大臣（もとの頭中将）と出くわす。内大臣は娘・雲居雁のことや、不出来を嘆く近江の君について大宮に語っていた。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 三代にわたる「面影」の反復</div>
+      <h3>桐壺更衣から続く憧れの系譜</h3>
+      <p>紫の上は藤壺の姪であり、藤壺は桐壺更衣に似ているとされて桐壺帝・光源氏の双方に愛された経緯がある。その紫の上の姿に、今度は光源氏の実子・夕霧が初めて出会って心を奪われる本帖の場面は、桐壺帝から光源氏へ、そして夕霧へと、同じ面影に惹かれる構図が世代を超えて繰り返されていることを印象づける。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 紫の上の反応</div>
+      <h3>頬を赤らめる気まずさ</h3>
+      <p>源氏から「夕霧に姿を見られたかもしれない」と告げられた紫の上が頬を赤らめる様子は、単なる恥じらいだけでなく、これまで夫・源氏が徹底して自分の姿を息子から遠ざけてきた事情を紫の上自身も理解していたことをうかがわせる。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 夕霧の動揺が示すもの</div>
+      <h3>生真面目な公達に生じた最初の綻び</h3>
+      <p>夕霧はそれまで恋人・雲居雁に一途な生真面目な公達として描かれてきたが、本帖での紫の上への衝撃は、その一途さに初めて生じた綻びとして読むことができる。この動揺そのものは本文に明記された心情描写にもとづくものだが、これが後年の帖（第39帖「夕霧」）で夕霧自身が道ならぬ恋に踏み込んでいく人物造形の伏線として機能しているという見方は、物語全体の構成を踏まえたAIの読み解きであり、本帖の本文自体がそこまでを示しているわけではありません。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 玉鬘の垣間見が持つ物語上の機能</div>
+      <h3>次帖「行幸」への伏線</h3>
+      <p>夕霧が目にした、親子とは思えないほど睦まじい源氏と玉鬘の様子は、読者にも夕霧と同じ違和感を抱かせる仕掛けになっている。この源氏の真意（玉鬘を実の娘としてではなく、婿選びの駒として手元に置きたい思惑があること）は、次帖「行幸」で明らかにされていく。本帖の覗き見場面は、その謎を提示する伏線として機能していると考えられるが、これは物語構成上の推測であり、本帖自体が源氏の意図を明言しているわけではありません。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 野分という自然現象の物語上の役割</div>
+      <h3>六条院の秩序を一時的に乱す装置</h3>
+      <p>光源氏が四季になぞらえて造営した六条院は、女君たちがそれぞれの町に整然と住み分ける、源氏の意志によって作られた秩序だった空間である。野分という制御不能な自然の力が吹き荒れることで、屏風や御格子といった「隔て」が乱れ、隠されていたはずの紫の上の姿や、源氏と玉鬘の危うい親密さが図らずも露わになる。野分は単なる天候描写ではなく、六条院の秩序に生じる綻びを可視化する装置として読むことができるが、これはAIによる物語構造上の解釈であり、原典が明示的にそう述べているわけではありません。</p>
+    </div>
+    <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+  </section>
+
+  <!-- 7. 特筆事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+    <div class="note-card">
+      <h3>「玉鬘十帖」における位置づけ</h3>
+      <p>野分は「玉鬘十帖」（第22帖〜第31帖）の第7帖にあたる。前帖「篝火」の恋の情趣から一転し、台風という自然現象を軸に六条院の女君たちの姿を整理して見せる帖である。</p>
+    </div>
+    <div class="note-card">
+      <h3>夕霧の視点から初めて描かれる六条院</h3>
+      <p>本帖は、光源氏の実子でありながらそれまで六条院の女君たちの姿をほとんど知らなかった夕霧の視点を通して、六条院の様子が初めてまとまった形で描かれる帖である。紫の上・玉鬘・明石の姫君という、後の物語で重要な位置を占める女性たちが、夕霧の目を通して花にたとえられながら紹介される。</p>
+    </div>
+    <div class="note-card">
+      <h3>桐壺巻「野分立ちて」との呼応</h3>
+      <p>「野分」という言葉は、第1帖「桐壺」で桐壺帝が亡き桐壺更衣を追憶する場面（「野分立ちて にはかに肌寒き夕暮れのほど」）にも用いられている。物語全体において、野分（台風のような強い風）はしばしば心細さや、これまでの秩序が乱れる予兆と結び付けて描かれる傾向がある。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 28;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  genji:       {x:450, y:300, label:'光源氏'},
+  murasaki:    {x:450, y:80,  label:'紫の上'},
+  yugiri:      {x:622, y:163, label:'夕霧'},
+  tamakazura:  {x:665, y:349, label:'玉鬘'},
+  kumoinokari: {x:546, y:498, label:'雲居雁'},
+  naidaijin:   {x:355, y:498, label:'内大臣'},
+  akikonomu:   {x:236, y:349, label:'秋好中宮'},
+  akashihime:  {x:278, y:163, label:'明石の姫君'}
+};
+const edges = [
+  {a:'genji', b:'murasaki', label:'夫婦', type:'kinship'},
+  {a:'genji', b:'yugiri', label:'実の父子', type:'kinship'},
+  {a:'genji', b:'tamakazura', label:'表向きは養父娘。抑えがたい恋情', type:'emotion'},
+  {a:'genji', b:'akikonomu', label:'養育・後見してきた間柄', type:'kinship'},
+  {a:'genji', b:'akashihime', label:'実の父女（紫の上が養育）', type:'kinship'},
+  {a:'murasaki', b:'yugiri', label:'野分の垣間見で美貌に衝撃を受け、動揺する夕霧', type:'emotion'},
+  {a:'yugiri', b:'tamakazura', label:'初めて見る美しさに目が離せなくなる', type:'emotion'},
+  {a:'yugiri', b:'kumoinokari', label:'恋人。見舞いの和歌を贈る', type:'emotion'},
+  {a:'naidaijin', b:'kumoinokari', label:'実の父娘', type:'kinship'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  const w = Math.max(96, n.label.length*13);
+  g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
