@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第26帖 常夏 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --gray:#8c8579;
+    --kon:#2c3a63;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+  .person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:var(--kon);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:18px; height:3px; display:inline-block;}
+  .legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka.solo{grid-column:1 / -1;}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+  .waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第26帖</div>
+    <h1>常夏</h1>
+    <div class="kana">とこなつ</div>
+    <p class="lead">光源氏36歳、盛夏の六条院。東の釣殿で涼む源氏のもとに内大臣家の子息たちが訪れ、話題は内大臣が近江の田舎で見出したという娘・近江の君の噂に及ぶ。早口で品のない物言いをして持て余される近江の君と、源氏のもとで上品に育った玉鬘という、同じ内大臣の娘でありながら対照的な二人の姫君が描かれる。源氏はなおも和琴の稽古を口実に玉鬘への恋情を募らせ、内大臣は夕霧と娘雲居雁の仲を認めようとせず、双方意地の張り合いを続けている。</p>
+  </div>
+
+  <!-- 1. 主な登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">36歳</span></div><p>六条院の主。玉鬘への抑えがたい恋情を胸に秘めながら、和琴の稽古を口実に言い寄る一方、近江の君の一件で内大臣を痛烈に皮肉る。</p></div>
+      <div class="person"><div class="row"><span class="name">玉鬘</span><span class="age">22歳</span></div><p>六条院・夏の町に住む源氏の養女。実父内大臣とはまだ対面できず、養父と実父の不仲を案じながら、源氏からなおも和琴の稽古にかこつけて言い寄られる。</p></div>
+      <div class="person"><div class="row"><span class="name">内大臣（もとの頭中将）</span><span class="age">年齢不詳</span></div><p>かつての頭中将。夕顔との娘（玉鬘）を探すうちに、代わりに近江の君という粗野な娘を見出して引き取るが、その品のなさに手を焼き後悔を深める。娘雲居雁と夕霧の仲も認めようとせず意地を張る。</p><p class="unconfirmed-age">正確な年齢は本帖に記載がなく、確認できません。</p></div>
+      <div class="person"><div class="row"><span class="name">近江の君</span><span class="age">年齢不詳</span></div><p>内大臣が近江で見出し引き取った娘。器量は悪くないが早口で頓狂な物言いをし、貴族社会になじめない。奉公を望んで「大御大壺とりにも仕うまつらむ」と口走り、周囲を驚かせる。</p><p class="unconfirmed-age">正確な年齢は本帖に記載がなく、確認できません。</p></div>
+      <div class="person"><div class="row"><span class="name">夕霧</span><span class="age">15歳</span></div><p>光源氏の長男。初恋の雲居雁を今も思い続けるが、内大臣に仲を認められず苦しい立場に置かれている。</p></div>
+      <div class="person"><div class="row"><span class="name">柏木</span><span class="age">年齢不詳</span></div><p>内大臣の長男。玉鬘の異母兄にあたるが、その事実を知らぬまま以前より玉鬘に思いを寄せていた（前帖までの経緯）。近江の君を近江で見つけて内大臣に取り次いだ人物でもある。</p><p class="unconfirmed-age">本帖時点での正確な年齢は確認できません（別の巻の記述からおおむね20歳台前半と推定する解説もあるが、本帖本文には明記がありません）。</p></div>
+    </div>
+  </section>
+
+  <!-- 2. 人物系図 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 900 490" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+      <span><i style="background:var(--kon);"></i>政争・対立</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※この帖の本文には、政略同盟、主従・忠誠にあたる関係の記述は見当たらないため、系図には血縁・婚姻／感情／政争・対立の3種類のみを図示しています（凡例は5種類とも共通表示）。内大臣から玉鬘・近江の君へそれぞれ延びる血縁の線に、対照的な育ちの説明を添えることで、二人の対比を示しています。</p>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 六条院・東の釣殿と内大臣邸</h2></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 760 460" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="760" height="460" fill="var(--paper)"/>
+
+        <text x="380" y="30" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--murasaki-deep)">対照的な二つの場所</text>
+
+        <!-- Room 1: 六条院・東の釣殿 -->
+        <g class="scene-room" onclick="showScenePopup('①六条院・東の釣殿（納涼の宴、氷を用いた場面）','いたく暑い日、光源氏は東の釣殿に出て、夕霧や気心の知れた殿上人たちと涼んでいた。桂川の鮎や賀茂川の石臥といった川魚を目の前で調理させ、酒を酌み交わし、氷室に貯えられていた氷を用いた氷水や水飯で涼をとる。そこへ内大臣家の子息たちが訪れたので、源氏は最近内大臣が引き取ったという近江の君の噂の真偽を弁少将に尋ね、夕霧と雲居の雁の仲を認めない内大臣への不満も手伝って、痛烈に皮肉った。')">
+        <rect x="70" y="100" width="280" height="240" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
+        <text x="80" y="120" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--suou)">六条院</text>
+        <text x="210" y="205" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">東の釣殿</text>
+        <text x="210" y="228" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">納涼の宴・氷水と水飯</text>
+        <text x="210" y="250" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">近江の君の噂話・皮肉</text>
+        <circle cx="320" cy="120" r="12" fill="var(--murasaki)"/>
+        <text x="320" y="125" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">①</text>
+        </g>
+
+        <!-- Room 2: 内大臣邸 -->
+        <g class="scene-room" onclick="showScenePopup('②内大臣邸（近江の君の滑稽な言動が繰り広げられる場）','内大臣が近江の田舎で見出し引き取った近江の君は、器量こそ悪くないものの、早口で頓狂な声、育ちの卑しさを感じさせる言葉遣いのために、貴族社会になじめずにいた。奉公を望んで「大御大壺とりにも仕うまつらむ」（便器の掃除でも致しましょう）などと突飛な発言をし、さすがの内大臣も笑いをこらえきれない。手を焼いた内大臣は、長女・弘徽殿女御のもとへ行儀見習いに出すことを決めるが、近江の君が意気込んで送った手紙と和歌もまた支離滅裂な出来で、女御に仕える女房たちの失笑を買った。')">
+        <rect x="410" y="100" width="280" height="240" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
+        <text x="420" y="120" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--suou)">内大臣邸</text>
+        <text x="550" y="205" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">近江の君の御方</text>
+        <text x="550" y="228" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">奉公を願い出る滑稽な場面</text>
+        <text x="550" y="250" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">弘徽殿女御への文・和歌</text>
+        <circle cx="660" cy="120" r="12" fill="var(--murasaki)"/>
+        <text x="660" y="125" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">②</text>
+        </g>
+
+        <!-- connecting dashed line indicating narrative contrast, not physical corridor -->
+        <line x1="350" y1="220" x2="410" y2="220" stroke="var(--gray)" stroke-width="1.4" stroke-dasharray="3,5"/>
+        <text x="380" y="205" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9" fill="var(--ink-soft)">対比</text>
+
+        <text x="380" y="415" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">六条院と内大臣邸は物理的に隔たった別の邸だが、同じ内大臣の娘をめぐる場面として本帖の中で対比的に語られる</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">①では源氏が上品な玉鬘を後ろに従えつつ内大臣を皮肉り、②では内大臣自身が近江の君の粗野さに苦笑する。同じ「内大臣の娘」を軸にしながら、場所も雰囲気もまったく異なる二つの場面が並べて描かれている点が、この帖の構成上の読みどころである。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>釣殿（つりどの）</dt>
+      <dd>寝殿造りの邸宅で、庭の池に張り出すように設けられた建物。夏場に涼を取ったり、管弦の遊びや宴を催したりする場として用いられた。本帖冒頭、光源氏が納涼の宴を催す舞台となる。</dd>
+      <dt>氷室（ひむろ）</dt>
+      <dd>冬の間に切り出した天然の氷を、夏まで貯蔵しておくための穴蔵・貯蔵施設。朝廷の主水司（もひとりのつかさ）が管理し、陰暦4月から9月にかけて氷が高貴な人々に配られた。本帖では、この氷を用いた氷水や水飯で涼をとる場面が描かれる。</dd>
+      <dt>双六（すごろく）</dt>
+      <dd>さいころを使う盤上遊戯。本帖では近江の君が内大臣への奉公について語る際、「手打たぬ双六でよい目が出る」（自分から動かずによい目が出るはずがない、の意）といった言い回しを口にし、その育ちの卑しさを印象づける語として用いられている。</dd>
+      <dt>常夏（とこなつ）</dt>
+      <dd>撫子（なでしこ）の古名。巻名の由来となった語で、源氏が玉鬘を撫子に喩えて詠んだ和歌に因む。</dd>
+    </dl>
+    <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">光源氏 → 玉鬘（撫子＝常夏の花に玉鬘を喩えた歌）</div>
+        <div class="poem">撫子の　とこなつかしき　色を見ば　もとの垣根を　人や尋ねむ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">撫子（あなた）の、いつまでも懐かしく心惹かれる美しい色を実の父君がご覧になったら、きっと母君（夕顔）のことを尋ねてくることでしょう。</div>
+        <div class="source">出典：『源氏物語』常夏巻（原典）。渋谷栄一氏『源氏物語の世界』の原文・現代語訳を統合した「古典の改め」サイト、およびWikipedia「常夏」の項で原文を確認。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">玉鬘（光源氏への返歌）</div>
+        <div class="poem">山賤の　垣ほに生ひし　撫子の　もとの根ざしを　誰れか尋ねむ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">山里の賤しい家の垣根に咲いた撫子（自分）の、生まれの根本のことなど、いったい誰が尋ねてくれるでしょうか。</div>
+        <div class="source">出典：『源氏物語』常夏巻（原典）。「古典の改め」サイト（渋谷栄一氏原文・現代語訳を統合）で原文を確認。</div>
+      </div>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※本帖にはこの贈答歌以外にも近江の君↔弘徽殿女御の手紙・和歌のやり取りが語られるが、内容が支離滅裂であったと記されるのみで、具体的な字句は伝わっておらず確認できません。</p>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>盛夏、六条院東の釣殿での納涼</h3><p>いたく暑いある日、光源氏は東の釣殿に出て涼んでいた。子息の夕霧も控え、気心の知れた殿上人たちが大勢集う中、桂川の鮎や賀茂川の石臥といった川魚を御前で調理させて肴とし、酒を酌み交わしながら、氷室の氷を用いた氷水や水飯で若い者たちは思い思いに涼をとっていた。</p></div>
+      <div class="tl-item"><h3>内大臣家の子息たちの来訪と近江の君の噂</h3><p>夕暮れになっても誰も帰らずにいるところへ、例によって内大臣家の子息たちが夕霧を訪ねてやって来た。話題は自然と、内大臣が近江の田舎で見出し引き取ったという近江の君の噂に及ぶ。源氏は弁少将にその真偽を尋ね、夕霧と雲居の雁の仲を認めようとしない内大臣への不満も手伝って、「内大臣が好き放題に遊び歩いた末のことだ」と痛烈に皮肉った。</p></div>
+      <div class="tl-item"><h3>源氏、玉鬘のもとを訪れ和琴を教える</h3><p>その後、源氏は若い公達を引き連れて玉鬘のいる西の対へと向かう。誰もが噂の姫君を一目見たいとついて来る中、源氏は和琴を教えるという口実で玉鬘に近づき、なおも抑えがたい恋情を募らせていた。</p></div>
+      <div class="tl-item"><h3>源氏、夕霧と雲居の雁の一件を語る</h3><p>源氏は玉鬘に、実子である夕霧と内大臣の娘・雲居の雁との恋愛のいきさつを語って聞かせる。玉鬘は、養父である源氏と実父である内大臣とが不仲であることを知り、いつになれば実の父に会えるのかと、板挟みの立場に心を痛める。</p></div>
+      <div class="tl-item"><h3>内大臣、近江の君を引き取った経緯と後悔</h3><p>一方の内大臣は、行方の知れぬ娘（玉鬘）を探し求めるうちに、代わりに近江の君を見出して引き取っていた。器量は人が言うほど悪くなく愛嬌もあるものの、早口で落ち着きのない物言いばかりは気に障ると、内大臣は苦笑まじりに手を焼いていた。</p></div>
+      <div class="tl-item"><h3>内大臣、雲居の雁を叱り、夕霧との仲に意地を張る</h3><p>内大臣は娘・雲居の雁のもとを訪れ、夏の盛りに単衣一枚でうたた寝している姿を見て「はしたない」と説教する。夕霧との仲を認めてもよいという思いもよぎるが、夕霧の側から折れてくる様子がないため、自分から言い出すこともできず、双方意地の張り合いが続いていた。</p></div>
+      <div class="tl-item"><h3>近江の君、双六めいた物言いで奉公を申し出る</h3><p>持て余し気味の近江の君について内大臣が思案していると、当人は「手打たぬ双六でよい目が出る」といった調子の早口な物言いで、自分から進んで宮仕えを望み、ついには「大御大壺とりにも仕うまつらむ」（便器の掃除でも致しましょう）とまで言い出す始末であった。あまりの突飛さに、さすがの内大臣も笑いをこらえきれなかった。</p></div>
+      <div class="tl-item"><h3>内大臣、近江の君を弘徽殿女御のもとへ</h3><p>近江の君を邸に留め置くのも人目が気になり、かといって突き放すこともできずにいた内大臣は、長女・弘徽殿女御に教育を託すことに決め、行儀見習いとして出仕させることにした。</p></div>
+      <div class="tl-item"><h3>近江の君の手紙と和歌、女房たちの失笑</h3><p>行儀見習いが叶うと聞いた近江の君は大喜びし、さっそく弘徽殿女御のもとへ手紙と和歌を送る。しかしその文面と和歌は支離滅裂で、女御に仕える女房たちの失笑を買った。当の近江の君はそうとも知らず、女御からの「お待ちしています」という返事を受け取って、意気揚々とめかし込み、参上の支度に取りかかるのであった。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 源氏の皮肉に見える二重基準</div>
+      <h3>人を笑いながら、自らの恋情は棚に上げる</h3>
+      <p>源氏は近江の君の一件を種に内大臣を痛烈に皮肉るが、その一方で自らも養女である玉鬘への恋情を抑えきれずにいる。他人の家の事情には辛辣でありながら、自身の後見人としての立場の危うさには目をつぶっている点に、源氏という人物の身勝手さが表れているとも読める。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 近江の君の言動に宿る屈託のなさ</div>
+      <h3>笑われ役でありながら卑屈ではない</h3>
+      <p>「大御大壺とりにも仕うまつらむ」という発言は当時の貴族社会の価値観からは笑いの対象だが、裏を返せば、身分にとらわれず父の役に立ちたいという素朴な誠実さの表れとも取れる。育ちの卑しさとして描かれながらも、卑屈さのない率直な人柄がうかがえる。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜「育ちと教養」というテーマ</div>
+      <h3>同じ内大臣の娘が分かれる明暗</h3>
+      <p>玉鬘と近江の君は、ともに内大臣の娘でありながら、源氏の元で貴族的な教養を身につけて育ったか、地方で庶民的に育ったかという環境の違いによって、物語内での扱われ方が対照的に分かれている。これは血筋そのものよりも、育った環境と教育が人物評価を大きく左右するという、当時の貴族社会の価値観を浮き彫りにする構成だと考えられる。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 内大臣の子育て観との対照</div>
+      <h3>教養を重んじる父が味わう皮肉</h3>
+      <p>内大臣は娘の器量や物腰、教養を重んじる価値観の持ち主として描かれるが、皮肉にもその価値観ゆえに、実の娘である近江の君に対して冷淡にならざるを得ない。源氏が玉鬘の美点を見出し慈しむ態度と好対照をなしており、親としての器の違いが暗に示されているとも読める。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 直接出会わない二人が読者の中でだけ対比される構造</div>
+      <h3>紫式部の意図的な配置</h3>
+      <p>本帖において玉鬘と近江の君が直接顔を合わせる場面は描かれない。にもかかわらず、読者は自然と二人を比較してしまう。この「同じ場に登場させず、しかし対比だけを際立たせる」という構成そのものに、紫式部の周到な意図が働いていると考えられる。ただしこれは物語構成に基づくAIの読み解きであり、作者の意図を直接裏づける資料があるわけではありません。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 源氏と内大臣、双方の「意地の張り合い」</div>
+      <h3>権力者同士の面子の張り合い</h3>
+      <p>夕霧と雲居の雁の恋を巡る対立は、本来なら双方が納得できる着地点を見出せそうな話でありながら、光源氏・内大臣という二人の権力者の面子が絡み合うことで膠着している。近江の君をめぐる源氏の皮肉も、この対立に燃料を注ぐ形になっており、政治的立場と個人的な意地とが分かちがたく結びついている点が興味深い。</p>
+    </div>
+    <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+  </section>
+
+  <!-- 7. 特筆事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+    <div class="note-card">
+      <h3>「玉鬘十帖」における位置づけ</h3>
+      <p>常夏は「玉鬘十帖」（第22帖〜第31帖）の第5帖にあたる。これまでの求婚譚の緊張感から一転し、近江の君という滑稽な人物を挿入することで、物語全体に息抜きの緩急を与える帖である。</p>
+    </div>
+    <div class="note-card">
+      <h3>巻名「常夏」の由来</h3>
+      <p>巻名は、源氏が玉鬘を撫子（常夏の花）に喩えて詠んだ「撫子のとこなつかしき色を見ば」の歌に由来する。常夏は撫子の古名である。</p>
+    </div>
+    <div class="note-card">
+      <h3>近江の君という滑稽譚が持つ役割</h3>
+      <p>近江の君は、源典侍や末摘花に連なる『源氏物語』の「笑われ役」の系譜に位置づけられる人物である。玉鬘をめぐる求婚譚が深刻さを増していく中で、この滑稽譚を挟むことで物語全体のトーンに変化をつける機能を果たしている。なお近江の君は後の「若菜下」巻にも再登場することが知られている。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 26;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+const nodes = {
+  genji:      {x:450, y:90,  label:'光源氏'},
+  yugiri:     {x:660, y:170, label:'夕霧'},
+  kashiwagi:  {x:660, y:370, label:'柏木'},
+  naidaijin:  {x:450, y:450, label:'内大臣'},
+  oumi:       {x:240, y:370, label:'近江の君'},
+  tamakazura: {x:240, y:170, label:'玉鬘'}
+};
+const edges = [
+  {a:'genji', b:'tamakazura', label:'後見人という立場と恋情、和琴を教えながら言い寄る', type:'emotion'},
+  {a:'genji', b:'naidaijin', label:'夕霧との仲を認めぬ内大臣を、近江の君の噂を種に皮肉る', type:'conflict'},
+  {a:'genji', b:'yugiri', label:'実の父子', type:'kinship'},
+  {a:'naidaijin', b:'tamakazura', label:'実の父娘。源氏に上品に育てられ、まだ対面できず', type:'kinship'},
+  {a:'naidaijin', b:'oumi', label:'実の父娘。田舎育ちで粗野なため持て余す', type:'kinship'},
+  {a:'naidaijin', b:'yugiri', label:'娘雲居の雁との仲を認めず、意地の張り合い', type:'conflict'},
+  {a:'kashiwagi', b:'naidaijin', label:'実の父子（長男）', type:'kinship'},
+  {a:'kashiwagi', b:'tamakazura', label:'異母妹と知らぬまま求婚していた（前帖までの経緯）', type:'emotion'},
+  {a:'kashiwagi', b:'oumi', label:'異母妹。近江で見つけて内大臣に取り次いだ', type:'kinship'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  const w = Math.max(96, n.label.length*13);
+  g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
