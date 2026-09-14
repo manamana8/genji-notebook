@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第40帖 御法 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--paper:#f5f0e6;
+--paper-deep:#eee6d6;
+--paper-deeper:#e6dbc2;
+--ink:#2b241e;
+--ink-soft:#5a5044;
+--murasaki:#4b2e51;
+--murasaki-deep:#382039;
+--suou:#8b3a3a;
+--yamabuki:#c08a34;
+--koke:#5c6b47;
+--gray:#8c8579;
+--kon:#2c3a63;
+--line:#d8cdb8;
+--radius:2px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+margin:0;
+background:var(--paper);
+color:var(--ink);
+font-family:"Zen Kaku Gothic New", sans-serif;
+line-height:1.85;
+-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+a{color:inherit;}
+header.top{
+position:sticky; top:0; z-index:50;
+background:var(--murasaki);
+color:#f2ead8;
+box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+.top-row{
+display:flex; align-items:center; justify-content:space-between;
+padding:12px 18px 8px;
+gap:12px;
+}
+.brand{
+font-family:"Shippori Mincho", serif;
+font-weight:700;
+font-size:1rem;
+display:flex; align-items:center; gap:8px;
+text-decoration:none;
+}
+.brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+select#jump{
+background:var(--murasaki-deep);
+color:#f2ead8;
+border:1px solid #6b4a70;
+border-radius:var(--radius);
+padding:6px 10px;
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+max-width:40vw;
+}
+nav.tabs{
+display:flex;
+overflow-x:auto;
+gap:2px;
+padding:0 10px 10px;
+scrollbar-width:thin;
+}
+nav.tabs::-webkit-scrollbar{height:4px;}
+.tab{
+flex:0 0 auto;
+padding:7px 12px;
+font-size:.8rem;
+color:#cdb8c9;
+background:transparent;
+border:none;
+border-bottom:2px solid transparent;
+white-space:nowrap;
+opacity:.55;
+text-decoration:none;
+}
+.tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+.tab.enabled{opacity:.85; color:#f2ead8;}
+.tab.enabled:hover{opacity:1;}
+main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+.frontispiece{
+padding:40px 0 30px;
+border-bottom:1px solid var(--line);
+margin-bottom:44px;
+}
+.frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+.frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+.frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+section.block{margin-bottom:58px;}
+.block-head{
+display:flex; align-items:baseline; gap:12px;
+border-bottom:1px solid var(--line);
+padding-bottom:10px; margin-bottom:22px;
+}
+.block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+.block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+.people-grid{
+display:grid;
+grid-template-columns:repeat(2, minmax(0, 1fr));
+gap:14px;
+}
+@media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+.person{
+background:var(--paper-deep);
+border-left:3px solid var(--suou);
+padding:16px 18px;
+min-width:0;
+}
+.person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+.person .name{font-weight:700; font-size:1rem;}
+.person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+.person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+.person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+.filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+.filters button{
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+padding:7px 14px;
+border:1px solid var(--line);
+background:var(--paper);
+color:var(--ink-soft);
+border-radius:16px;
+cursor:pointer;
+}
+.filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+.diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+.scene-room{cursor:pointer;}
+.scene-room rect{transition:opacity .15s ease;}
+.scene-room:hover rect{opacity:.75;}
+.scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+.scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+.node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+.node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+.edge line{stroke-width:2px;}
+.edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+.edge.kinship line{stroke:var(--gray);}
+.edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+.edge.conflict line{stroke:var(--kon);}
+.edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+.legend span{display:inline-flex; align-items:center; gap:6px;}
+.legend i{width:18px; height:3px; display:inline-block;}
+.legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+.gloss{border-top:1px solid var(--line);}
+.gloss dt{
+font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+border-bottom:1px solid var(--line);
+display:flex; align-items:baseline; gap:8px;
+}
+.gloss dt:first-of-type{border-top:none;}
+.gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+.waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
+@media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+.waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
+.waka.solo{grid-column:1 / -1;}
+.waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+.waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+.waka .trans{font-size:.82rem; color:var(--ink-soft);}
+.waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+.waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.timeline{position:relative; padding-left:26px;}
+.timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+.tl-item{position:relative; margin-bottom:26px;}
+.tl-item::before{
+content:''; position:absolute; left:-26px; top:4px;
+width:9px; height:9px; border-radius:50%;
+background:var(--yamabuki); border:2px solid var(--paper);
+box-shadow:0 0 0 1px var(--yamabuki);
+}
+.tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+.analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+.analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+.analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+.note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+.disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+#toTop{
+position:fixed; right:18px; bottom:18px; z-index:60;
+width:46px; height:46px; border-radius:50%;
+background:var(--murasaki); color:#f2ead8;
+border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+font-size:1.1rem; cursor:pointer;
+display:flex; align-items:center; justify-content:center;
+}
+#toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="top-row">
+<a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+<select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+</div>
+<nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+<div class="frontispiece">
+<div class="num">第40帖</div>
+<h1>御法</h1>
+<div class="kana">みのり</div>
+<p class="lead">光源氏51歳、三月から八月にかけての物語。「若菜下」の大病以来、体調の優れない紫の上は、しきりに出家を望むが、源氏はこれを許そうとしない。三月十日、紫の上が長年書き溜めさせた法華経千部の供養が、自らの邸である二条院で盛大に営まれ、明石の御方や花散里も参集して、紫の上は誰もがこれを最後の対面と思い定めて別れを惜しむ。夏になると容態はいっそう重くなり、明石の中宮も養母の見舞いのために里下がりしてくる。紫の上は可愛がっていた孫の三の宮（後の匂宮）に、庭の紅梅と桜を自分の代わりに愛でてほしいとそれとなく遺言する。風の強い秋の夕暮れ、見舞いに訪れた明石の中宮と源氏を交えて和歌を詠み交わした直後、紫の上は容態を急変させ、中宮に手を取られながら、八月十四日の明け方、露の消えるように息を引き取った。源氏の生涯の伴侶であり、物語の中心的なヒロインであった紫の上の死を描く、正編の実質的な終幕を告げる一帖である。</p>
+</div>
+
+<!-- 1. 主な登場人物 -->
+<section class="block" id="people">
+<div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+<div class="people-grid">
+<div class="person"><div class="row"><span class="name">紫の上</span><span class="age">43歳</span></div><p>光源氏の最愛の伴侶。「若菜下」の大病以来病みがちで、しきりに出家を望むが源氏に許されない。自ら発願した法華経千部の供養を最後の大きな務めとして果たし、夏から秋にかけて容態が悪化、八月十四日の明け方、明石の中宮に見守られながら息を引き取る。</p></div>
+<div class="person"><div class="row"><span class="name">光源氏</span><span class="age">51歳</span></div><p>准太上天皇。紫の上の出家の願いを、彼女を手放したくない一心で聞き入れずにきたが、その死を止めることはできない。臨終の場で中宮とともに和歌を詠み交わし、最愛の人を失う深い悲嘆の淵に沈む。</p></div>
+<div class="person"><div class="row"><span class="name">明石の中宮</span><span class="age">23歳</span></div><p>光源氏と明石の御方の娘で、今上帝の中宮。紫の上に姫君時代から養われた養い子。夏、養母の見舞いのために里下がりし、臨終の場に立ち会って、和歌を詠み交わしながら紫の上の最期を看取る。</p></div>
+<div class="person"><div class="row"><span class="name">夕霧</span><span class="age">30歳</span></div><p>光源氏の長男、左大将。紫の上の葬儀万端を取り仕切り、かねてより人には言えぬ思いを抱きながらも慎んできたその死に顔を、間近でゆっくりと見つめる。</p></div>
+<div class="person"><div class="row"><span class="name">花散里</span><span class="age">年齢確認できません</span></div><p>六条院・夏の町に住む源氏の妻の一人。法華経千部供養に参集し、法会の後、紫の上と今生の別れを思わせる和歌を贈答する。この贈答歌が本帖の帖名「御法」の由来となった。</p></div>
+<div class="person"><div class="row"><span class="name">明石の御方（明石の君）</span><span class="age">年齢確認できません</span></div><p>光源氏の妻の一人、明石の中宮の実母。法華経千部供養の場で、三の宮を使いとした紫の上からの和歌に返歌する。かつて紫の上と対抗心を抱き合った間柄だったが、この帖では静かな和歌の贈答として描かれる。</p></div>
+<div class="person"><div class="row"><span class="name">三の宮（後の匂宮）</span><span class="age">年齢確認できません</span></div><p>光源氏と明石の中宮の子、紫の上の孫にあたる。紫の上に特に目をかけて育てられ、臨終の前、紫の上から二条院の対の前の紅梅と桜を託され、折々に愛でるようにと遺言される。</p></div>
+</div>
+</section>
+
+<!-- 2. 人物系図 -->
+<section class="block" id="relations">
+<div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+<div class="filters">
+<button data-f="all" class="active">すべて表示</button>
+<button data-f="kinship">血縁・婚姻</button>
+<button data-f="emotion">感情</button>
+<button data-f="conflict">政争・対立</button>
+<button data-f="alliance">政略同盟</button>
+<button data-f="loyalty">主従・忠誠</button>
+</div>
+<div class="diagram-wrap">
+<svg id="relmap" viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+<div class="legend">
+<span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+<span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+<span><i style="background:var(--kon);"></i>政争・対立</span>
+<span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+<span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+</div>
+<p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※この帖の本文には、政争・対立、政略同盟、主従・忠誠にあたる関係の記述は見当たらないため、系図には血縁・婚姻／感情の2種類のみを図示しています（凡例は5種類とも共通表示）。紫の上と夕霧を結ぶ感情の線、および紫の上と明石の御方を結ぶ感情の線の解釈（長年の思いの帰結として描いている点）は、原文の記述をもとにしたAIの解釈を含みます。</p>
+</section>
+
+<!-- 3. 空間・地理構造 -->
+<section class="block" id="scene">
+<div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 同じ二条院で移ろう、春の晴れ舞台と秋の別れ</h2></div>
+<div class="diagram-wrap">
+<svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="900" height="480" fill="var(--paper)"/>
+
+<!-- ①二条院・法華経千部供養（三月） -->
+<g class="scene-room" onclick="showScenePopup('①二条院 ― 法華経千部供養の場（三月十日）','紫の上が長年書き溜めさせた法華経千部の供養が、彼女自身の邸である二条院で盛大に営まれる。花盛りの季節、空の様子も麗らかで、あたかも極楽浄土のありさまが目に浮かぶようだと語られる。明石の御方は三の宮を使いとした紫の上からの和歌に返歌し、法会の後には花散里との間で本帖の帖名の由来となった和歌の贈答が交わされる。参集した六条院ゆかりの人々の顔を見るにつけ、紫の上は皆それぞれ、今日の見聞きが最後になるだろうと思い続け、深く物思いに沈む。')">
+<rect x="60" y="90" width="330" height="290" fill="#f7ecd9" stroke="var(--yamabuki)" stroke-width="2.6"/>
+<rect x="55" y="85" width="340" height="300" fill="none" stroke="var(--yamabuki)" stroke-width="1.2" stroke-dasharray="4,3"/>
+<text x="80" y="122" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--yamabuki)">①</text>
+<text x="225" y="158" text-anchor="middle" font-family="Shippori Mincho" font-size="17" fill="var(--ink)">二条院</text>
+<text x="225" y="184" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">法華経千部供養（三月十日）</text>
+<text x="225" y="222" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・花盛りの季節、盛大な法要</text>
+<text x="225" y="240" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・明石の御方と和歌の贈答</text>
+<text x="225" y="270" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・花散里と帖名由来の贈答歌</text>
+<text x="225" y="288" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">　「絶えぬべき御法ながらぞ…」</text>
+<text x="225" y="318" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・紫の上、皆との今生の別れを</text>
+<text x="225" y="336" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">　思いつつ別れを惜しむ</text>
+<circle cx="365" cy="115" r="12" fill="var(--yamabuki)"/>
+<text x="365" y="120" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#3a2a10">①</text>
+</g>
+
+<!-- ②二条院・死去の場（八月） -->
+<g class="scene-room" onclick="showScenePopup('②二条院 ― 紫の上、死去の場（八月十四日）','夏、紫の上の容態はいっそう重くなり、明石の中宮も養母の見舞いのために里下がりする。紫の上は可愛がる孫の三の宮に、対の前の紅梅と桜を自分に代わって愛でるようにと、それとなく遺言する。風の強い秋の夕暮れ、見舞いに訪れた中宮に、渡ってきた光源氏も加わって、萩の上露に寄せて三人が和歌を詠み交わす。その直後、紫の上は容態を急変させ、中宮に手を取られながら、露の消えるように八月十四日の明け方、息を引き取った。亡骸はその日のうちに荼毘に付され、翌朝葬送が行われた。')">
+<rect x="470" y="90" width="330" height="290" fill="#efe4ce" stroke="var(--murasaki)" stroke-width="1.6"/>
+<text x="490" y="122" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--murasaki)">②</text>
+<text x="635" y="158" text-anchor="middle" font-family="Shippori Mincho" font-size="17" fill="var(--ink)">二条院</text>
+<text x="635" y="184" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">紫の上、死去の場（八月十四日）</text>
+<text x="635" y="222" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・三の宮に紅梅と桜を託す遺言</text>
+<text x="635" y="240" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・秋の夕暮れ、中宮の見舞い</text>
+<text x="635" y="270" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・源氏も加わり萩の上露の歌を</text>
+<text x="635" y="288" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">　詠み交わす</text>
+<text x="635" y="318" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・その直後容態急変、明け方に</text>
+<text x="635" y="336" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">　息を引き取る</text>
+</g>
+
+<defs>
+<marker id="arrowBetween" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/>
+</marker>
+</defs>
+<line x1="390" y1="235" x2="470" y2="235" stroke="var(--ink-soft)" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#arrowBetween)"/>
+<text x="430" y="223" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">春から秋へ</text>
+
+<text x="450" y="440" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">同じ二条院で、①春の盛りの晴れ舞台（法要）から②秋の別れ（死去）へと、半年を隔てて対をなす2つの場面が描かれる</text>
+</svg>
+</div>
+<div class="scene-popup" id="scenePopup" style="display:none;"></div>
+<p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">本帖の舞台はいずれも紫の上自身の邸・二条院であり、場所の移動はない。その代わりに、三月の花盛りの晴れやかな法要から、八月の風の強い秋の夕暮れの死去まで、同じ場所を舞台とした季節の移ろいそのものが、紫の上の命の終わりへの歩みを映し出している点が読みどころである。</p>
+</section>
+
+<!-- 4. 用語解説 -->
+<section class="block" id="glossary">
+<div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+<dl class="gloss">
+<dt>法華経千部供養（ほけきょうせんぶくよう）</dt>
+<dd>法華経を千部（千巻）書写・書写させ、その完成を祝って営む盛大な仏事。紫の上は長年にわたりこれを書き溜めさせており、本帖ではそれを自邸・二条院で供養する法会が営まれる。死を意識した紫の上にとって、この世での最後の大きな務めとなった。</dd>
+<dt>出家（しゅっけ）</dt>
+<dd>俗世を離れ、仏門に入ること。紫の上は病を機にしきりに出家を望むが、源氏は彼女を手放したくない一心でこれを許さない。結局、紫の上は出家を果たせないまま世を去る。</dd>
+<dt>薪の行道（たきぎのぎょうどう）</dt>
+<dd>法華経の「薪こり菜摘み水汲み仕へてぞ得し」（法華経を得るために薪を拾い菜を摘み水を汲んで仕えた、の意）に由来する法会の作法・讃歎。あわせて「薪尽き火滅す」（法華経序品にある、仏の入滅を薪が尽きて火が消えるさまにたとえた語）を踏まえ、紫の上は自らの命の終わりを「薪尽きなむ」の一語に重ねて詠んでいる。</dd>
+<dt>荼毘（だび）</dt>
+<dd>火葬にすること。紫の上の亡骸は、亡くなったその日のうちに荼毘に付され、翌朝八月十五日に葬送が行われた。</dd>
+<dt>不断の読経・懺法（ふだんのどきょう・せんぼう）</dt>
+<dd>「不断の読経」は一定期間絶え間なく経を読み続けること、「懺法」は法華経などを読誦してその意味を観想し罪障を懺悔する修法。法華経千部供養の法会に引き続き、二条院ではこうした勤行がたゆみなく営まれた。</dd>
+</dl>
+<div class="waka-grid">
+<div class="waka">
+<div class="speaker">紫の上（明石の御方へ、三の宮を使いとして）</div>
+<div class="poem">惜しからぬこの身ながらもかぎりとて 薪尽きなむことの悲しさ</div>
+<div class="trans-label">大意</div>
+<div class="trans">惜しいとは思わないこの身ですが、これを最後の供養として、薪が尽きるように命が尽きてしまうのかと思うと悲しゅうございます。</div>
+<div class="source">出典：『源氏物語』御法巻（原典）。渋谷栄一氏の原文対訳サイト（sainet.or.jp）ほか複数サイトで実在確認。</div>
+</div>
+<div class="waka">
+<div class="speaker">明石の御方（紫の上への返歌）</div>
+<div class="poem">薪こる思ひは今日をはじめにて この世にねがふ法ぞはるけき</div>
+<div class="trans-label">大意</div>
+<div class="trans">薪を拾う（仏道に仕える）思いは今日を始まりとして、この世で願う仏法はまだまだ末永く続くことでしょう（どうかお命も末永く）。</div>
+<div class="source">出典：『源氏物語』御法巻（原典）。渋谷栄一氏の原文対訳サイト（sainet.or.jp）ほか複数サイトで実在確認。</div>
+</div>
+<div class="waka">
+<div class="speaker">紫の上（花散里への贈歌／帖名由来歌）</div>
+<div class="poem">絶えぬべき御法ながらぞ頼まるる 世々にと結ぶ中の契りを</div>
+<div class="trans-label">大意</div>
+<div class="trans">（この身は）今にも絶えてしまいそうな命ではありますが、仏法の縁によって、生まれ変わっても幾世までもと結んだあなたとの契りだけは、頼りに思われます。</div>
+<div class="source">出典：『源氏物語』御法巻（原典）。本帖の帖名の由来となった和歌。Wikipedia「御法」、Wikisource「源氏物語/御法」等で実在確認。</div>
+</div>
+<div class="waka">
+<div class="speaker">花散里（紫の上への返歌）</div>
+<div class="poem">結びおく契りは絶えじおほかたの 残りすくなき御法なりとも</div>
+<div class="trans-label">大意</div>
+<div class="trans">お互いに結んでおいた契りは絶えることはないでしょう、たとえこの御法要のように残り少ない御命であったとしても。</div>
+<div class="source">出典：『源氏物語』御法巻（原典）。Wikisource「源氏物語/御法」で実在確認。</div>
+</div>
+<div class="waka solo">
+<div class="speaker">紫の上（臨終の場、萩の上露に寄せて）</div>
+<div class="poem">おくと見るほどぞはかなきともすれば 風に乱るる萩の上露</div>
+<div class="trans-label">大意</div>
+<div class="trans">露が置いたと見る間もなくはかなく消えてしまう、ともすれば風に乱れる萩の葉の上の露のように、私の命もはかないものです。</div>
+<div class="source">出典：『源氏物語』御法巻（原典）。roudokus.com、note「和歌を訪ねて」等の複数サイトで実在確認。臨終の場で紫の上・光源氏・明石の中宮が順に詠み交わした三首の一首目。</div>
+</div>
+<div class="waka solo">
+<div class="speaker">光源氏（紫の上への返歌）</div>
+<div class="poem">ややもせば消えをあらそふ露の世に 後れ先だつほど経ずもがな</div>
+<div class="trans-label">大意</div>
+<div class="trans">ともすれば先を争って消えてゆく露のようなこの世ですが、私とあなたと、後れたり先立ったりする間隔がないように（一緒に逝きたいものです）。</div>
+<div class="source">出典：『源氏物語』御法巻（原典）。三首の唱和の二首目。複数サイトで実在確認。</div>
+</div>
+<div class="waka solo">
+<div class="speaker">明石の中宮（二人への返歌）</div>
+<div class="poem">秋風にしばしとまらぬ露の世を たれか草葉のうへとのみ見む</div>
+<div class="trans-label">大意</div>
+<div class="trans">秋風に吹かれてしばらくもとどまらない露のようなこの世を、誰が草葉の上の露だけのこと（他人事）と見るでしょうか（私たち皆にとって同じことです）。</div>
+<div class="source">出典：『源氏物語』御法巻（原典）。三首の唱和の三首目。Wikipedia「御法」ほか複数サイトで実在確認。紫の上の死の直後に交わされた最後の唱和である。</div>
+</div>
+</div>
+</section>
+
+<!-- 5. あらすじ -->
+<section class="block" id="story">
+<div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+<div class="timeline">
+<div class="tl-item"><h3>紫の上、大病以来の病みがちな日々</h3><p>「若菜下」での大病以来、紫の上の体調は優れることがなく、そこはかとなく悩み続ける日々が長く続いていた。</p></div>
+<div class="tl-item"><h3>出家をしきりに望むが、源氏は許さない</h3><p>死期の近いことを感じ取った紫の上は再三出家を望むが、光源氏は生きているうちは離れたくないとの一心から、これを頑として許そうとしない。</p></div>
+<div class="tl-item"><h3>三月十日、二条院で法華経千部供養</h3><p>紫の上が長年書き溜めさせていた法華経千部の供養が、彼女自身の邸である二条院で盛大に営まれる。花盛りの季節で、空の様子も麗らかに、極楽浄土のありさまがすぐそこにあるかのように感じられるほどであった。</p></div>
+<div class="tl-item"><h3>明石の御方と和歌を贈答</h3><p>法会の最中、紫の上は三の宮を使いとして明石の御方に「惜しからぬこの身ながらもかぎりとて…」の歌を贈り、みずからの命を薪の尽きることになぞらえる。明石の御方はさりげない詠みぶりで返歌する。</p></div>
+<div class="tl-item"><h3>花散里と最後の贈答歌（帖名の由来）</h3><p>法会が終わり、参集した人々がそれぞれ帰ろうとするのを、紫の上は永遠の別れのように感じて惜しむ。花散里に「絶えぬべき御法ながらぞ頼まるる…」の歌を贈り、花散里も「結びおく契りは絶えじ…」と返す。この贈答歌が本帖の帖名「御法」の由来となった。</p></div>
+<div class="tl-item"><h3>法会の後も、絶え間ない勤行が続く</h3><p>供養に引き続き、二条院では不断の読経や懺法など、たゆみない仏事が営まれ続ける。</p></div>
+<div class="tl-item"><h3>夏、容態がいっそう悪化、明石の中宮が里下がり</h3><p>夏になると紫の上の容態はさらに重くなる。今上帝の中宮となっていた明石の中宮も、養母の見舞いのために里下がりしてくる。</p></div>
+<div class="tl-item"><h3>三の宮（後の匂宮）に、二条院と花木を託す遺言</h3><p>紫の上は特に目をかけて育てた孫の三の宮に、大人になったらこの二条院に住み、対の前の紅梅と桜を折々に心とどめて愛で、しかるべき折には仏にも供えてほしいと、それとなく遺言する。幼い三の宮は涙ぐみながらうなずく。</p></div>
+<div class="tl-item"><h3>秋、風の強い夕暮れに明石の中宮の見舞い</h3><p>秋、少し涼しくなり気分が晴れやぐように見えても、紫の上の容態はともすれば思わしくない。風の強く吹き出した夕暮れ、庭の前栽を見ようと脇息に寄りかかっていた紫の上のもとへ、明石の中宮が見舞いに訪れる。</p></div>
+<div class="tl-item"><h3>源氏も加わり、萩の上露に寄せて三首を詠み交わす</h3><p>そこへ光源氏も渡ってきて、三人で萩の上露に寄せた和歌を詠み交わす。紫の上「おくと見るほどぞはかなきともすれば…」、源氏「ややもせば消えをあらそふ露の世に…」、中宮「秋風にしばしとまらぬ露の世を…」と、命のはかなさを三人でつなぐように詠み合う。</p></div>
+<div class="tl-item"><h3>容態急変、八月十四日の明け方に死去</h3><p>歌を詠み交わした直後、紫の上はにわかに容態を崩す。明石の中宮に手を取られながら、露が消えるようにはかなく、八月十四日の明け方、息を引き取った。</p></div>
+<div class="tl-item"><h3>荼毘に付され、葬送・弔問が相次ぐ</h3><p>亡骸はその日のうちに荼毘に付され、翌朝八月十五日に葬送が行われた。悲しみのあまり源氏は紫の上のそばを離れようとせず、葬儀万端は夕霧が取り仕切る。夕霧は、かつて垣間見て以来長らく人には言えぬ思いを慎んできたその死に顔を、間近でゆっくりと見つめる。その死顔は生前にも増して美しく見えた。帝、致仕大臣、秋好中宮をはじめ、多くの人々から弔問が絶えず、源氏は世間体を思って出家の思いをこらえながら、その日その日を過ごしていく。</p></div>
+</div>
+</section>
+
+<!-- 6. 考察と深層考察 -->
+<section class="block" id="thoughts">
+<div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 許されなかった出家という読み方</div>
+<h3>源氏の愛執が紫の上から選択を奪う</h3>
+<p>紫の上が再三望んだ出家を、源氏は「生きているうちは離れたくない」という自身の思いから許しません。結果として紫の上は、みずから死に方を選ぶ自由さえ持てないまま世を去ることになります。この帖を通して繰り返し語られる出家の願いとその不許可は、源氏の深い愛情の裏面として、紫の上個人の意志が最後まで尊重されなかったことを浮かび上がらせているとも読めます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 法華経千部供養という「別れの儀式」</div>
+<h3>生前に営まれる、もう一つの葬送</h3>
+<p>三月の法華経千部供養は、表向きは仏道への祈願行事ですが、紫の上自身も参集した人々も、これを事実上最後の対面と思い定めて臨んでいる点で、生前に営まれる別れの儀式としての性格を強く帯びています。この場での明石の御方・花散里との和歌の贈答は、いずれも今生の別れを言葉にした唱和であり、供養そのものが紫の上の死への静かな予行として描かれていると考えられます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 三首の唱和が描く無常の広がり</div>
+<h3>個人の死から、人間すべての無常へ</h3>
+<p>臨終の場での紫の上・光源氏・明石の中宮による三首の唱和は、紫の上が「風」「萩」「露」で自らの命のはかなさを詠み、源氏が「消え」「露の世」で共に逝きたいと願い、中宮が「秋風」「草葉」でその無常を人間すべてに広げるという、意味の連なりを持っています。一人の死を悼む歌が、次第に人の世すべての無常へと開かれていく構成は、この場面の文学的な美しさの核にあると考えられます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 三の宮への遺言に見る、行き場を得た母性</div>
+<h3>実子を持たなかった紫の上の、最後の愛情の宛先</h3>
+<p>紫の上は物語を通じて実子を持たず、明石の姫君（後の明石の中宮）を養い子として育てました。臨終を前にした三の宮への遺言は、その母性がさらに次の世代へと向けられ、二条院という自らの邸そのものを託す形で結実したものと読むことができます。紫の上の愛情が血のつながりを越えて受け継がれていく様子が、この場面には凝縮されていると考えられます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 夕霧の「おほけなき心」の最終的な行方</div>
+<h3>慎み続けた思いが、死に顔を見つめる場面に昇華する</h3>
+<p>夕霧はかつて「野分」の帖で紫の上を垣間見て以来、長年にわたって人には言えぬ思いを胸に秘めながらも、それを行動に移すことは慎んできたとされます。本帖で夕霧がその死に顔をゆっくりと見つめる場面は、生前には決して許されなかった距離の近さが、死によってはじめて訪れたという、痛切な逆説を含んでいるとも読めます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 紫の上の死が物語構造に与える意味</div>
+<h3>ヒロインの死が告げる、光源氏の物語の終わり</h3>
+<p>紫の上は「若紫」以来、物語のほぼ全篇にわたって光源氏の傍らにあり続けた中心的なヒロインです。その死は単なる一登場人物の退場ではなく、光源氏を主人公とする物語（正編）そのものが終わりに近づいていることを告げる、構造上の大きな転換点であると考えられます。</p>
+</div>
+<p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+</section>
+
+<!-- 7. 特筆事項 -->
+<section class="block" id="notes">
+<div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+<div class="note-card">
+<h3>正編の実質的な終幕を告げる帖</h3>
+<p>『源氏物語』全54帖のうち、光源氏を中心に据えた物語は第41帖「幻」までとされる。「幻」は光源氏が紫の上を失った悲しみのうちに一年を過ごす帖であり、続く「雲隠」は本文を持たない巻名のみの帖として、光源氏の死を暗示して物語から退場させる。本帖「御法」における紫の上の死は、その意味で、光源氏を主人公とする物語（いわゆる正編）が実質的な終わりへと向かう起点にあたる。</p>
+</div>
+<div class="note-card">
+<h3>「薄雲」以来続いた養育関係の結実</h3>
+<p>紫の上と明石の中宮（明石の姫君）の養母子関係は、第19帖「薄雲」で姫君が紫の上に引き取られて以来、六条院を舞台に長く描かれてきた。本帖での臨終の場に明石の中宮が立ち会い、その手を取られながら紫の上が息を引き取る場面は、20年以上にわたって積み重ねられてきたこの関係の、一つの到達点として位置づけられる。</p>
+</div>
+<div class="note-card">
+<h3>唱和三首の文学史的な評価</h3>
+<p>臨終の場における紫の上・光源氏・明石の中宮の三首の唱和は、『源氏物語』の和歌表現の中でも特に完成度の高い場面の一つとして、古来しばしば取り上げられてきた。高校古典の教材として広く採用されていることからも、この場面が日本文学史上重要な一節とみなされていることがうかがえる。</p>
+</div>
+</section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+const el = document.getElementById('scenePopup');
+if(!el) return;
+el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+el.style.display = 'block';
+}
+
+const CURRENT = 40;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+chapters.forEach(c=>{
+const tab = document.createElement(c.done ? 'a' : 'span');
+tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+tab.textContent = c.n + '.' + c.t;
+if(c.done){ tab.href = c.f; }
+tabsEl.appendChild(tab);
+const opt = document.createElement('option');
+opt.value = c.done ? c.f : '';
+opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+opt.disabled = !c.done;
+if(c.n===CURRENT) opt.selected = true;
+jumpEl.appendChild(opt);
+});
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+const nodes = {
+genji: {x:400, y:200, label:'光源氏'},
+murasaki: {x:500, y:340, label:'紫の上'},
+akashichugu: {x:680, y:140, label:'明石の中宮'},
+yugiri: {x:680, y:400, label:'夕霧'},
+hanachirusato: {x:220, y:140, label:'花散里'},
+akashinokata: {x:220, y:400, label:'明石の御方'},
+niou: {x:500, y:50, label:'三の宮（匂宮）'}
+};
+const edges = [
+{a:'genji', b:'murasaki', label:'四十年近い夫婦の絆、今生の別れ', type:'kinship'},
+{a:'genji', b:'akashichugu', label:'実の父娘', type:'kinship'},
+{a:'genji', b:'yugiri', label:'父子', type:'kinship'},
+{a:'genji', b:'hanachirusato', label:'六条院の妻の一人', type:'kinship'},
+{a:'genji', b:'akashinokata', label:'六条院の妻の一人', type:'kinship'},
+{a:'genji', b:'niou', label:'祖父と孫', type:'kinship'},
+{a:'murasaki', b:'akashichugu', label:'養母と養女、姫君時代からの養育（薄雲以来）', type:'kinship'},
+{a:'murasaki', b:'yugiri', label:'野分以来慎み続けた敬慕、死に顔を見つめる（AIの解釈を含む）', type:'emotion'},
+{a:'murasaki', b:'hanachirusato', label:'法要の後の贈答歌に見る、今生の別れの情（帖名由来）', type:'emotion'},
+{a:'murasaki', b:'akashinokata', label:'三の宮を使いとした贈答歌に見る、わだかまりを越えた情愛（AIの解釈を含む）', type:'emotion'},
+{a:'murasaki', b:'niou', label:'実の祖母ではないが、手ずから育てた深い愛情', type:'kinship'},
+{a:'akashichugu', b:'yugiri', label:'異母兄妹', type:'kinship'},
+{a:'akashichugu', b:'niou', label:'母子', type:'kinship'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+edges.forEach(edge=>{
+const A=nodes[edge.a], B=nodes[edge.b];
+const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+const dx=B.x-A.x, dy=B.y-A.y;
+const len=Math.sqrt(dx*dx+dy*dy)||1;
+const nx=-dy/len, ny=dx/len;
+const offset = 15;
+const lx = mx + nx*offset, ly = my + ny*offset;
+const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+t.textContent = edge.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+const g = el('g',{class:'node'});
+const w = Math.max(96, n.label.length*13);
+g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+t.textContent = n.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+document.querySelectorAll('.filters button').forEach(btn=>{
+btn.addEventListener('click', ()=>{
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+const f = btn.dataset.f;
+document.querySelectorAll('.edge').forEach(e=>{
+e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+});
+});
+});
+</script>
+</body>
+</html>
