@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第32帖 梅枝 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --gray:#8c8579;
+    --kon:#2c3a63;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+  .person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:var(--kon);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:18px; height:3px; display:inline-block;}
+  .legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka.solo{grid-column:1 / -1;}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+  .waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第32帖</div>
+    <h1>梅枝</h1>
+    <div class="kana">うめがえ</div>
+    <p class="lead">光源氏39歳の春の物語。太政大臣として栄華を極める源氏は、明石の姫君（11歳）の裳着と東宮入内の支度に心を砕く。六条院の女君たちに薫物の調合を依頼し、自らも寝殿の奥にこもって秘伝の香を練る。2月10日、蛍兵部卿宮を判者に迎えて薫物合わせが催され、優劣つけがたい出来栄えに宴は盛り上がり、弁少将が催馬楽「梅が枝」を歌う。翌日には裳着の儀が盛大に行われ、秋好中宮が異例の腰結役を務めた。一方、夕霧と雲居雁の恋は変わらず膠着したままで、業を煮やした源氏は息子に結婚を諭し、そのことがかえって雲居雁を傷つける。六条院の文化的な栄華と、次世代の縁談という二つの主題が並行して描かれる帖である。</p>
+  </div>
+
+  <!-- 1. 主な登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">39歳</span></div><p>太政大臣。明石の姫君の裳着と東宮入内の準備に奔走し、薫物合わせを主催する。息子・夕霧の結婚が定まらないことにも心を痛め、自らの経験を踏まえて訓戒する。</p></div>
+      <div class="person"><div class="row"><span class="name">明石の姫君</span><span class="age">11歳</span></div><p>光源氏と明石の君の娘、紫の上の養女。裳着の儀を迎え、東宮への入内を控える。本帖では姫君自身の心情はほとんど語られず、専ら周囲の大人たちの奔走の対象として描かれる。</p></div>
+      <div class="person"><div class="row"><span class="name">明石の君</span><span class="age">30歳</span></div><p>明石の姫君の実母。薫物の調合に加わるが、身分の低さゆえに裳着の儀に出席することはかなわず、源氏はそのことを悔やむ。</p></div>
+      <div class="person"><div class="row"><span class="name">紫の上</span><span class="age">確認できません</span></div><p>光源氏の正妻格。明石の姫君を養女として育て上げ、裳着の支度にも深く関わる。源氏から仮名の書きぶりを朧月夜・朝顔の姫君と並ぶ達筆と評される。</p></div>
+      <div class="person"><div class="row"><span class="name">夕霧</span><span class="age">18歳</span></div><p>光源氏の嫡男。雲居雁への思いを変わらず抱き続けているが、身を固めようとしない態度を父に案じられ、結婚について訓戒を受ける。</p></div>
+      <div class="person"><div class="row"><span class="name">雲居雁</span><span class="age">確認できません</span></div><p>内大臣の娘。夕霧との仲を父に引き裂かれて以来の想いを抱えるが、夕霧に新しい縁談の噂が立ったと聞き衝撃を受け、恨みの返歌を送る。</p></div>
+      <div class="person"><div class="row"><span class="name">内大臣</span><span class="age">確認できません</span></div><p>頭中将であった人物。娘・雲居雁の処遇に相変わらず悩み続けている。</p></div>
+      <div class="person"><div class="row"><span class="name">蛍兵部卿宮</span><span class="age">確認できません</span></div><p>光源氏の異母弟。薫物合わせに判者として招かれ、どの薫物も優劣つけがたい出来栄えに苦心する。催馬楽「梅が枝」を聴いて和歌を詠む。</p></div>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※光源氏（39歳）・明石の姫君（11歳）・明石の君（30歳）・夕霧（18歳）は、ダ・ヴィンチWeb「3分で読む源氏物語」の年齢紹介で複数の記述の一致を確認しました。紫の上・雲居雁・内大臣・蛍兵部卿宮の年齢は明示された記述を見つけられず、確認できません。特に紫の上の年齢は、Wikipedia「源氏物語年立」の記事によれば、「若紫」巻の記述を基準とすると光源氏より7〜8歳年下、「若菜」巻の記述を基準とすると10歳年下となり、資料間で見解が分かれています。</p>
+  </section>
+
+  <!-- 2. 人物系図 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 900 710" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+      <span><i style="background:var(--kon);"></i>政争・対立</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※この帖の本文には、政略同盟、主従・忠誠にあたる関係の記述は見当たらないため、系図には血縁・婚姻／感情／政争・対立の3種類のみを図示しています（凡例は5種類とも共通表示）。光源氏と内大臣の間の「政争・対立」は、本帖の本文が直接そう描いているわけではなく、両者が長年ライバル関係にあり（雨夜の品定め以来の間柄、玉鬘をめぐる立場の違いなど）、子女の縁組をめぐって微妙に異なる思惑を抱いているという背景から、AIが便宜的に分類したものです。</p>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 六条院の薫物合わせと入内の支度</h2></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+            <polygon points="0 0, 10 4, 0 8" fill="var(--murasaki)"/>
+          </marker>
+        </defs>
+        <rect x="0" y="0" width="760" height="420" fill="var(--paper)"/>
+        <text x="380" y="30" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--murasaki-deep)">薫物合わせの雅と、入内の支度</text>
+
+        <g class="scene-room" onclick="showScenePopup('①六条院（薫物合わせの会場）','正月末、閑暇な頃合いを見て、源氏は薫香の調合を思い立つ。六条院の女君たちにそれぞれ薫物の調合を依頼し、自らも寝殿の奥にこもって秘伝の香を練り上げる。前斎院・朝顔の君からも紺瑠璃・白瑠璃の香壺に入れた薫物が届けられた。2月10日、雨の少し降る日に蛍兵部卿宮を判者として迎え、薫物合わせが催される。どの薫物もそれぞれに優れており、蛍宮も優劣を定めかねるほどであった。夜には管弦の宴が催され、美声の弁少将が催馬楽「梅が枝」を歌い、この帖の名の由来となった。')">
+          <rect x="60" y="70" width="280" height="220" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
+          <text x="70" y="92" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--suou)">六条院・寝殿</text>
+          <text x="200" y="170" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">薫物合わせ</text>
+          <text x="200" y="195" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">香を調合し優劣を競う雅な行事</text>
+          <circle cx="315" cy="90" r="13" fill="var(--murasaki)"/>
+          <text x="315" y="95" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">①</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('②明石の姫君の入内準備の場','翌日、明石の姫君の裳着の儀が盛大に執り行われ、秋好中宮が前例のない腰結役を務めた。姫の美しさに中宮も目を細める。源氏は本来出席すべき実母・明石の君を、身分の低さから来る噂を憂慮して出席させられなかったことを悔やんだ。東宮も入内を待ちわびていたが、他の公卿が源氏に遠慮して娘の入内を控える様子を見て、源氏はあえて明石の姫君の入内を延期し、他家の入内を促す。姫君の局は淑景舎（桐壺）と定められ、源氏は華麗な調度品に加え、名筆家たちに手本となる書の執筆を依頼して回った。')">
+          <rect x="420" y="70" width="280" height="220" fill="#efe7d8" stroke="var(--suou)" stroke-width="1.8"/>
+          <text x="430" y="92" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--suou)">六条院・淑景舎の支度</text>
+          <text x="560" y="170" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">裳着の儀・入内の準備</text>
+          <text x="560" y="195" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">東宮入内に向けた調度・手本の支度</text>
+          <circle cx="675" cy="90" r="13" fill="var(--murasaki)"/>
+          <text x="675" y="95" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">②</text>
+        </g>
+
+        <line x1="340" y1="180" x2="418" y2="180" stroke="var(--murasaki)" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+        <text x="380" y="340" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">①雅な社交行事としての薫物合わせと、②娘の将来を賭けた入内の政治的な支度は、同じ六条院の中で表裏一体に進行します</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">薫物合わせは表向きは風雅な社交行事だが、その実、明石の姫君の入内という一族の政治生命を左右する一大事のための布石でもある。六条院という同じ空間が、文化的な栄華の舞台であると同時に、次代への布石を打つ政治の舞台でもあることが、この帖の空間構成からも読み取れる。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>薫物合わせ（たきものあわせ）</dt>
+      <dd>各自が調合した練り香（薫物）を持ち寄り、判者を立てて香りの優劣を競う遊び。平安貴族の高度な美意識と教養を示す社交行事で、本帖の中心的な出来事となっている。</dd>
+      <dt>梅枝（うめがえ）</dt>
+      <dd>本帖の巻名。薫物合わせの後の宴で、弁少将（内大臣の次男、後の紅梅大納言）が催馬楽「梅が枝」を歌ったことに由来する。</dd>
+      <dt>東宮（とうぐう）</dt>
+      <dd>次の帝となることが定まっている皇太子を指す。本帖では朱雀院の皇子（後の今上帝）を指し、明石の姫君が入内する相手である。</dd>
+      <dt>入内（じゅだい）</dt>
+      <dd>皇后・中宮・女御・更衣などとして帝や東宮の後宮に入ること。一族の政治的な地位を左右する重要な出来事であり、明石の姫君の入内準備が本帖の主題の一つとなっている。</dd>
+    </dl>
+    <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">朝顔の君（薫物に添えて）</div>
+        <div class="poem">花の香は 散りにし枝に とまらねど うつらむ袖に あさくしまめや</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">この花のお香は、花の散った枝と同じ我が身には役立ちませんが、姫君のお袖にお移しになれば、深く奥ゆかしく香り立つことでしょう。</div>
+        <div class="source">出典：『源氏物語』梅枝巻。京都宇治「式部郷」の白描源氏物語シリーズで原文を確認。前斎院・朝顔の君が薫物とともに姫君へ贈った歌とされる。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">催馬楽「梅が枝」（弁少将が歌う）</div>
+        <div class="poem">梅が枝に 来ゐる鶯や 春かけて はれ 春かけて 鳴けどもいまだや 雪は降りつつ あはれ そこよしや 雪は降りつつ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">梅の枝に来て留まっている鶯が、春を待ち望んで鳴いているけれども、いまだ雪は降り続いている。</div>
+        <div class="source">出典：催馬楽「梅が枝」。『古今和歌集』春上の「梅が枝に来ゐるうぐひす春かけて鳴けどもいまだ雪は降りつつ」を元にした歌謡とされる。薫物合わせ後の宴で弁少将が歌ったことが巻名の由来。原文は催馬楽wikiおよび複数の解説サイトで一致を確認。</div>
+      </div>
+      <div class="waka solo">
+        <div class="speaker">蛍兵部卿宮（催馬楽「梅が枝」を受けて）</div>
+        <div class="poem">鴬の声にやいとどあくがれむ 心しめつる花のあたりに</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">鶯の声にいよいよ心が浮かれ出てしまうのだろうか、すでに深く心を染められた花のあたりで。</div>
+        <div class="source">出典：『源氏物語』梅枝巻。弁少将が歌った催馬楽「梅が枝」の歌詞にある「鶯」を受けて蛍兵部卿宮が詠んだ和歌とされ、解説サイト「源氏びより」で原文を確認。</div>
+      </div>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※上記3首（朝顔の君の歌、催馬楽「梅が枝」、蛍兵部卿宮の返歌）は、いずれもWeb検索により原文の実在を確認できたものです。夕霧と雲居雁の間で交わされたとされる贈答歌については、今回のWeb検索では字句まで確認できる出典を見つけられず、掲載を見送りました。確認できません。</p>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>源氏、明石の姫君の裳着の支度を急ぐ</h3><p>正月末、公私ともに閑暇な頃合いを見て、源氏は11歳になった明石の姫君の裳着の儀式の準備に並々ならぬ心配りを見せる。同じ2月に東宮（春宮）も元服することが決まっており、それに続いて姫君の入内も行われることが予想された。</p></div>
+      <div class="tl-item"><h3>源氏、薫香の調合を思い立つ</h3><p>大弐から贈られた香木ではもの足りないと感じた源氏は、二条院の倉を開けさせ、かつて唐から渡来した貴重な香木を取り寄せる。六条院の女君たちにもそれぞれ薫物の調合を依頼し、自らも寝殿の奥にこもって秘伝の調合に没頭する。</p></div>
+      <div class="tl-item"><h3>朝顔の君からも薫物が届く</h3><p>前斎院・朝顔の君からも、紺瑠璃・白瑠璃の香壺に入れた薫物と、花の枝に添えた和歌が贈られてくる。六条院の外からも心を寄せる人々が姫君の晴れ舞台に加わろうとする様子がうかがえる。</p></div>
+      <div class="tl-item"><h3>薫物合わせが催される</h3><p>雨の少し降る2月10日、源氏は異母弟・蛍兵部卿宮を判者として迎え、薫物合わせを催す。女君たちが心を込めて調合した薫物はどれも優れており、経験豊富な蛍宮をもってしても優劣を定めかねるほどの出来栄えであった。</p></div>
+      <div class="tl-item"><h3>宴で弁少将が催馬楽「梅が枝」を歌う</h3><p>薫物合わせの後、夜には管弦の宴が催される。美声で知られる弁少将（内大臣の次男）が催馬楽「梅が枝」を歌い、これに感じ入った蛍兵部卿宮が和歌を詠む。この宴での出来事が、本帖の巻名「梅枝」の由来となった。</p></div>
+      <div class="tl-item"><h3>明石の姫君の裳着の儀が行われる</h3><p>翌日、姫君の裳着の儀式が盛大に執り行われる。異例のことながら秋好中宮が腰結の役を務め、姫の美しさに目を細めて感心する。源氏は実母・明石の君を、身分の低さゆえの噂を憂慮して出席させられなかったことを悔やむ。</p></div>
+      <div class="tl-item"><h3>源氏、あえて入内を延期する</h3><p>東宮は入内を待ちかねているが、源氏に遠慮して他の公卿たちが娘の入内を見合わせている様子に気づいた源氏は、宮仕えとは多くの優れた姫君が集まってこそ意義があると考え、あえて明石の姫君の入内を延期し、他家にも入内を促す。</p></div>
+      <div class="tl-item"><h3>左大臣の娘が先に入内する</h3><p>源氏の配慮を受け、左大臣の娘が先に入内し麗景殿女御となる。明石の姫君の入内は4月と定められ、局は淑景舎（桐壺）と決まる。源氏は華麗な調度品を吟味し、名筆家たちに手本となる書の執筆を依頼して回る。</p></div>
+      <div class="tl-item"><h3>源氏、紫の上と書について語り合う</h3><p>入内の支度を進める中、源氏は紫の上を前に、これまで見てきた様々な女性の書きぶりを思い出とともに語る。紫の上の仮名の書きぶりは、朧月夜や朝顔の姫君と並ぶ達筆であると褒める。</p></div>
+      <div class="tl-item"><h3>内大臣、雲居雁の処遇に悩む</h3><p>華やかな噂を聞きながら、内大臣は娘・雲居雁の処遇に相変わらず頭を悩ませている。女盛りでありながら塞ぎ込んだ様子の娘を見て、内大臣自身も弱気になっている。</p></div>
+      <div class="tl-item"><h3>源氏、夕霧に結婚を訓戒する</h3><p>源氏も息子・夕霧がなかなか身を固めないことを案じ、自らの経験を踏まえて訓戒する。誰でもよいと結婚するのはよくないが、いつまでも独り身で女遊びに走るのもよくない、不本意な結婚であってもその人の良いところを見て添い遂げるべきだ、とそれとなく他の縁談を勧める。</p></div>
+      <div class="tl-item"><h3>雲居雁、噂を聞いて衝撃を受ける</h3><p>夕霧に新たな縁談の噂があると父から聞かされた雲居雁は衝撃を受け、自分はこうもあっさり忘れられてしまう身なのかと深く悲しむ。久しぶりに人目を忍んで届いた夕霧からの文に対し、その冷淡さを恨む返歌を書き送る。</p></div>
+      <div class="tl-item"><h3>夕霧、雲居雁の怒りの理由に困惑する</h3><p>心変わりをした覚えのない夕霧は、雲居雁がなぜこれほど怒っているのか分からず考え込む。二人の恋の行方は、この帖の時点ではなお膠着したまま次帖へと持ち越される。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 薫物合わせという「見えない」栄華の表現</div>
+      <h3>香りで示される六条院の頂点</h3>
+      <p>これまでの帖で描かれてきた六条院の栄華は、四季の御殿の壮麗さや管弦の宴といった視覚・聴覚に訴える形が多かったが、本帖では「香り」という、記録にも図にも残らない感覚的な贅を尽くす場面が中心に据えられている。目に見えない領域にまで極められた美意識こそが、六条院の文化的な頂点を象徴していると読み取れる。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 出席できなかった明石の君の悔しさ</div>
+      <h3>身分の壁がなお残る晴れ舞台</h3>
+      <p>明石の姫君の裳着という晴れの日に、実の母である明石の君だけが身分の低さゆえに出席できない。源氏がこれを悔やむ描写は、六条院の栄華がどれほど極まっても、明石の君の出自という壁だけは完全には越えられないことを静かに示している。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 源氏の夕霧への訓戒に滲む自己像</div>
+      <h3>自らの恋愛遍歴を鏡にした助言</h3>
+      <p>源氏が夕霧に語る結婚の訓戒は、誰でもよいわけではないが独り身も良くない、という一見常識的な内容だが、これは数々の恋愛遍歴を重ねてきた源氏自身の半生を踏まえた発言として読むと重みを増す。息子には自分と同じ回り道をさせたくないという親心が透けて見える。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 明石の姫君の「不在」の意味</div>
+      <h3>主役でありながら語られない姫君自身の声</h3>
+      <p>本帖は明石の姫君の裳着と入内という、姫君にとって人生の大きな節目を描きながら、姫君自身の心情はほとんど語られない。物語が専ら源氏・紫の上・明石の君という大人たちの視点から進むことは、当時の姫君が政略の主体ではなく客体として扱われていた立場を象徴しているとも読める。これは本文の構成から読み取れるAIの解釈であり、原典が明示的にそう位置づけているわけではありません。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 夕霧と雲居雁、膠着の意味</div>
+      <h3>次世代の恋が持つ「動かなさ」という対比</h3>
+      <p>明石の姫君の入内準備が華々しく進む一方で、夕霧と雲居雁の恋は本帖でも一向に進展しない。华やかな政略結婚の準備と、身分違いでもなく双方に想いがありながら進まない恋という対照は、六条院の栄華の陰で個人の感情がなお置き去りにされている状況を浮かび上がらせているとも読める。これは物語構成上の見立てであり、原典が意図的にそう対比させていると明言しているわけではありません。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 催馬楽「梅が枝」が示す季節の比喩</div>
+      <h3>「まだ雪は降りつつ」に重なる夕霧の恋</h3>
+      <p>宴で歌われる催馬楽「梅が枝」は、春を待ちながらまだ雪が降り続く鶯の姿を歌う。この歌詞は、栄華の頂点にある六条院の華やぎとは裏腹に、夕霧と雲居雁の恋がいまだ「春」を迎えられずにいる状況と重ね合わせて読むことができる。これは歌詞の内容から連想されるAIの読み解きであり、本文がそのような対応関係を明示しているわけではありません。</p>
+    </div>
+    <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+  </section>
+
+  <!-- 7. 特筆事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+    <div class="note-card">
+      <h3>六条院の文化的な頂点を描く帖</h3>
+      <p>梅枝の巻は、薫物合わせという極めて洗練された社交行事を通じて、六条院の栄華が文化的な頂点に達したことを描く帖とされる。政治力・経済力だけでなく、香りという繊細な美意識にまで及ぶ贅が尽くされる様は、物語全体における光源氏の栄華の頂点を象徴する場面の一つといえる。</p>
+    </div>
+    <div class="note-card">
+      <h3>次帖「藤裏葉」への布石</h3>
+      <p>本帖で膠着したまま残された夕霧と雲居雁の恋の行方、および明石の姫君の入内準備は、続く第33帖「藤裏葉」でそれぞれ大きな展開を迎える。梅枝は、六条院の栄華の頂点を描きながら、同時に次の大きな転換点への準備段階としても位置づけられる。</p>
+    </div>
+    <div class="note-card">
+      <h3>巻名が歌謡に由来する数少ない例</h3>
+      <p>梅枝という巻名は、和歌ではなく催馬楽という歌謡の曲名に由来している。五十四帖の中でも、巻名が古歌ではなく当時の流行歌謡に基づく例は珍しく、平安貴族の宴における音楽文化の広がりをうかがわせる一帖である。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 32;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram =====
+   8 nodes arranged in a circle, genji at the center hub, the other 7
+   evenly spaced around him at 900,375 radius 280 so that every genji
+   edge is a simple spoke and every non-genji edge connects two
+   adjacent perimeter nodes (a short chord that stays outside the
+   spokes to any other node). Verified by construction: with genji
+   fixed at the centre, no chord between adjacent perimeter nodes can
+   cross a radial spoke to a third node, and no two spokes cross since
+   they share only the centre point. */
+const nodes = {
+  genji:      {x:450, y:375, label:'光源氏'},
+  murasaki:   {x:730, y:375, label:'紫の上'},
+  himegimi:   {x:625, y:156, label:'明石の姫君'},
+  akashi:     {x:388, y:102, label:'明石の君'},
+  hotaru:     {x:198, y:254, label:'蛍兵部卿宮'},
+  naidaijin:  {x:198, y:497, label:'内大臣'},
+  kumoi:      {x:388, y:648, label:'雲居雁'},
+  yugiri:     {x:625, y:594, label:'夕霧'}
+};
+const edges = [
+  {a:'genji', b:'himegimi', label:'実の父娘。入内・裳着の準備に奔走', type:'kinship'},
+  {a:'himegimi', b:'murasaki', label:'養母と娘。裳着の後見と書の指南', type:'kinship'},
+  {a:'himegimi', b:'akashi', label:'実の母娘。出席かなわず対面できず', type:'kinship'},
+  {a:'genji', b:'murasaki', label:'夫婦。書の思い出を語り合う', type:'kinship'},
+  {a:'genji', b:'akashi', label:'娘の晴れの日に出席させられぬ悔い', type:'emotion'},
+  {a:'genji', b:'yugiri', label:'実の親子。結婚について訓戒する', type:'kinship'},
+  {a:'yugiri', b:'kumoi', label:'相思相愛。冷淡さを恨む贈答歌', type:'emotion'},
+  {a:'naidaijin', b:'kumoi', label:'実の父娘。娘の処遇に悩み続ける', type:'kinship'},
+  {a:'genji', b:'hotaru', label:'兄弟。薫物合わせの判者に招く', type:'kinship'},
+  {a:'genji', b:'naidaijin', label:'長年のライバル関係（AIによる分類）', type:'conflict'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  const w = Math.max(96, n.label.length*13);
+  g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
