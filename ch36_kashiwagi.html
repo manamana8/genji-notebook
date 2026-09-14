@@ -280,34 +280,64 @@
   <section class="block" id="scene">
     <div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 離れた二つの場所で同時に進む生と死</h2></div>
     <div class="diagram-wrap">
-      <svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg">
-        <rect x="0" y="0" width="760" height="420" fill="var(--paper)"/>
-        <text x="380" y="32" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--murasaki-deep)">致仕の大臣邸と六条院 ― 離れた二つの舞台</text>
+      <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+            <polygon points="0 0, 10 4, 0 8" fill="var(--murasaki)"/>
+          </marker>
+        </defs>
+        <rect x="0" y="0" width="900" height="600" fill="var(--paper)"/>
+        <text x="450" y="30" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--murasaki-deep)">致仕の大臣邸と六条院・四町図 ― 離れた二つの舞台</text>
 
         <g class="scene-room" onclick="showScenePopup('①柏木の実家（致仕の大臣邸）― 危篤・死去の場','病が篤くなった柏木は、六条院の妻・落葉の宮のもとを離れ、実家である致仕の大臣邸に移って療養する。父母や兄弟たちが付きっきりで看病し、加持祈祷も尽くされるが快方に向かわない。見舞いに訪れた親友の夕霧に、柏木は源氏への取りなしと、離れ離れの妻・落葉の宮の後事をそれとなく託す。柏木はこの邸で、両親や兄弟に深く嘆かれながら息を引き取る。')">
-          <rect x="50" y="70" width="290" height="220" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
-          <text x="60" y="100" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--suou)">致仕の大臣邸（柏木の実家）</text>
-          <text x="195" y="160" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--ink)">柏木、病床に臥す</text>
-          <text x="195" y="188" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">両親・兄弟の看病</text>
-          <text x="195" y="208" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">夕霧の見舞いと死去</text>
-          <circle cx="300" cy="90" r="13" fill="var(--murasaki)"/>
-          <text x="300" y="95" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">①</text>
+          <rect x="40" y="110" width="340" height="280" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
+          <text x="50" y="140" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--suou)">致仕の大臣邸（柏木の実家）</text>
+          <text x="210" y="235" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--ink)">柏木、病床に臥す</text>
+          <text x="210" y="263" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">両親・兄弟の看病</text>
+          <text x="210" y="283" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">夕霧の見舞いと死去</text>
+          <circle cx="360" cy="130" r="13" fill="var(--murasaki)"/>
+          <text x="360" y="135" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">①</text>
         </g>
 
-        <line x1="340" y1="180" x2="420" y2="180" stroke="var(--ink-soft)" stroke-width="1.4" stroke-dasharray="5,4"/>
-        <text x="380" y="170" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">離れた場所</text>
+        <line x1="380" y1="250" x2="460" y2="250" stroke="var(--ink-soft)" stroke-width="1.4" stroke-dasharray="5,4"/>
+        <text x="420" y="240" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">離れた場所</text>
+
+        <!-- 六条院 四町 2x2 -->
+        <g>
+          <rect x="460" y="60" width="200" height="120" fill="#efe7d8" stroke="var(--line)" stroke-width="1.2"/>
+          <text x="560" y="88" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">西北（戌亥）＝冬の町</text>
+          <text x="560" y="112" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">明石の君</text>
+          <text x="560" y="132" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">本帖に大きな動きの描写はなし</text>
+
+          <rect x="660" y="60" width="200" height="120" fill="#efe7d8" stroke="var(--line)" stroke-width="1.2"/>
+          <text x="760" y="88" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">東北（丑寅）＝夏の町</text>
+          <text x="760" y="112" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">花散里・玉鬘</text>
+          <text x="760" y="132" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">本帖に大きな動きの描写はなし</text>
+
+          <rect x="460" y="180" width="200" height="120" fill="#efe7d8" stroke="var(--line)" stroke-width="1.2"/>
+          <text x="560" y="208" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">西南（未申）＝秋の町</text>
+          <text x="560" y="232" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">秋好中宮</text>
+          <text x="560" y="252" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">本帖に大きな動きの描写はなし</text>
+
+          <rect x="660" y="180" width="200" height="120" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
+          <text x="760" y="208" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--suou)">東南（辰巳）＝春の町</text>
+          <text x="760" y="232" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">紫の上・女三の宮</text>
+          <text x="760" y="252" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">この帖で動きがあるのはここ</text>
+        </g>
+
+        <line x1="760" y1="300" x2="760" y2="330" stroke="var(--murasaki)" stroke-width="2" marker-end="url(#arrowhead)"/>
 
         <g class="scene-room" onclick="showScenePopup('②六条院・女三の宮の御殿 ― 出家、薫の誕生','源氏の看病がかなわぬまま、女三の宮は六条院で男子（薫）を出産する。宮は出産後も体調がすぐれず、見舞いに訪れた父・朱雀院にその場で出家を願い出て、朱雀院自らの手で髪を下ろす。源氏はこの場に居合わせながら引き留めることができない。三月には同じ六条院で薫の五十日の祝いが催され、源氏は抱き上げた薫の面差しに柏木の面影を見て涙する。')">
-          <rect x="420" y="70" width="290" height="220" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
-          <text x="430" y="100" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--suou)">六条院・女三の宮の御殿</text>
-          <text x="565" y="160" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--ink)">出産・出家・五十日の祝い</text>
-          <text x="565" y="188" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">薫の誕生と産養</text>
-          <text x="565" y="208" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">朱雀院による出家</text>
-          <circle cx="670" cy="90" r="13" fill="var(--murasaki)"/>
-          <text x="670" y="95" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">②</text>
+          <rect x="460" y="340" width="400" height="160" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
+          <text x="470" y="368" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--suou)">六条院・女三の宮の御殿</text>
+          <text x="660" y="415" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--ink)">出産・出家・五十日の祝い</text>
+          <text x="660" y="443" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">薫の誕生と産養</text>
+          <text x="660" y="463" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">朱雀院による出家</text>
+          <circle cx="830" cy="360" r="13" fill="var(--murasaki)"/>
+          <text x="830" y="365" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">②</text>
         </g>
 
-        <text x="380" y="340" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">柏木の死とほぼ時を同じくして、六条院では新しい命（薫）が誕生し、育てられていく</text>
+        <text x="450" y="540" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">柏木の死とほぼ時を同じくして、六条院では新しい命（薫）が誕生し、育てられていく</text>
       </svg>
     </div>
     <div class="scene-popup" id="scenePopup" style="display:none;"></div>
