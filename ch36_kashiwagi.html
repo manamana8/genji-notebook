@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第36帖 柏木 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --gray:#8c8579;
+    --kon:#2c3a63;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+    min-width:0;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px; flex-wrap:wrap;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+  .person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:var(--kon);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:18px; height:3px; display:inline-block;}
+  .legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
+  .waka.solo{grid-column:1 / -1;}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+  .waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第36帖</div>
+    <h1>柏木</h1>
+    <div class="kana">かしわぎ</div>
+    <p class="lead">光源氏48歳、正月から四月にかけての物語。女三の宮との密通が源氏に知られたことを悟りながらも、柏木の病はいっこうに癒えないまま年が明ける。死を覚悟した柏木は女三の宮に最後の文を送り、宮も気の進まぬまま小侍従に促されて返事をしたためる。まもなく女三の宮は男子を出産するが、生まれた子（薫）の面差しにはっきりと柏木の面影を見た源氏は、かつての自らの過ちを思い返しながら複雑な思いに沈む。出産後も体調のすぐれない宮を案じた朱雀院がひそかに六条院を訪れ、宮の願いを容れてその場で自ら髪を下ろさせる。娘の出家を知った柏木は絶望し、両親や兄弟、そして親友の夕霧に後事を託して息を引き取る。三月には薫の五十日の祝いが催され、源氏は我が子として抱き上げた薫にあらためて柏木の面影を見て涙する。一方、柏木の遺言を胸に一条の宮を訪ね始めた夕霧は、未亡人となった落葉の宮の奥ゆかしい暮らしぶりに次第に心惹かれていく。</p>
+  </div>
+
+  <!-- 1. 主な登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">48歳</span></div><p>准太上天皇。女三の宮と柏木の密通の真実を知りながら、生まれた薫を我が子として迎える。柏木の面影を宿す薫の顔立ちに、かつて自らが藤壺と犯した過ちを思い返し、複雑な思いに沈む。</p></div>
+      <div class="person"><div class="row"><span class="name">柏木</span><span class="age">32〜33歳（死去）</span></div><p>権大納言兼衛門督（のち権大納言）。女三の宮との密通が源氏に知られたことを悟り、病床に伏す。宮の出家を知って絶望し、両親・兄弟と親友の夕霧に後事を託して世を去る。</p></div>
+      <div class="person"><div class="row"><span class="name">女三の宮</span><span class="age">22〜23歳</span></div><p>光源氏の正室。柏木との過ちにより男子（薫）を出産するが、心身ともに弱り切り、見舞いに訪れた父・朱雀院に出家を願い出て、その場で髪を下ろす。</p></div>
+      <div class="person"><div class="row"><span class="name">薫</span><span class="age">誕生〜1歳（五十日の祝い）</span></div><p>女三の宮と柏木の密通によって生まれた男子。戸籍上は光源氏の子として育てられる。三月に六条院で五十日の祝いが催され、源氏はその容姿に柏木の面影を見る。</p></div>
+      <div class="person"><div class="row"><span class="name">夕霧</span><span class="age">27歳</span></div><p>光源氏の長男、大納言兼左大将。柏木の親友であり、病床の柏木を見舞う。柏木の遺言を口実に、未亡人となった落葉の宮のもとへ弔問を重ねるようになる。</p></div>
+      <div class="person"><div class="row"><span class="name">落葉の宮</span><span class="age">確認できません</span></div><p>朱雀院の第二皇女（女二宮）。柏木の正室であったが、柏木の心は妹・女三の宮にあり、夫婦仲は満たされないまま柏木を喪う。以後、夕霧の訪問を受けるようになる。</p></div>
+      <div class="person"><div class="row"><span class="name">朱雀院</span><span class="age">51歳</span></div><p>光源氏の異母兄、女三の宮・落葉の宮の父。出家した身でありながら、娘・女三の宮の体調を案じてひそかに六条院を訪れ、その願いを容れて自ら髪を下ろさせる。</p></div>
+      <div class="person"><div class="row"><span class="name">致仕の大臣</span><span class="age">確認できません</span></div><p>もとの頭中将、柏木の父。息子の病を深く案じ、各地から修験者を呼び寄せて加持祈祷を尽くすが、柏木の死を止めることはできず、深い悲しみに沈む。</p></div>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※光源氏（48歳）・柏木（32〜33歳で死去）・女三の宮（22〜23歳）・夕霧（27歳）は、Wikipedia「柏木（源氏物語）」、ダ・ヴィンチWeb「源氏物語三十六帖 柏木」、三省堂「ことばのコラム（絵巻で見る平安時代の暮らし）」、「3分で読む源氏物語」の複数サイトで一致して確認しました。朱雀院（51歳）は三省堂「ことばのコラム」の絵巻解説（「朱雀院の見舞」の場面）で確認しました。薫は本帖内で誕生し、三月に五十日の祝いを迎えます。落葉の宮・致仕の大臣の年齢は、本文中に明記が見当たらず確認できません。</p>
+  </section>
+
+  <!-- 2. 人物系図 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 900 760" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+      <span><i style="background:var(--kon);"></i>政争・対立</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※この帖の本文には政争・対立／政略同盟／主従・忠誠にあたる関係の記述は見当たらないため、系図には血縁・婚姻／感情の2種類のみを図示しています（凡例は5種類とも共通表示）。「光源氏―薫」の線は、戸籍上・世間向けの親子関係（実子として育てる）を指し、「柏木―薫」の線は本文が明かす血のつながりを指します。両方を血縁・婚姻として図示することで、薫の出生の秘密（表向きの親子と、真実の血縁が同時に存在する状態）を表現しています。「柏木―夕霧」は友情を、「夕霧―落葉の宮」は柏木の死後に芽生え始めた思慕を、いずれも感情としてAIが分類したものです。</p>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 離れた二つの場所で同時に進む生と死</h2></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="760" height="420" fill="var(--paper)"/>
+        <text x="380" y="32" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--murasaki-deep)">致仕の大臣邸と六条院 ― 離れた二つの舞台</text>
+
+        <g class="scene-room" onclick="showScenePopup('①柏木の実家（致仕の大臣邸）― 危篤・死去の場','病が篤くなった柏木は、六条院の妻・落葉の宮のもとを離れ、実家である致仕の大臣邸に移って療養する。父母や兄弟たちが付きっきりで看病し、加持祈祷も尽くされるが快方に向かわない。見舞いに訪れた親友の夕霧に、柏木は源氏への取りなしと、離れ離れの妻・落葉の宮の後事をそれとなく託す。柏木はこの邸で、両親や兄弟に深く嘆かれながら息を引き取る。')">
+          <rect x="50" y="70" width="290" height="220" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
+          <text x="60" y="100" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--suou)">致仕の大臣邸（柏木の実家）</text>
+          <text x="195" y="160" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--ink)">柏木、病床に臥す</text>
+          <text x="195" y="188" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">両親・兄弟の看病</text>
+          <text x="195" y="208" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">夕霧の見舞いと死去</text>
+          <circle cx="300" cy="90" r="13" fill="var(--murasaki)"/>
+          <text x="300" y="95" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">①</text>
+        </g>
+
+        <line x1="340" y1="180" x2="420" y2="180" stroke="var(--ink-soft)" stroke-width="1.4" stroke-dasharray="5,4"/>
+        <text x="380" y="170" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">離れた場所</text>
+
+        <g class="scene-room" onclick="showScenePopup('②六条院・女三の宮の御殿 ― 出家、薫の誕生','源氏の看病がかなわぬまま、女三の宮は六条院で男子（薫）を出産する。宮は出産後も体調がすぐれず、見舞いに訪れた父・朱雀院にその場で出家を願い出て、朱雀院自らの手で髪を下ろす。源氏はこの場に居合わせながら引き留めることができない。三月には同じ六条院で薫の五十日の祝いが催され、源氏は抱き上げた薫の面差しに柏木の面影を見て涙する。')">
+          <rect x="420" y="70" width="290" height="220" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
+          <text x="430" y="100" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--suou)">六条院・女三の宮の御殿</text>
+          <text x="565" y="160" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--ink)">出産・出家・五十日の祝い</text>
+          <text x="565" y="188" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">薫の誕生と産養</text>
+          <text x="565" y="208" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">朱雀院による出家</text>
+          <circle cx="670" cy="90" r="13" fill="var(--murasaki)"/>
+          <text x="670" y="95" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">②</text>
+        </g>
+
+        <text x="380" y="340" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">柏木の死とほぼ時を同じくして、六条院では新しい命（薫）が誕生し、育てられていく</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">①柏木は妻・落葉の宮のいる六条院の外、実家で息を引き取り、②その死とほぼ同じ頃、六条院では柏木の忘れ形見である薫が育まれていく。二つの場所が物理的に離れていることが、柏木の死と薫の誕生という対照的な出来事を静かに浮かび上がらせている。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>出家（しゅっけ）</dt>
+      <dd>俗世を離れ仏門に入ること。本帖では、体調の優れない女三の宮が父・朱雀院に願い出て、その場で自ら髪を下ろされる。</dd>
+      <dt>産養（うぶやしない）</dt>
+      <dd>子の誕生を祝う儀式で、生後三日・五日・七日・九日など奇数日の夜に催される。本帖では薫の誕生後、六条院の人々がそれぞれに産養を用意し、秋好中宮からも五日の夜に盛大な贈り物が届けられる。</dd>
+      <dt>五十日の祝い（いかのいわい）</dt>
+      <dd>子が生まれて五十日目を祝う儀式。本帖では三月に薫の五十日の祝いが六条院で催され、源氏が薫を抱き上げる場面が描かれる。</dd>
+      <dt>後事（こうじ）</dt>
+      <dd>自分の死後のことを人に託すこと。柏木は死の床で、源氏への取りなしと、妻・落葉の宮の行く末を、親友の夕霧に後事として託す。</dd>
+      <dt>権大納言（ごんのだいなごん）</dt>
+      <dd>大納言に準ずる官職。柏木の病を哀れんだ今上帝が、彼を元気づけるために授けた位である。</dd>
+    </dl>
+    <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">柏木（女三の宮への最後の文）</div>
+        <div class="poem">いまはとて燃えむ煙もむすぼほれ絶えぬ思ひのなほや残らむ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">もはやこれまでと火葬されて立ち上る煙も、乱れ結ぼれて、この尽きぬ思いはなお残るのでしょうか。</div>
+        <div class="source">出典：定家自筆本ほか複数の原文サイトで確認しました。死を覚悟した柏木が女三の宮に宛てた文に添えた歌です。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">女三の宮（柏木への返歌）</div>
+        <div class="poem">立ちそひて消えやしなましうきことを思ひみだるる煙くらべに</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">あなたの煙に立ち添って、私も消えてしまいたい。つらいことに思い乱れるこの煙比べに。</div>
+        <div class="source">出典：同じく原文サイトで確認しました。小侍従に促され、気の進まぬまま宮がしたためた返歌で、「『源氏物語』最高の和歌」とも評されます（丸谷才一氏の評として紹介するブログ記事による）。</div>
+      </div>
+      <div class="waka solo">
+        <div class="speaker">柏木（代表歌・最期の返書に添えて）</div>
+        <div class="poem">行く方なき空の煙となりぬとも思ふあたりを立ちは離れじ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">行方も知れぬ空の煙となってしまっても、あなたのあたりを立ち離れはしないでしょう。</div>
+        <div class="source">出典：定家自筆本ほか複数サイトで確認しました。臥せったまま最後の力を振り絞って書いたとされる、柏木の代表歌の一つです。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">夕霧（一条の宮の庭で、落葉の宮の女房へ）</div>
+        <div class="poem">ことならば馴らしの枝にならさなむ葉守の神の許しありきと</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">できることなら、私を慣れ親しむ枝にしてほしいものです。葉守の神のお許しがありましたと言って。</div>
+        <div class="source">出典：森永エンゼルカレッジ「源氏物語全講会」等で本文とともに確認しました。柏木の弔問に訪れた夕霧が、庭の柏木（かしわ）と楓の木に寄せて詠んだ歌です。</div>
+      </div>
+      <div class="waka solo">
+        <div class="speaker">少将の君（落葉の宮方の女房、夕霧への返し・巻名由来歌）</div>
+        <div class="poem">柏木に葉守の神はまさずとも人ならすべき宿の梢か</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">柏木（＝亡き柏木）に葉守の神はいらっしゃらなくなってしまったとはいえ、だからといって人を泊めてよい宿の梢でしょうか（いいえ、そうではありません）。</div>
+        <div class="source">出典：森永エンゼルカレッジ「源氏物語全講会」、Wikipedia「柏木（源氏物語）」で確認しました。「柏木」に亡き夫の名を掛けた歌で、本帖の巻名の由来となっています。</div>
+      </div>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※和歌はいずれも定家自筆本の原文を掲載するサイト（渋谷栄一氏『源氏物語の世界』）および森永エンゼルカレッジ「源氏物語全講会」で原文を確認しました。</p>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>柏木、病のまま新年を迎える</h3><p>女三の宮との密通が源氏に知られたことを悟った柏木は、去年の試楽の宴の後から床に臥したまま、年を越しても快方に向かわない。父・致仕の大臣は各地から修験者や祈祷師を呼び寄せ、加持祈祷を尽くすが、効き目は見えない。</p></div>
+      <div class="tl-item"><h3>柏木、女三の宮に最後の文を送る</h3><p>死を覚悟した柏木は、もう一度だけでも心の内を伝えたいと、女三の宮のもとへ文を送る。「どうしてこれほど早く、この身を終えるようなことになったのでしょう」と、思い乱れる心をつづった。</p></div>
+      <div class="tl-item"><h3>女三の宮、気の進まぬまま返事をしたためる</h3><p>思い出すのもつらい出来事のため、女三の宮は返事を書く気になれずにいたが、乳母子の小侍従に促され、しかたなく筆を執る。「立ちそひて消えやしなまし」の歌を受け取った柏木は、涙にむせぶ。</p></div>
+      <div class="tl-item"><h3>女三の宮、男子（薫）を出産する</h3><p>まもなく女三の宮は無事に男子を出産する。六条院の人々はそれぞれに産養（うぶやしない）を用意して祝い、秋好中宮からも五日の夜に盛大な贈り物が届けられる。だが源氏は、生まれた子の面差しに柏木の面影がはっきりと表れているのを見て、深く複雑な思いに沈む。</p></div>
+      <div class="tl-item"><h3>出産後も女三の宮の体調はすぐれない</h3><p>出産を終えた女三の宮であったが、心身ともに弱り切ったまま床に臥しがちになる。世をはかなむ思いは強まるばかりで、出家を望む気持ちを募らせていく。</p></div>
+      <div class="tl-item"><h3>朱雀院、ひそかに六条院を訪れ女三の宮を見舞う</h3><p>娘の様子を案じた朱雀院は、出家した身でありながら人目を忍んで六条院を訪れる。弱り切った宮の姿を目の当たりにし、痛ましく思う。</p></div>
+      <div class="tl-item"><h3>女三の宮、出家を願い出る。朱雀院、その場で髪を下ろす</h3><p>女三の宮は父に出家を強く願い出る。源氏は今さらながら慌てて引き留めようとするが、宮の決意は固く、むしろ源氏への恨みをその態度ににじませる。朱雀院は宮の願いを容れ、僧を呼んでその宵のうちに自らの手で宮の髪を下ろさせる。朱雀院は源氏に「宮の行く末を見捨てぬように」と念を押し、自身の住む寺へと帰っていった。</p></div>
+      <div class="tl-item"><h3>柏木、女三の宮の出家を知り絶望する</h3><p>女三の宮が出家したとの知らせを受けた柏木は、もはやこれまでと絶望する。離れ離れの妻・落葉の宮も、夫の病状を聞いて涙に暮れる。</p></div>
+      <div class="tl-item"><h3>今上帝、柏木を権大納言に叙す</h3><p>柏木の病状を哀れんだ今上帝は、彼を元気づけようと権大納言の位を授ける。昇進を祝おうと、致仕の大臣邸には多くの人が詰めかける。</p></div>
+      <div class="tl-item"><h3>夕霧、柏木を見舞い、後事を託される</h3><p>心配して駆けつけた夕霧に、柏木はそれとなく源氏の不興を買ったことを打ち明け、源氏へのとりなしを頼む。あわせて、離れ離れの妻・落葉の宮の行く末についても、それとなく後事を託す。</p></div>
+      <div class="tl-item"><h3>柏木、とうとう死去する</h3><p>兄弟たちも皆悲しみに沈むなか、柏木はついに息を引き取る。とりわけ両親の嘆きは激しく、伝え聞いた女三の宮も、我が身を顧みながら柏木を憐れんで涙する。</p></div>
+      <div class="tl-item"><h3>三月、薫の五十日の祝いが催される</h3><p>六条院で薫の五十日の祝いが盛大に催される。抱き上げた薫の美しい面差しに柏木の面影を見た源氏は、さすがに怒りも失せ、思わず涙をこぼす。一方、柏木の遺言を胸に落ち着かない夕霧は、事の真相を気にかけながらも、未亡人となった落葉の宮のもとを訪ね始め、その奥ゆかしい暮らしぶりに次第に心惹かれていく。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 罪の重さに押しつぶされる死</div>
+      <h3>直接の病名ではなく、心理的な重圧が死をもたらす構成</h3>
+      <p>柏木の死因は、本文上、明確な病名で説明されるわけではない。源氏に密通を知られたという事実そのものが柏木の心を蝕み、床に臥したまま回復の兆しを失わせていく。この「心が体を滅ぼす」という描かれ方は、単なる病死以上に、罪の意識そのものが人を死に至らしめるという物語の主題を強く印象づけている。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 薫の出生の秘密が物語全体に及ぼす影響</div>
+      <h3>「秘密の子」という構造が、物語の第三部を準備する</h3>
+      <p>薫は戸籍上は光源氏の子として育てられながら、実の父は柏木であるという秘密を背負って生まれる。この秘密は本帖の時点では源氏と女三の宮、ごく一部の女房しか知らないが、後年、薫自身がこの出生の秘密を知ることになり（宇治十帖「橋姫」）、彼の生涯を貫く出生への不安・懐疑の源となっていく。若菜上で示された「源氏自身の過去の過ちが繰り返される」という構図が、ここで単に繰り返されるだけでなく、次の世代（薫）の人生を規定する新たな物語の種となる点は重要である。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 源氏が複雑な思いで薫を見守る心情</div>
+      <h3>加害者と被害者の立場が入れ替わる皮肉</h3>
+      <p>かつて源氏自身が父・桐壺帝を裏切り、藤壺との間に冷泉帝をもうけた過去を持つ。今度は源氏自身が「裏切られる側」に立たされ、しかもその子（薫）を自らの子として育てなければならない。薫の顔立ちに柏木の面影を見て涙する源氏の姿には、単なる怒りだけでなく、かつて自分も同じ罪を犯したことへの自覚と、めぐりめぐる因果への感慨が入り混じっていると読める。これはあくまで物語構造から見た解釈であり、原典が直接そう明言しているわけではない。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 女三の宮、初めて自ら道を選ぶ</div>
+      <h3>受動的だった女三の宮が示す、最初で最後の強い意思</h3>
+      <p>前帖まで、自ら状況を切り開くことのほとんどなかった女三の宮が、本帖では出家という形で初めて明確な意思を示す。源氏の引き留めにも屈せず、父・朱雀院にすがって決意を貫く姿は、受動的な性格として描かれてきた彼女にとって、物語上唯一とも言える能動的な選択である。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 夕霧と落葉の宮のなれそめ</div>
+      <h3>友の死をきっかけに始まる、新たな物語の伏線</h3>
+      <p>柏木の遺言を口実に始まった夕霧の一条の宮通いは、本帖の時点ではまだ弔問としての体裁を保っている。しかし庭の柏木・楓の木に寄せた夕霧の歌には、すでにほのかな恋情がにじみ出ており、これが次帖「横笛」以降で本格化していく夕霧と落葉の宮の物語の出発点となっている。</p>
+    </div>
+    <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+  </section>
+
+  <!-- 7. 特筆事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+    <div class="note-card">
+      <h3>物語正編（第一部・第二部）の悲劇の頂点</h3>
+      <p>柏木は、若菜上・若菜下で積み重ねられてきた因果応報の物語が、ついに一人の死という形で結実する帖である。密通・出家・死という重い出来事が立て続けに描かれ、源氏の栄華の物語として始まった正編は、この帖を境に色濃く老いと喪失の影を帯びていく。</p>
+    </div>
+    <div class="note-card">
+      <h3>薫という第三部の主人公の誕生</h3>
+      <p>本帖で生まれる薫は、のちに「宇治十帖」と呼ばれる物語第三部の主人公となる人物である。その出生の秘密は、薫自身の生き方や人間観に深く影を落とし続けることになり、本帖はその出発点として物語全体の中でも重要な位置を占めている。</p>
+    </div>
+    <div class="note-card">
+      <h3>巻名の由来</h3>
+      <p>巻名「柏木」は、柏木の死後、その未亡人・落葉の宮の母である一条御息所が、弔問に訪れた夕霧への返しとして詠んだ「柏木に葉守の神はまさずとも人ならすべき宿の梢か」の歌に由来する。「柏木」の語に亡き夫の名を掛けた、この帖ならではの巻名歌である。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 36;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram =====
+   8 nodes: genji as hub at (450,420), 7 others placed on a circle
+   around him (radius 300, evenly spaced). Node boxes and edges were
+   verified programmatically (Python, Liang-Barsky segment/rectangle
+   clipping) so that no edge line passes over the box of any node
+   other than its own two endpoints. Circle order was chosen to keep
+   thematically related nodes adjacent: onnasan/kaoru/kashiwagi (the
+   secret birth) are clustered upper-right, kashiwagi/chiji/ochiba/
+   yugiri (his family, marriage and friendship) continue clockwise,
+   and suzaku sits between yugiri and onnasan (top). */
+const nodes = {
+  genji:      {x:450, y:420, label:'光源氏'},
+  onnasan:    {x:450, y:120, label:'女三の宮'},
+  kaoru:      {x:685, y:233, label:'薫'},
+  kashiwagi:  {x:742, y:487, label:'柏木'},
+  chiji:      {x:580, y:690, label:'致仕の大臣'},
+  ochiba:     {x:320, y:690, label:'落葉の宮'},
+  yugiri:     {x:158, y:487, label:'夕霧'},
+  suzaku:     {x:215, y:233, label:'朱雀院'}
+};
+const edges = [
+  {a:'genji', b:'onnasan', label:'正室として迎える。密通の真実を知り、複雑な思いで見舞う', type:'kinship'},
+  {a:'genji', b:'kaoru', label:'戸籍上は実子として育てるが、柏木の面影に複雑な心情を抱く', type:'kinship'},
+  {a:'genji', b:'suzaku', label:'異母兄弟。宮を見捨てぬよう釘を刺される', type:'kinship'},
+  {a:'onnasan', b:'kaoru', label:'実の母子。出産直後に出家する', type:'kinship'},
+  {a:'kashiwagi', b:'kaoru', label:'実の父子（本文が明かす真実。世間には秘密のまま）', type:'kinship'},
+  {a:'kashiwagi', b:'onnasan', label:'道ならぬ恋の末に密通。最後の文を交わし柏木は世を去る', type:'emotion'},
+  {a:'kashiwagi', b:'ochiba', label:'正室として迎えるが、心満たされぬまま柏木は世を去る', type:'kinship'},
+  {a:'kashiwagi', b:'chiji', label:'実の親子。息子の死を深く嘆く', type:'kinship'},
+  {a:'kashiwagi', b:'yugiri', label:'親友。死の床で落葉の宮の後事を託す', type:'emotion'},
+  {a:'yugiri', b:'ochiba', label:'柏木の遺言をきっかけに芽生え始めた思慕（次帖以降への伏線）', type:'emotion'},
+  {a:'suzaku', b:'onnasan', label:'実の父娘。密かに見舞い、その場で出家を許し自ら髪を下ろす', type:'kinship'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  const w = Math.max(96, n.label.length*13);
+  g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
