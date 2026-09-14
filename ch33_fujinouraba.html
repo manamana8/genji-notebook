@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第33帖 藤裏葉 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --gray:#8c8579;
+    --kon:#2c3a63;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+  .person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:var(--kon);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:18px; height:3px; display:inline-block;}
+  .legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka.solo{grid-column:1 / -1;}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+  .waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第33帖</div>
+    <h1>藤裏葉</h1>
+    <div class="kana">ふじのうらば</div>
+    <p class="lead">光源氏39歳の春から冬にかけての物語。夕霧と雲居雁の恋を無理やり引き裂いてから数年、世間の噂も定着してしまった以上、内大臣は自分から折れるほかないと考え始める。祖母・大宮の法事で内大臣が夕霧に袖を引いて話しかけたことをきっかけに、4月、内大臣邸の藤の花の宴で、ついに二人の結婚が許される。同じ頃、源氏の娘・明石の姫君の東宮入内も進み、養母紫の上は後見役を実母・明石の君に譲る決断をし、入れ違いに対面した二人の母は長年のわだかまりを解く。秋には源氏が准太上天皇の待遇を受け、内大臣は太政大臣に、夕霧は中納言に昇進。冬、冷泉帝と朱雀院が六条院に行幸し、少年の日に高麗人が告げた「帝王にあらず、臣下にあらず」という予言が成就する形で、源氏の栄華は頂点に達する。物語の第一部が、この帖で一つの完結を迎える。</p>
+  </div>
+
+  <!-- 1. 主な登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">39歳</span></div><p>秋に准太上天皇の待遇を受け、少年の日の予言どおり「帝王でも臣下でもない」身となる。息子・夕霧の結婚と娘・明石の姫君の入内、双方の成就を見届け、栄華の頂点に立つ。</p></div>
+      <div class="person"><div class="row"><span class="name">夕霧</span><span class="age">18歳</span></div><p>光源氏と故葵の上の子。雲居雁への長年の思いを貫き通し、ついに内大臣に結婚を許される。同じ年、中納言に昇進する。</p></div>
+      <div class="person"><div class="row"><span class="name">雲居雁</span><span class="age">確認できません</span></div><p>内大臣の娘。夕霧とは幼なじみで、父に引き裂かれてからも互いへの思いを失わず、本帖でついに結ばれる。</p></div>
+      <div class="person"><div class="row"><span class="name">内大臣</span><span class="age">確認できません</span></div><p>かつての頭中将。娘・雲居雁と夕霧の仲を長年許さずにいたが、世間の噂を踏まえ自ら折れる決心をし、藤の宴で結婚を許す。同じ年、太政大臣に昇任する。</p></div>
+      <div class="person"><div class="row"><span class="name">明石の姫君</span><span class="age">11歳</span></div><p>光源氏と明石の君の娘、紫の上の養女。東宮への入内が実現し、入内を機に後見役が養母から実母へと引き継がれる。</p></div>
+      <div class="person"><div class="row"><span class="name">明石の君</span><span class="age">30歳</span></div><p>明石の姫君の実母。3歳で手放した娘と8年ぶりに再会し、姫君の後見役を紫の上から譲り受ける。入内に際して紫の上と初めて対面する。</p></div>
+      <div class="person"><div class="row"><span class="name">紫の上</span><span class="age">確認できません</span></div><p>光源氏の正妻格。明石の姫君を養女として育て上げ、入内には付き添えないことから、実母・明石の君に後見役を譲る決断をする。</p></div>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※光源氏（39歳）・夕霧（18歳）・明石の姫君（11歳）・明石の君（30歳）は、ダ・ヴィンチWeb「3分で読む源氏物語」の藤裏葉紹介記事で年齢の一致を確認しました。明石の姫君の年齢は、Wikipedia「藤裏葉」の記事にある「3歳で養女に出した明石の姫君と実母・明石の君が8年ぶりに再会」という記述とも一致します。雲居雁・内大臣・紫の上の年齢は、明示された記述を見つけられず、確認できません。</p>
+  </section>
+
+  <!-- 2. 人物系図 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 900 720" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+      <span><i style="background:var(--kon);"></i>政争・対立</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※この帖の本文には、主従・忠誠にあたる関係の記述は見当たらないため、系図には血縁・婚姻／感情／政争・対立／政略同盟の4種類を図示しています（凡例は5種類とも共通表示）。光源氏と内大臣の間の「政争・対立」は、両者が長年ライバル関係にあり、子女の処遇をめぐって異なる思惑を抱いてきたという背景から、AIが便宜的に分類したものです。夕霧と内大臣の間の「政略同盟」は、恋愛の末の結婚ではあるものの、これにより両家が舅・婿という新たな姻戚関係を結ぶ側面に着目し、AIが便宜的に分類したものです。冷泉帝と光源氏が実の親子であることは、「薄雲」帖で夜居の僧都によって冷泉帝自身に明かされた物語上の秘密であり、表向きは帝と臣下の関係です。</p>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 藤の宴の許しと、宮中への入内</h2></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+            <polygon points="0 0, 10 4, 0 8" fill="var(--murasaki)"/>
+          </marker>
+        </defs>
+        <rect x="0" y="0" width="760" height="420" fill="var(--paper)"/>
+        <text x="380" y="30" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--murasaki-deep)">内大臣邸の藤の宴と、宮中の入内</text>
+
+        <g class="scene-room" onclick="showScenePopup('①内大臣邸（藤の花の宴）','4月、内大臣は庭先に見事に咲いた藤の花を口実に管弦の宴を催し、夕霧を招く。長年待ち焦がれていた誘いに心躍らせつつも真意を測りかねる夕霧を、内大臣は丁重にもてなし、酒を勧める。酔ったふりをして古歌「春日さす藤の裏葉のうらとけて君し思はば我も頼まむ」を口ずさみ、夕霧に雲居雁を託す意を伝えた。夜が更け、夕霧が「泊まる所を貸してほしい」と柏木に頼むと、内大臣は「年寄りは酔い過ぎて無礼だから」と言い置いて席を外し、二人はついに結ばれる。')">
+          <rect x="60" y="70" width="280" height="220" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
+          <text x="70" y="92" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--suou)">内大臣邸・庭先</text>
+          <text x="200" y="170" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">藤の花の宴</text>
+          <text x="200" y="195" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">長年の対立に終止符が打たれる場</text>
+          <circle cx="315" cy="90" r="13" fill="var(--murasaki)"/>
+          <text x="315" y="95" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">①</text>
+        </g>
+
+        <g class="scene-room" onclick="showScenePopup('②宮中（明石の姫君の東宮入内）','明石の姫君の入内の日取りが決まる中、源氏は自分に遠慮して娘の入内を控える貴族が多いことを憂慮し、あえて姫君の入内を延期。他家にも入内を働きかけた結果、左大臣の姫（のちの藤壺女御）が先に入内し、殿舎は麗景殿と定まる。姫君に付き添えない養母紫の上は、生き別れとなっていた実母・明石の君に後見役を譲る。姫君の入内に際し、入れ違いになった二人の母は初めて対面し、互いの美点を見いだして長年のわだかまりを解いていく。')">
+          <rect x="420" y="70" width="280" height="220" fill="#efe7d8" stroke="var(--suou)" stroke-width="1.8"/>
+          <text x="430" y="92" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--suou)">宮中・淑景舎ほか</text>
+          <text x="560" y="170" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">東宮入内・二人の母の対面</text>
+          <text x="560" y="195" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">紫の上と明石の君が初めて心を通わせる</text>
+          <circle cx="675" cy="90" r="13" fill="var(--murasaki)"/>
+          <text x="675" y="95" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">②</text>
+        </g>
+
+        <line x1="340" y1="180" x2="418" y2="180" stroke="var(--murasaki)" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+        <text x="380" y="340" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">①私邸で長年の対立が解け、②宮中で次代を担う姫君の道が開かれる。二つの場が同じ年に重なり、源氏一族の栄華を形作ります</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">私邸の藤の宴という私的な和解の場と、宮中の入内という公的な政治の場。この二つが同じ年に成就することで、源氏の家の私（家庭）と公（朝廷）の双方における栄華が同時に描き出されている。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>准太上天皇（じゅんだいじょうてんのう）</dt>
+      <dd>太上天皇（譲位した元天皇）に准ずる待遇・位。臣下でありながら退位した帝に準じる格式を与えられるもので、光源氏は39歳の年、四十の賀を控えて冷泉帝からこの待遇を受ける。桐壺帝の子でありながら即位せず、しかし単なる臣下でもないという、少年の日の高麗人の予言が形になったものとされる。</dd>
+      <dt>東宮（とうぐう）</dt>
+      <dd>次の帝となることが定まっている皇太子。本帖では朱雀院の皇子（後の今上帝）を指し、明石の姫君が入内する相手である。</dd>
+      <dt>入内（じゅだい）</dt>
+      <dd>皇后・中宮・女御・更衣などとして帝や東宮の後宮に入ること。一族の政治的地位を左右する重要な出来事で、明石の姫君の入内実現が本帖の主題の一つとなっている。</dd>
+      <dt>太政大臣（だいじょうだいじん）</dt>
+      <dd>律令制における最高の官職。本帖で源氏が准太上天皇の待遇を受けるのと同じ年、内大臣（かつての頭中将）がこの地位に昇任する。</dd>
+    </dl>
+    <div class="waka-grid">
+      <div class="waka solo">
+        <div class="speaker">内大臣（藤の宴で口ずさむ古歌）</div>
+        <div class="poem">春日さす藤の裏葉のうらとけて 君し思はば我も頼まむ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">春の日がさす藤の裏葉の「うら」ではないが、あなたが心を開いて娘のことを思ってくれるなら、私もあなたを信頼しましょう。</div>
+        <div class="source">出典：『後撰和歌集』読み人知らずの古歌。内大臣が藤の宴の席で酔ったふりをしながら口ずさみ、夕霧に雲居雁を託す意を伝えたとされる場面で、本帖の巻名「藤裏葉」の由来となった。ゴー宣DOJOの源氏物語解説記事で、出典が『後撰集』であることを含めて原文を実在確認しました。内大臣自身が新たに詠んだ歌ではなく、既存の古歌を引いたものである点に注意してください。</div>
+      </div>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※夕霧と雲居雁の間で、結婚が許された前後に交わされたとされる和歌については、今回のWeb検索では原文の字句まで確認できる出典を見つけられず、掲載を見送りました。確認できません。</p>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>内大臣、自ら折れる決心をする</h3><p>夕霧と雲居雁の恋を無理やり引き裂いてから数年。二人の恋愛はすでに世間に知れ渡っており、今さら雲居雁を別の相手と結婚させるのも外聞が悪い。夕霧の方から焦って結婚を申し込む様子もないまま、内大臣は自分の方から折れるべきだと考えるようになる。</p></div>
+      <div class="tl-item"><h3>大宮の法事で内大臣が夕霧に話しかける</h3><p>夕霧と雲居雁の祖母であり内大臣の母でもある大宮の法事の席で、内大臣は夕霧の袖を引いて話しかける。夕霧は戸惑い、もしや結婚を許してもらえるのかと、真意を測りかねて煩悶する一夜を過ごす。</p></div>
+      <div class="tl-item"><h3>内大臣、藤の花の宴を口実に夕霧を招く</h3><p>4月、内大臣は自邸の庭に見事に咲いた藤の花を愛でるという口実で管弦の宴を催し、息子・柏木を使いに立てて夕霧を招く。緊張する夕霧に、光源氏は出かけるよう促し、自らの上等な衣服を選び与える。</p></div>
+      <div class="tl-item"><h3>内大臣、古歌を口ずさみ雲居雁を託す</h3><p>宴の席で、内大臣は酔ったふりをしながら夕霧に杯を勧め、古歌「春日さす藤の裏葉のうらとけて君し思はば我も頼まむ」を口ずさむ。あからさまに言い渡すのではなく、和歌に託して結婚を許す意を伝える。</p></div>
+      <div class="tl-item"><h3>夕霧、泊まりを口実にその夜を過ごす</h3><p>夜が更け、夕霧は酔ったふりをして「無事に帰れそうにないので、泊まる所を貸してほしい」と柏木（雲居雁の兄）に頼む。内大臣は「年寄りは酔い過ぎて無礼だから」と言い置いて席を外し、夕霧と雲居雁はついに結ばれる。</p></div>
+      <div class="tl-item"><h3>源氏と内大臣、それぞれに喜ぶ</h3><p>仲睦まじい夫婦の誕生に、源氏は夕霧の辛抱強さを親心から褒める。内大臣も、後宮での競争が多い入内よりも、立派な婿を迎えた今の結婚の方が娘にとって幸せだと悟り、心から喜んで夕霧を大切に扱うようになる。</p></div>
+      <div class="tl-item"><h3>明石の姫君の入内の日取りが決まる</h3><p>一方、源氏の娘・明石の姫君の東宮入内の日取りが定まっていく。源氏は自分に遠慮して娘の入内を控える貴族が多いことを憂慮し、あえて姫君の入内を延期する。</p></div>
+      <div class="tl-item"><h3>左大臣の姫が先に入内する</h3><p>源氏の配慮を受け、左大臣の姫（のちの藤壺女御、薫の妻・女二宮の母）が先に入内する。明石の姫君の殿舎は麗景殿と定まる。</p></div>
+      <div class="tl-item"><h3>紫の上、後見役を明石の君に譲る</h3><p>姫君の入内に付き添えない養母・紫の上は、生き別れとなっていた実母・明石の君に配慮し、後見役を譲ることを取り計らう。明石の君の喜びは大きかった。</p></div>
+      <div class="tl-item"><h3>紫の上と明石の君、初めて対面する</h3><p>姫君が入内し、入れ違いになった二人の母は初めて顔を合わせる。互いに相手の美点を見いだして認め合い、これまでのわだかまりも氷解して心を通わせる。3歳で手放した姫君と明石の君にとっては、8年ぶりの再会でもあった。</p></div>
+      <div class="tl-item"><h3>秋、源氏が准太上天皇の待遇を受ける</h3><p>秋になり、翌年に控えた四十の賀を前に、源氏は准太上天皇の待遇を受ける。同時に内大臣は太政大臣に昇任し、夕霧も中納言に昇進する。</p></div>
+      <div class="tl-item"><h3>夕霧と雲居雁、三条の邸に移り住む</h3><p>昇進を機に、夕霧はかつて祖母・大宮が住んでいた三条の邸を改装し、雲居雁とともに移り住む。</p></div>
+      <div class="tl-item"><h3>冷泉帝と朱雀院、六条院へ行幸する</h3><p>11月、紅葉に彩られた六条院へ冷泉帝と朱雀院が揃って行幸し、華やかな宴が催される。少年の日、高麗人の人相見が源氏に告げた「その身は帝王にあらず、臣下にあらず」という予言はここに実現し、源氏の栄華は絶頂に達する。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 素直になれない内大臣の父心</div>
+      <h3>古歌を借りてしか伝えられない許し</h3>
+      <p>内大臣は、自分から折れるべきだと分かっていながら、法事の席でも直接は言い出せず、藤の宴でも古歌を口ずさむという形でしか結婚を許す意を伝えられない。この回りくどさは、長年意地を張り続けてきた父親が、面子を保ちながら折れようとする人間味として読み取れる。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 「酔ったふり」という貴族社会の作法</div>
+      <h3>本音を建前で包む宴の演出</h3>
+      <p>夕霧も内大臣も、互いに「酔ったふり」をすることで本心を伝え合い、後戻りできる余地を残している。本音を建前で包みながら意思疎通を図るこの場面の演出は、平安貴族社会における間接的なコミュニケーションの型をよく表しているといえる。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 紫の上が後見役を譲る決断</div>
+      <h3>身を引くことで示される成熟</h3>
+      <p>紫の上は、実子でない明石の姫君の晴れの日に自ら付き添えないという事実を受け止め、進んで後見役を実母に譲る。この決断は、紫の上という人物の器の大きさと、六条院という家全体の秩序を優先する成熟した判断として読み取れる。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 高麗人の予言の成就</div>
+      <h3>桐壺帖からの伏線が33帖を経て回収される</h3>
+      <p>第1帖「桐壺」で高麗人の人相見が源氏について告げた「その身は帝王にあらず、臣下にあらず」という予言が、本帖の准太上天皇という待遇によって文字通り実現する。物語冒頭の伏線が、五十四帖のちょうど三分の二手前でこのような形で回収される構成は、紫式部の周到な設計を感じさせる。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 明石の君をめぐる「身分」の物語の一つの決着</div>
+      <h3>須磨・明石以来の伏線の結実</h3>
+      <p>身分の低さゆえに娘を手放さざるを得なかった明石の君が、紫の上と対等に心を通わせ、後見役として正式に認められる本帖の展開は、「須磨」「明石」帖以来続いてきた身分をめぐる物語の一つの決着点と読める。三代（明石入道・明石の君・明石の姫君）にわたる家の悲願が、ここで公的にも達成されたことになる。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 物語構造上の「第一部完結点」</div>
+      <h3>栄華の頂点は、次なる陰りの予兆でもある</h3>
+      <p>藤裏葉巻は伝統的に『源氏物語』第一部（正編前半）の完結点とされる。息子の結婚、娘の入内、自身の准太上天皇即位という、私・公すべてにおける成就が一つの帖に集約される構成は、これ以上ない栄華の頂点を描くと同時に、物語の力学として「これから先は下るしかない」という予兆を内包しているとも読める。これは物語構成上の見立てであり、本文が直接そう予告しているわけではありません。</p>
+    </div>
+    <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+  </section>
+
+  <!-- 7. 特筆事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+    <div class="note-card">
+      <h3>『源氏物語』第一部（正編前半）の完結を告げる帖</h3>
+      <p>藤裏葉巻は、桐壺帖から始まった物語の第一部が完結する帖として位置づけられることが多い。夕霧の結婚、明石の姫君の入内、源氏の准太上天皇即位という三つの成就が同じ帖に描かれ、次の「若菜上」からは物語の調子が大きく変わっていく。</p>
+    </div>
+    <div class="note-card">
+      <h3>桐壺帖の予言が実現する帖</h3>
+      <p>第1帖「桐壺」で高麗の人相見が源氏に告げた「帝王でもなければ臣下でもない」という予言が、本帖の准太上天皇という待遇によって成就する。五十四帖の構成上、物語冒頭の伏線がここで一つの結実を見せる。</p>
+    </div>
+    <div class="note-card">
+      <h3>巻名が「口ずさまれた古歌」に由来する例</h3>
+      <p>藤裏葉という巻名は、内大臣が新たに詠んだ歌ではなく、『後撰和歌集』にある読み人知らずの古歌を口ずさんだ場面に由来する。前帖「梅枝」の巻名が催馬楽という当時の歌謡に由来していたのと同様、既存の詞章を場面に重ねて巻名とする紫式部の手法がここでも見られる。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 33;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram =====
+   8 nodes: genji at (450,375) as hub, 7 others placed around him.
+   Node boxes and edges were verified programmatically (Python,
+   Liang-Barsky segment/rectangle clipping) so that no edge line
+   passes over the box of any node other than its own two endpoints.
+   Clustering: akashi/murasaki/himegimi grouped upper-left-to-top so
+   the murasaki-akashi reconciliation edge and both mother/daughter
+   edges stay short and near the rim; yugiri/kumoi/naidaijin grouped
+   lower area so their triangle of new in-law relations stays short. */
+const nodes = {
+  genji:      {x:450, y:375, label:'光源氏'},
+  murasaki:   {x:730, y:375, label:'紫の上'},
+  akashi:     {x:360, y:150, label:'明石の君'},
+  himegimi:   {x:560, y:110, label:'明石の姫君'},
+  reizei:     {x:198, y:300, label:'冷泉帝'},
+  naidaijin:  {x:198, y:520, label:'内大臣'},
+  kumoi:      {x:400, y:660, label:'雲居雁'},
+  yugiri:     {x:650, y:600, label:'夕霧'}
+};
+const edges = [
+  {a:'genji', b:'himegimi', label:'実の父娘。入内の日取りが決まる', type:'kinship'},
+  {a:'genji', b:'murasaki', label:'夫婦。後見役を譲る決断を共にする', type:'kinship'},
+  {a:'genji', b:'akashi', label:'娘の入内を機に後見役を引き継ぐ喜び', type:'emotion'},
+  {a:'genji', b:'yugiri', label:'実の親子。結婚を喜び、中納言への昇進を見届ける', type:'kinship'},
+  {a:'genji', b:'reizei', label:'実は親子（薄雲帖で発覚）。准太上天皇の待遇を受ける', type:'kinship'},
+  {a:'genji', b:'naidaijin', label:'長年のライバル関係（AIによる分類）。共に昇進する', type:'conflict'},
+  {a:'himegimi', b:'murasaki', label:'養母と娘。入内まで育て、後見役を実母に譲る', type:'kinship'},
+  {a:'himegimi', b:'akashi', label:'実の母娘。3歳で別れ、8年ぶりの再会', type:'kinship'},
+  {a:'murasaki', b:'akashi', label:'長年の確執を経て初めて対面し、認め合う', type:'emotion'},
+  {a:'yugiri', b:'kumoi', label:'相思相愛。長年の恋がついに結ばれる', type:'emotion'},
+  {a:'naidaijin', b:'kumoi', label:'実の父娘。ついに夕霧との結婚を許す', type:'kinship'},
+  {a:'yugiri', b:'naidaijin', label:'舅と婿。結婚により新たな姻戚関係を結ぶ（AIによる分類）', type:'alliance'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  const w = Math.max(96, n.label.length*13);
+  g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
