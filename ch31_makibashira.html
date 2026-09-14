@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第31帖 真木柱 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f0e6;
+    --paper-deep:#eee6d6;
+    --paper-deeper:#e6dbc2;
+    --ink:#2b241e;
+    --ink-soft:#5a5044;
+    --murasaki:#4b2e51;
+    --murasaki-deep:#382039;
+    --suou:#8b3a3a;
+    --yamabuki:#c08a34;
+    --koke:#5c6b47;
+    --gray:#8c8579;
+    --kon:#2c3a63;
+    --line:#d8cdb8;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+  a{color:inherit;}
+
+  /* ===== sticky header ===== */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:var(--murasaki);
+    color:#f2ead8;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .top-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px 8px;
+    gap:12px;
+  }
+  .brand{
+    font-family:"Shippori Mincho", serif;
+    font-weight:700;
+    font-size:1rem;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+  }
+  .brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+  select#jump{
+    background:var(--murasaki-deep);
+    color:#f2ead8;
+    border:1px solid #6b4a70;
+    border-radius:var(--radius);
+    padding:6px 10px;
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    max-width:40vw;
+  }
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    padding:0 10px 10px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{height:4px;}
+  .tab{
+    flex:0 0 auto;
+    padding:7px 12px;
+    font-size:.8rem;
+    color:#cdb8c9;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    opacity:.55;
+    text-decoration:none;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+  .tab.enabled{opacity:.85; color:#f2ead8;}
+  .tab.enabled:hover{opacity:1;}
+
+  /* ===== layout ===== */
+  main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+
+  .frontispiece{
+    padding:40px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+  .frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+  .frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+
+  section.block{margin-bottom:58px;}
+  .block-head{
+    display:flex; align-items:baseline; gap:12px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px; margin-bottom:22px;
+  }
+  .block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+  .block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+
+  /* ---- 1. people ---- */
+  .people-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+  .person{
+    background:var(--paper-deep);
+    border-left:3px solid var(--suou);
+    padding:16px 18px;
+  }
+  .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+  .person .name{font-weight:700; font-size:1rem;}
+  .person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+  .person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+  .person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+
+  /* ---- 2. relation diagram ---- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .filters button{
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    font-size:.8rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-radius:16px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+  .diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+  .scene-room{cursor:pointer;}
+  .scene-room rect{transition:opacity .15s ease;}
+  .scene-room:hover rect{opacity:.75;}
+  .scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+  .scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+  svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+  .node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+  .node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+  .edge line{stroke-width:2px;}
+  .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:var(--kon);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:18px; height:3px; display:inline-block;}
+  .legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+
+  /* ---- 4. glossary ---- */
+  .gloss{border-top:1px solid var(--line);}
+  .gloss dt{
+    font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .gloss dt:first-of-type{border-top:none;}
+  .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+
+  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka.solo{grid-column:1 / -1;}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+  .waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+
+  /* ---- 5. timeline ---- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+  .tl-item{position:relative; margin-bottom:26px;}
+  .tl-item::before{
+    content:''; position:absolute; left:-26px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--yamabuki); border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--yamabuki);
+  }
+  .tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+  .tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  /* ---- 6 & 7 analysis ---- */
+  .analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+  .analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+  .analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+  .analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+
+  .note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+  .note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+  .note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+
+  .disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+
+  /* ---- floating back-to-top ---- */
+  #toTop{
+    position:fixed; right:18px; bottom:18px; z-index:60;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--murasaki); color:#f2ead8;
+    border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+    font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+    <select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+
+  <div class="frontispiece">
+    <div class="num">第31帖</div>
+    <h1>真木柱</h1>
+    <div class="kana">まきばしら</div>
+    <p class="lead">光源氏37歳の冬から38歳にかけての物語。玉鬘に長らく求婚していた髭黒大将が、女房の手引きによって強引に契りを結んでしまう。源氏は内心の衝撃を隠して婚礼を丁重に取り計らうが、実父・内大臣はこの縁組をむしろ歓迎する。玉鬘への傾倒を深める髭黒は、精神を病んだ最初の北の方をすっかり顧みなくなり、絶望した北の方は狂乱して香炉の灰を浴びせる事件を起こす。ついに北の方は娘・真木柱、息子二人を連れて父・式部卿宮の邸へ帰ることになり、真木柱は父との別れを悲しんで邸の柱に和歌を残す。年が明け、玉鬘は尚侍として出仕するが、その美しさに魅了された冷泉帝に慌てた髭黒は玉鬘を自邸へ連れ戻してしまう。玉鬘十帖の結末として、長い求婚譚が一つの家庭の崩壊と引き換えに幕を閉じる一帖である。</p>
+  </div>
+
+  <!-- 1. 主な登場人物 -->
+  <section class="block" id="people">
+    <div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+    <div class="people-grid">
+      <div class="person"><div class="row"><span class="name">光源氏</span><span class="age">37〜38歳</span></div><p>六条院の主。玉鬘への未練を捨てきれぬまま、髭黒との強引な結婚を見届けることになる。婚礼の儀は丁重に執り行うが内心では悔しさを募らせ、玉鬘の出仕後も未練がましく幾度か文を送る。</p></div>
+      <div class="person"><div class="row"><span class="name">玉鬘</span><span class="age">23歳</span></div><p>内大臣の娘、源氏の養女。女房の手引きにより望まぬまま髭黒と契りを結ばされ、心を閉ざしたまま新婚生活を送る。のちに尚侍として出仕し三位に叙せられるが、冷泉帝に見初められたことで髭黒に自邸へ連れ戻されてしまう。</p></div>
+      <div class="person"><div class="row"><span class="name">髭黒大将</span><span class="age">32〜33歳</span></div><p>玉鬘に長年恋い焦がれていた右大将。女房の手引きで強引に玉鬘と契りを結び、有頂天になって迎える一方、精神を病んだ最初の北の方をすっかり顧みなくなる。</p></div>
+      <div class="person"><div class="row"><span class="name">髭黒の北の方</span><span class="age">確認できません</span></div><p>式部卿宮の長女で、髭黒の最初の正妻。髭黒への長年の献身も報われず玉鬘への傾倒によって見捨てられ、絶望のあまり狂乱して香炉の灰を浴びせてしまう。ついに娘・真木柱を連れて実家へ帰る。</p><p class="unconfirmed-age">※髭黒より3〜4歳年長と伝わりますが、具体的な年齢は確認できません。</p></div>
+      <div class="person"><div class="row"><span class="name">真木柱</span><span class="age">12、3歳</span></div><p>髭黒の長女。父を慕っていたが、母とともに邸を去ることになり、泣きながら邸の柱の割れ目に別れの和歌を残していく。この和歌が帖名の由来となった。</p></div>
+      <div class="person"><div class="row"><span class="name">式部卿宮</span><span class="age">確認できません</span></div><p>北の方の父。娘が髭黒にすっかり見捨てられた様子に絶望し、髭黒の留守を狙って北の方と孫たちを自邸へ引き取らせる。</p></div>
+      <div class="person"><div class="row"><span class="name">内大臣</span><span class="age">確認できません</span></div><p>玉鬘の実父。娘が髭黒の妻となったことを、冷泉帝の後宮で異母姉・弘徽殿女御と寵を競わずに済むためかえって良かったと喜び、源氏の計らいに感謝する。</p></div>
+      <div class="person"><div class="row"><span class="name">冷泉帝</span><span class="age">確認できません</span></div><p>桐壺帝の第十皇子とされる帝（実は源氏の子）。玉鬘が尚侍として出仕した際、噂以上の美しさに魅了されて熱心に想いを訴えるが、慌てた髭黒に阻まれる。</p></div>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※光源氏（37〜38歳）・玉鬘（23歳）・髭黒大将（32〜33歳）・真木柱（12、3歳、10歳と8歳ほどの弟2人）は、複数の情報源（ダ・ヴィンチWeb「3分で読む源氏物語」、古典注釈サイト「わかる源氏物語」、古注釈『湖月抄』を引用するブログ、note「毎週一帖源氏物語」等）で年齢の一致を確認しました。髭黒の北の方が髭黒より3〜4歳年長であることはWikipedia『源氏物語』注釈と『湖月抄』の双方に記述がありますが、具体的な年齢そのものは確認できません。式部卿宮・内大臣の年齢は明示されておらず確認できません。冷泉帝は「紅葉賀」帖での出生時期から19〜20歳頃と逆算する資料がありますが、これは単一の資料による計算であり、複数資料での一致は確認できません。</p>
+  </section>
+
+  <!-- 2. 人物系図 -->
+  <section class="block" id="relations">
+    <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+    <div class="filters">
+      <button data-f="all" class="active">すべて表示</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
+    </div>
+    <div class="diagram-wrap">
+      <svg id="relmap" viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+      <span><i style="background:var(--kon);"></i>政争・対立</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+      <span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※この帖の本文には、政略同盟、主従・忠誠にあたる関係の記述は見当たらないため、系図には血縁・婚姻／感情／政争・対立の3種類のみを図示しています（凡例は5種類とも共通表示）。髭黒と北の方の間柄は、本文上はなお正式な夫婦でありながら事実上破綻した関係であるため、便宜的に血縁・婚姻に分類しています。また式部卿宮と髭黒の間の「政争・対立」は、孫と娘の引き取りをめぐる対立をAIが解釈して分類したものです。</p>
+  </section>
+
+  <!-- 3. 空間・地理構造 -->
+  <section class="block" id="scene">
+    <div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 髭黒邸と玉鬘の新生活</h2></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+            <polygon points="0 0, 10 4, 0 8" fill="var(--murasaki)"/>
+          </marker>
+        </defs>
+        <rect x="0" y="0" width="760" height="420" fill="var(--paper)"/>
+        <text x="380" y="30" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--murasaki-deep)">髭黒邸の悲しい別れと、玉鬘の新しい生活</text>
+
+        <!-- ①髭黒邸 -->
+        <g class="scene-room" onclick="showScenePopup('①髭黒邸（北の方と真木柱が邸を去る、悲しい別れの場面）','完全に見捨てられた北の方は、父・式部卿宮の意向により、娘の真木柱、息子二人とともに実家へ引き取られることになる。父の帰りを待つと言い張っていた真木柱だが、ついに連れられて邸を去ることになり、いつも寄りかかっていた東面の柱の割れ目に、桧皮色の紙に書いた別れの歌をそっと挟んでいく。「今はとて宿かれぬとも馴れ来つる真木の柱はわれを忘るな」。北の方もこれに和して歌を残し、女房たちも涙にくれた。この柱への和歌が、後にこの帖と姫君自身の呼び名（真木柱）の由来となる。')">
+          <rect x="60" y="70" width="280" height="220" fill="#f4ead6" stroke="var(--suou)" stroke-width="1.8"/>
+          <text x="70" y="92" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--suou)">髭黒大将邸</text>
+          <text x="200" y="170" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">柱に残された別れの歌</text>
+          <text x="200" y="195" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">真木柱、母とともに邸を去る</text>
+          <circle cx="315" cy="90" r="13" fill="var(--murasaki)"/>
+          <text x="315" y="95" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">①</text>
+        </g>
+
+        <!-- ②玉鬘の新生活 -->
+        <g class="scene-room" onclick="showScenePopup('②玉鬘の新生活（尚侍としての宮仕えと髭黒との結婚生活）','年が明け、髭黒はようやく玉鬘の出仕を許し、玉鬘は尚侍として華々しく参内する。ところが冷泉帝が噂以上の美しさに魅了されて熱心に想いを訴えたため、慌てた髭黒は玉鬘の退出をせきたて、そのまま自邸へ連れ帰ってしまう。源氏はなおも未練の文を送るが、髭黒に隔てられて思うに任せない。玉鬘はやがて男子を出産し、以後は宮仕えに戻ることもなく、髭黒の正室として家庭に落ち着いていく。')">
+          <rect x="420" y="70" width="280" height="220" fill="#efe7d8" stroke="var(--suou)" stroke-width="1.8"/>
+          <text x="430" y="92" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--suou)">宮中・髭黒邸</text>
+          <text x="560" y="170" text-anchor="middle" font-family="Shippori Mincho" font-size="15" fill="var(--ink)">尚侍としての出仕と結婚生活</text>
+          <text x="560" y="195" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">冷泉帝の寵と髭黒の独占</text>
+          <circle cx="675" cy="90" r="13" fill="var(--murasaki)"/>
+          <text x="675" y="95" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">②</text>
+        </g>
+
+        <!-- 矢印：①→② -->
+        <line x1="340" y1="180" x2="418" y2="180" stroke="var(--murasaki)" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+        <text x="380" y="340" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">①一つの家庭が崩壊していく悲しみと、②玉鬘の新しい人生の始まりが、同じ時期に対照的に描かれます</text>
+      </svg>
+    </div>
+    <div class="scene-popup" id="scenePopup" style="display:none;"></div>
+    <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">髭黒邸は、北の方と真木柱にとって長年慣れ親しんだ私的な生活の場であったが、玉鬘の登場によってその場所そのものが失われていく。一方で同じ髭黒邸は、玉鬘にとっては宮中への出仕と引き換えに閉じ込められる新たな生活の場となる。一つの邸が、去る者と迎えられる者との対照的な運命の舞台として描かれている点が、本帖の構成の妙である。</p>
+  </section>
+
+  <!-- 4. 用語解説 -->
+  <section class="block" id="glossary">
+    <div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+    <dl class="gloss">
+      <dt>真木（まき）</dt>
+      <dd>杉や檜など、良材とされる木を指す歌語。真木柱姫が去り際に詠んだ歌に因み、姫君は「真木柱」と呼ばれるようになった。本帖の巻名の由来でもある。</dd>
+      <dt>尚侍（ないしのかみ）</dt>
+      <dd>内侍司の長官にあたる女官の職名。玉鬘はこの職として出仕するが、帝の寵を受けることも多い慣習であったため、髭黒との結婚生活と両立しがたいものとなった。</dd>
+      <dt>北の方（きたのかた）</dt>
+      <dd>正妻を指す呼称。本帖では髭黒の最初の正妻を指すが、玉鬘という新しい北の方の存在によって、その立場が覆されていく様が描かれる。</dd>
+      <dt>物の怪（もののけ）</dt>
+      <dd>人に取り憑いて病や心の乱れを引き起こすとされた霊。髭黒の北の方はしばしば癇癪や乱心の発作を起こし、当時の物語ではこれが「物の怪に取り憑かれている」ためと説明された。</dd>
+      <dt>三位（さんみ）</dt>
+      <dd>律令制における位階の一つ。物語終盤、玉鬘が三位に叙せられたことが、光源氏と玉鬘が交わした「紫」の歌のやり取りから読み取れる。</dd>
+    </dl>
+    <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">真木柱の姫君（帖名由来の歌）</div>
+        <div class="poem">今はとて宿かれぬとも馴れ来つる真木の柱はわれを忘るな</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">今はこの邸を離れていきますが、長らく寄り添ってきた真木の柱は、どうか私のことを忘れないでください。</div>
+        <div class="source">出典：『源氏物語』真木柱巻（原典）。Wikipedia「真木柱」および古典注釈サイトで原文を確認。この歌により姫君は「真木柱」と呼ばれる。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">母君・北の方（返歌）</div>
+        <div class="poem">馴れきとは思ひ出づとも何により立ち止まるべき真木の柱ぞ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">慣れ親しんだ真木の柱のことを思い出すことがあっても、今となっては何を頼りにこの邸にとどまることができましょうか。</div>
+        <div class="source">出典：『源氏物語』真木柱巻（原典）。古典注釈サイトで原文を確認。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">光源氏 → 玉鬘</div>
+        <div class="poem">などてかく灰あひがたき紫を心に深く思ひそめけむ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">どうしてこう、逢いがたい三位の紫の色の人（あなた）を、こんなにも深く思い染めてしまったのだろうか。</div>
+        <div class="source">出典：『源氏物語』真木柱巻（原典）。古注釈（新潮日本古典集成・玉上琢弥『源氏物語評釈』等の引用）で原文を確認。玉鬘の三位叙位を踏まえた歌とされる。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">玉鬘 → 光源氏（返歌）</div>
+        <div class="poem">いかならむ色とも知らぬ紫を心してこそ人は染めけれ</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">どのようなお気持ちからとも存じませんでしたこの紫の色は、深い思し召しがあってこそ、お染めくださったものなのですね。</div>
+        <div class="source">出典：『源氏物語』真木柱巻（原典）。古注釈（新潮日本古典集成・玉上琢弥『源氏物語評釈』等の引用）で原文を確認。</div>
+      </div>
+    </div>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※真木柱姫と母君の贈答歌2首は、巻名および姫君の呼び名の由来として複数の古典解説サイトに原文が掲載されており、字句の一致を確認できました。光源氏と玉鬘の「紫」の贈答歌2首は、古注釈を引用するサイトで原文を確認しました。本帖にはこのほかにも和歌が含まれるとされますが、原文の字句まで確認できたのはこの4首です。</p>
+  </section>
+
+  <!-- 5. あらすじ -->
+  <section class="block" id="story">
+    <div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><h3>髭黒、女房の手引きで玉鬘と契りを結ぶ</h3><p>玉鬘に長年執心していた髭黒大将は、女房・弁のおもとの手引きによって、ついに強引に玉鬘との契りを結んでしまう。源氏は「帝のお耳に入ることも恐れ多い、しばらくは内密に」と注意するが、髭黒は嬉しさのあまり隠しおおせない。</p></div>
+      <div class="tl-item"><h3>玉鬘、打ち解けぬまま日を過ごす</h3><p>髭黒が通うようになって日が経っても、玉鬘はいささかも心を開いた様子を見せず、思いがけず情けない巡り合わせだったと思い詰めている。髭黒はそれを辛く思いながらも、浅からぬ因縁をしみじみと嬉しく感じている。</p></div>
+      <div class="tl-item"><h3>源氏、婚礼を丁重に取り計らう</h3><p>今さら騒ぎ立てても仕方がないと考えた源氏は、内心の衝撃を押し隠し、髭黒を婿として格別立派に婚礼の儀を執り行う。</p></div>
+      <div class="tl-item"><h3>内大臣、この縁組を歓迎する</h3><p>玉鬘の実父・内大臣は、娘が宮仕えで異母姉の弘徽殿女御と冷泉帝の寵を競うよりも、髭黒の妻となる方がかえって安心だろうと考え、源氏の計らいに感謝する。</p></div>
+      <div class="tl-item"><h3>髭黒、玉鬘を迎える邸の改築にかかる</h3><p>玉鬘を正式に自邸へ迎えようと、髭黒は邸の改築にとりかかる。その様子を目の当たりにした北の方は、すっかり見捨てられたのだと絶望を深めていく。</p></div>
+      <div class="tl-item"><h3>式部卿宮、娘を実家へ戻す決意を固める</h3><p>娘の窮状を見かねた父・式部卿宮は、北の方を自邸へ引き取ろうと考え始める。髭黒はさすがに世間体が悪いとこれを引き止めるが、北の方の絶望は収まらない。</p></div>
+      <div class="tl-item"><h3>北の方、狂乱して香炉の灰を浴びせる</h3><p>髭黒がいざ玉鬘のもとへ出発しようとした矢先、突如乱心した北の方が香炉の灰を浴びせかける。髭黒の衣は焼け、この事件を境に髭黒は北の方に完全に愛想を尽かしてしまう。</p></div>
+      <div class="tl-item"><h3>髭黒、玉鬘のもとに入り浸る</h3><p>北の方への疎ましさを募らせた髭黒は、以後すっかり玉鬘のもとに入り浸るようになる。取り残された北の方は、雪の降る夜に一人思い焦がれる苦しさを歌に詠む。</p></div>
+      <div class="tl-item"><h3>式部卿宮、髭黒の留守に北の方と子らを迎えにやる</h3><p>業を煮やした式部卿宮は、髭黒の留守を狙って北の方と幼い子供たちを自邸へ迎えにやる。北の方は、今まで住んだこともない実家住まいでは大勢の女房を抱えきれないと思い悩みながらも、邸を去る決意をする。</p></div>
+      <div class="tl-item"><h3>真木柱、父を慕いながらも連れられていく</h3><p>ひとり父の帰りを待つと言い張っていた真木柱だが、ついに母とともに連れられていくことになる。いつも寄りかかっていた東面の柱を他人に譲る気にもなれず、桧皮色の紙に「今はとて宿かれぬとも馴れ来つる真木の柱はわれを忘るな」と書きつけ、柱の割れ目に挟んで邸を去る。</p></div>
+      <div class="tl-item"><h3>髭黒、帰邸して事の次第を知り涙する</h3><p>父宮に恨み言を言おうと出向く途中でまず自邸に立ち寄った髭黒は、女房・木工の君から北の方と姫君が去った様子を聞かされ、こらえていた涙をこぼす。柱に挟まれた姫君の幼い筆跡を見て、その健気さがいっそう恋しく思われる。</p></div>
+      <div class="tl-item"><h3>髭黒、宮邸を訪ねるが対面はかなわず</h3><p>涙を拭いながら式部卿宮邸を訪ねた髭黒だが、「せめて姫君だけでも」との願いも聞き入れられず、対面がかなったのは十歳と八歳ほどの息子二人だけであった。</p></div>
+      <div class="tl-item"><h3>年が明け、玉鬘の出仕がようやく許される</h3><p>新年になっても塞ぎ込む玉鬘を見かねて、髭黒はようやく出仕を許す気持ちになり、玉鬘は尚侍として華々しく参内する。</p></div>
+      <div class="tl-item"><h3>冷泉帝、玉鬘の美しさに魅了される</h3><p>早速訪れた冷泉帝は、噂以上の玉鬘の美しさに魅了され、熱心に想いを訴える。慌てた髭黒はこれに気を揉み、玉鬘の退出をせきたてて、そのまま自邸へ連れ帰ってしまう。</p></div>
+      <div class="tl-item"><h3>源氏、悔しさを噛みしめつつ文を送る</h3><p>まんまと玉鬘を髭黒に奪われた源氏は悔しさを噛みしめ、なおも未練がましく幾度か文を送るが、髭黒に隔てられて思うに任せない。この頃、玉鬘は三位に叙せられ、源氏と「紫」の歌を交わす。</p></div>
+      <div class="tl-item"><h3>玉鬘、男子を出産し家庭に落ち着く</h3><p>やがて玉鬘は髭黒との間に男子を出産する。以後は宮仕えに戻ることもなく、髭黒の正室として家庭に落ち着いていく。</p></div>
+    </div>
+  </section>
+
+  <!-- 6. 考察と深層考察 -->
+  <section class="block" id="thoughts">
+    <div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 玉鬘の「打ち解けなさ」という抵抗</div>
+      <h3>心を開かないことで示された、玉鬘の唯一の意志</h3>
+      <p>強引に結ばれた玉鬘は、髭黒に対して最後まで打ち解けた様子を見せない。逃げることも拒み通すこともできない立場の中で、心を閉ざし続けることが、玉鬘にできた数少ない自己主張であったと読み取ることができる。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 髭黒の「愛」の一方的さ</div>
+      <h3>相手の意志を置き去りにした執心</h3>
+      <p>髭黒は玉鬘への恋情を「浅からぬ因縁」と喜ぶ一方、玉鬘がまったく心を開いていないことには深く踏み込まない。この一方的な捉え方は、髭黒の無骨さや不器用さとして描かれつつも、当時の結婚のあり方そのものが抱えていた問題を映し出しているとも読める。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 真木柱の和歌が象徴する悲しみ</div>
+      <h3>「忘れないで」という願いに込められたもの</h3>
+      <p>真木柱の歌は、去りゆく我が身ではなく、動かない「柱」に「われを忘るな」と呼びかける点が印象的である。自分の意志では何も変えられない少女が、せめて家という不動のものに自分の記憶を託そうとした、というのは物語の展開を踏まえたAIの読み解きであり、原典がそこまで明言しているわけではありません。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 源氏の思惑が外れたことの物語的な意味</div>
+      <h3>「光る君」が敗者となる玉鬘十帖の結末</h3>
+      <p>長きにわたり玉鬘への恋情を抱き続けた源氏は、最終的に彼女を最も無骨な髭黒に奪われるという、これまでの恋愛遍歴にはなかった「敗北」を味わう。玉鬘十帖が源氏にとっての挫折で幕を閉じる構成は、物語がこれまでの「光る君の栄華」一辺倒の語りから離れていく転換点として読むことができる。これは物語構成上の見立てであり、原典が明示的にそう位置づけているわけではありません。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 北の方の「物の怪」という描かれ方</div>
+      <h3>乱心の背後にあるもの</h3>
+      <p>北の方の錯乱は「物の怪に取り憑かれている」と説明されるが、その発作は夫の裏切りという具体的な出来事と強く結びついて起きている。当時の物語が女性の激しい感情を「物の怪」という超自然的な言葉で語ろうとした背景には、感情そのものを正面から描くことへのためらいがあったのではないか、という見方もできる。これは本文の描写から読み取れるAIの解釈であり、学術的に確定した見解ではありません。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 真木柱、後の帖への伏線</div>
+      <h3>薄幸の少女は、ここで終わらない</h3>
+      <p>本帖で家庭を失った真木柱だが、物語はここで彼女を退場させない。後の帖で式部卿宮が柏木との縁組を試みたことや、最終的に蛍兵部卿宮の後妻となることが語られており、この帖での別れが、真木柱という人物のその後の人生の出発点として機能している。これは後続の帖との関係から読み取れる見立てであり、本帖自体にその後の展開が予告されているわけではありません。</p>
+    </div>
+    <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+  </section>
+
+  <!-- 7. 特筆事項 -->
+  <section class="block" id="notes">
+    <div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+    <div class="note-card">
+      <h3>「玉鬘十帖」の結末</h3>
+      <p>真木柱は「玉鬘十帖」（第22帖〜第31帖）の最終帖にあたる。長く続いた玉鬘をめぐる求婚譚は、彼女自身の望みとは異なる形で決着し、一つの家庭の崩壊という重い代償を伴って幕を閉じる。</p>
+    </div>
+    <div class="note-card">
+      <h3>巻名がそのまま人物の呼び名になった例</h3>
+      <p>真木柱は、巻名の由来となった和歌を詠んだ人物自身が、そのまま「真木柱」という通称で呼ばれるようになった珍しい例である。五十四帖の中でも、巻名と登場人物の呼称がここまで直接結びついている例は多くない。</p>
+    </div>
+    <div class="note-card">
+      <h3>真木柱のその後への伏線</h3>
+      <p>本帖で家庭を追われた真木柱は、後の「若菜下」帖で祖父・式部卿宮が柏木との縁組を密かに志したことが語られ、最終的には光源氏の異母弟・蛍兵部卿宮の後妻となる。この帖で描かれた別れが、真木柱という人物の長い物語の始まりとなっている。</p>
+    </div>
+  </section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+  const el = document.getElementById('scenePopup');
+  if(!el) return;
+  el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+  el.style.display = 'block';
+}
+
+/* ===== header nav (shared) ===== */
+const CURRENT = 31;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+
+chapters.forEach(c=>{
+  const tab = document.createElement(c.done ? 'a' : 'span');
+  tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+  tab.textContent = c.n + '.' + c.t;
+  if(c.done){ tab.href = c.f; }
+  tabsEl.appendChild(tab);
+
+  const opt = document.createElement('option');
+  opt.value = c.done ? c.f : '';
+  opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+  opt.disabled = !c.done;
+  if(c.n===CURRENT) opt.selected = true;
+  jumpEl.appendChild(opt);
+});
+
+/* scroll active tab into view */
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+/* ===== relationship diagram ===== */
+/* 8 nodes: tamakazura is the hub connecting the three men who desire/claim her
+   (genji, reizei, higekuro) and her real father (naidaijin) at the top;
+   higekuro is a secondary hub branching down-left to his first family
+   (shikibukyo, kitanokata, makibashira), kept on the opposite side from the
+   top cluster so no line crosses an unrelated node. Verified geometrically
+   with a Python script checking every edge segment against every node's
+   bounding box, and checking edge-edge crossings; both came back clear. */
+const nodes = {
+  genji:       {x:170, y:90,  label:'光源氏'},
+  naidaijin:   {x:450, y:90,  label:'内大臣'},
+  reizei:      {x:730, y:90,  label:'冷泉帝'},
+  tamakazura:  {x:450, y:290, label:'玉鬘'},
+  higekuro:    {x:480, y:460, label:'髭黒大将'},
+  shikibukyo:  {x:150, y:380, label:'式部卿宮'},
+  kitanokata:  {x:150, y:520, label:'北の方'},
+  makibashira: {x:150, y:660, label:'真木柱'}
+};
+const edges = [
+  {a:'tamakazura', b:'genji', label:'諦めきれぬ未練、幾度か文を送る', type:'emotion'},
+  {a:'tamakazura', b:'naidaijin', label:'実の父娘。この結婚を歓迎する', type:'kinship'},
+  {a:'tamakazura', b:'reizei', label:'出仕で見初められ、熱心に想いを訴えられる', type:'emotion'},
+  {a:'tamakazura', b:'higekuro', label:'女房の手引きによる強引な結婚', type:'kinship'},
+  {a:'higekuro', b:'shikibukyo', label:'娘・孫の引き取りをめぐる対立', type:'conflict'},
+  {a:'higekuro', b:'kitanokata', label:'最初の正妻。玉鬘への傾倒で破局', type:'kinship'},
+  {a:'higekuro', b:'makibashira', label:'父を慕う娘との悲しい別れ', type:'emotion'},
+  {a:'shikibukyo', b:'kitanokata', label:'実の父娘', type:'kinship'},
+  {a:'kitanokata', b:'makibashira', label:'実の母子。共に邸を去る', type:'kinship'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+edges.forEach(edge=>{
+  const A=nodes[edge.a], B=nodes[edge.b];
+  const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+  g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+  const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+  const dx=B.x-A.x, dy=B.y-A.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const offset = 15;
+  const lx = mx + nx*offset, ly = my + ny*offset;
+  const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+  t.textContent = edge.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+  const g = el('g',{class:'node'});
+  const w = Math.max(96, n.label.length*13);
+  g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+  const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+  t.textContent = n.label;
+  g.appendChild(t);
+  svg.appendChild(g);
+});
+
+document.querySelectorAll('.filters button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.edge').forEach(e=>{
+      e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
