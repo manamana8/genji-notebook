@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第39帖 夕霧 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--paper:#f5f0e6;
+--paper-deep:#eee6d6;
+--paper-deeper:#e6dbc2;
+--ink:#2b241e;
+--ink-soft:#5a5044;
+--murasaki:#4b2e51;
+--murasaki-deep:#382039;
+--suou:#8b3a3a;
+--yamabuki:#c08a34;
+--koke:#5c6b47;
+--gray:#8c8579;
+--kon:#2c3a63;
+--line:#d8cdb8;
+--radius:2px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+margin:0;
+background:var(--paper);
+color:var(--ink);
+font-family:"Zen Kaku Gothic New", sans-serif;
+line-height:1.85;
+-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+a{color:inherit;}
+header.top{
+position:sticky; top:0; z-index:50;
+background:var(--murasaki);
+color:#f2ead8;
+box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+.top-row{
+display:flex; align-items:center; justify-content:space-between;
+padding:12px 18px 8px;
+gap:12px;
+}
+.brand{
+font-family:"Shippori Mincho", serif;
+font-weight:700;
+font-size:1rem;
+display:flex; align-items:center; gap:8px;
+text-decoration:none;
+}
+.brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+select#jump{
+background:var(--murasaki-deep);
+color:#f2ead8;
+border:1px solid #6b4a70;
+border-radius:var(--radius);
+padding:6px 10px;
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+max-width:40vw;
+}
+nav.tabs{
+display:flex;
+overflow-x:auto;
+gap:2px;
+padding:0 10px 10px;
+scrollbar-width:thin;
+}
+nav.tabs::-webkit-scrollbar{height:4px;}
+.tab{
+flex:0 0 auto;
+padding:7px 12px;
+font-size:.8rem;
+color:#cdb8c9;
+background:transparent;
+border:none;
+border-bottom:2px solid transparent;
+white-space:nowrap;
+opacity:.55;
+text-decoration:none;
+}
+.tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+.tab.enabled{opacity:.85; color:#f2ead8;}
+.tab.enabled:hover{opacity:1;}
+main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+.frontispiece{
+padding:40px 0 30px;
+border-bottom:1px solid var(--line);
+margin-bottom:44px;
+}
+.frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+.frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+.frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+section.block{margin-bottom:58px;}
+.block-head{
+display:flex; align-items:baseline; gap:12px;
+border-bottom:1px solid var(--line);
+padding-bottom:10px; margin-bottom:22px;
+}
+.block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+.block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+.people-grid{
+display:grid;
+grid-template-columns:repeat(2, minmax(0, 1fr));
+gap:14px;
+}
+@media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+.person{
+background:var(--paper-deep);
+border-left:3px solid var(--suou);
+padding:16px 18px;
+min-width:0;
+}
+.person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+.person .name{font-weight:700; font-size:1rem;}
+.person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+.person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+.person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+.filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+.filters button{
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+padding:7px 14px;
+border:1px solid var(--line);
+background:var(--paper);
+color:var(--ink-soft);
+border-radius:16px;
+cursor:pointer;
+}
+.filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+.diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+.scene-room{cursor:pointer;}
+.scene-room rect{transition:opacity .15s ease;}
+.scene-room:hover rect{opacity:.75;}
+.scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+.scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+.node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+.node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+.edge line{stroke-width:2px;}
+.edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+.edge.kinship line{stroke:var(--gray);}
+.edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+.edge.conflict line{stroke:var(--kon);}
+.edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+.legend span{display:inline-flex; align-items:center; gap:6px;}
+.legend i{width:18px; height:3px; display:inline-block;}
+.legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+.gloss{border-top:1px solid var(--line);}
+.gloss dt{
+font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+border-bottom:1px solid var(--line);
+display:flex; align-items:baseline; gap:8px;
+}
+.gloss dt:first-of-type{border-top:none;}
+.gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+.waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
+@media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+.waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
+.waka.solo{grid-column:1 / -1;}
+.waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+.waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+.waka .trans{font-size:.82rem; color:var(--ink-soft);}
+.waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+.waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.timeline{position:relative; padding-left:26px;}
+.timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+.tl-item{position:relative; margin-bottom:26px;}
+.tl-item::before{
+content:''; position:absolute; left:-26px; top:4px;
+width:9px; height:9px; border-radius:50%;
+background:var(--yamabuki); border:2px solid var(--paper);
+box-shadow:0 0 0 1px var(--yamabuki);
+}
+.tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+.analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+.analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+.analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+.note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+.disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+#toTop{
+position:fixed; right:18px; bottom:18px; z-index:60;
+width:46px; height:46px; border-radius:50%;
+background:var(--murasaki); color:#f2ead8;
+border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+font-size:1.1rem; cursor:pointer;
+display:flex; align-items:center; justify-content:center;
+}
+#toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="top-row">
+<a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+<select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+</div>
+<nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+<div class="frontispiece">
+<div class="num">第39帖</div>
+<h1>夕霧</h1>
+<div class="kana">ゆうぎり</div>
+<p class="lead">光源氏50歳、夕霧29歳の八月中旬から冬にかけての物語。柏木の未亡人・落葉の宮は、物の怪に悩む母・一条御息所の加持祈祷のため、比叡山西麓の小野の山荘に移っていた。かねてより宮に恋心を募らせていた夕霧は、見舞いを口実に小野を訪れ、霧にかこつけて一夜の宿を求め、拒み続ける宮のかたわらで積年の思いを訴え続けるが、何事も起きぬまま夜は明ける。ところが加持の律師がこれを誤解して御息所に注進し、御息所は真意を確かめる文を病をおして夕霧に送った直後、危篤に陥ってしまう。その文は夕霧のもとに届くが、嫉妬に燃える正妻・雲居雁がこれを奪って隠し、夕霧の返事は間に合わなかった。御息所は返事のないまま息を引き取り、後見を失った落葉の宮は、夕霧によって半ば強引に一条の本邸へ連れ戻される。世間に二人の仲が公然となる中、夕霧は雲居雁と激しい夫婦喧嘩の末に彼女とその子どもたちに去られ、宮にも塗籠に閉じこもられて拒まれながら、結局は既成事実によって結婚に至る。真面目一途と語られてきた「まめ人」夕霧の恋が、初めてその人物像を大きく揺るがす一帖である。</p>
+</div>
+
+<!-- 1. 主な登場人物 -->
+<section class="block" id="people">
+<div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+<div class="people-grid">
+<div class="person"><div class="row"><span class="name">夕霧</span><span class="age">29歳</span></div><p>光源氏の長男、左大将。母は葵の上。実直で「まめ人」と評される官吏だが、亡き親友・柏木の未亡人である落葉の宮に恋着し、母の見舞いを口実に小野へ通う。誤解の連鎖の末に御息所を死なせ、強引な行動で宮との結婚を成立させる一方、正妻・雲居雁とは決裂する。</p></div>
+<div class="person"><div class="row"><span class="name">落葉の宮</span><span class="age">年齢確認できません</span></div><p>朱雀院の第二皇女（女二の宮）。故柏木の未亡人。柏木の生前は顧みられず「落葉」と呼ばれた身の上だが、本帖では夕霧の強引な求愛を拒み続け、母の死後もなお塗籠に閉じこもって抵抗する。しかし後見を失った立場から、結局は結婚を余儀なくされる。</p></div>
+<div class="person"><div class="row"><span class="name">一条御息所</span><span class="age">故人（享年不詳）</span></div><p>落葉の宮の母。物の怪に悩まされ、加持のため小野の山荘に移る。夕霧と娘の関係を誤解し、真意を確かめる文を病をおして送るが、返事が届かぬまま危篤となり、そのまま息を引き取る。誤解が招いた急死が、以後の悲劇の発端となる。</p></div>
+<div class="person"><div class="row"><span class="name">雲居雁</span><span class="age">31歳</span></div><p>夕霧の正妻。内大臣（頭中将）の娘で、夕霧とは幼なじみの純愛の末に結ばれた仲。夕霧の落葉の宮への恋に激しく嫉妬し、御息所からの文を隠してしまう。夫婦喧嘩の末、子どもたちを連れて実家の致仕大臣邸へ帰る。</p></div>
+<div class="person"><div class="row"><span class="name">光源氏</span><span class="age">50歳</span></div><p>准太上天皇。夕霧の父。本帖では表舞台にほとんど登場せず、事件は主に夕霧・落葉の宮・一条御息所・雲居雁の四者を中心に進む。光源氏自身が夕霧を直接問い質す場面が原典にどこまで描かれているかは確認できません。</p></div>
+</div>
+</section>
+
+<!-- 2. 人物系図 -->
+<section class="block" id="relations">
+<div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+<div class="filters">
+<button data-f="all" class="active">すべて表示</button>
+<button data-f="kinship">血縁・婚姻</button>
+<button data-f="emotion">感情</button>
+<button data-f="conflict">政争・対立</button>
+<button data-f="alliance">政略同盟</button>
+<button data-f="loyalty">主従・忠誠</button>
+</div>
+<div class="diagram-wrap">
+<svg id="relmap" viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+<div class="legend">
+<span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+<span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+<span><i style="background:var(--kon);"></i>政争・対立</span>
+<span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+<span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+</div>
+<p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※この帖の本文には、政争・対立、政略同盟、主従・忠誠にあたる関係の記述は見当たらないため、系図には血縁・婚姻／感情の2種類のみを図示しています（凡例は5種類とも共通表示）。夕霧と雲居雁を結ぶ血縁・婚姻の線には、夕霧の恋への嫉妬という感情面の緊張も併せて注記しています。一条御息所と夕霧を結ぶ感情の線は、誤解が心労と死を招いたという因果関係をAIの解釈により図示したものです。</p>
+</section>
+
+<!-- 3. 空間・地理構造 -->
+<section class="block" id="scene">
+<div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 一条の家と夕霧邸、二つの後見なき場所</h2></div>
+<div class="diagram-wrap">
+<svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="900" height="480" fill="var(--paper)"/>
+
+<!-- ①一条家（小野山荘→一条宮邸） -->
+<g class="scene-room" onclick="showScenePopup('①一条家（小野の山荘→一条宮邸）','母・一条御息所の加持のため、落葉の宮は比叡山西麓の小野の山荘に身を寄せていた。夕霧はここへ見舞いと称して通い、霧にかこつけて一夜の宿を求め、宮に積年の思いを訴える。律師の誤報から御息所が二人の仲を誤解し、確かめの文を送った直後に小野で危篤となり、返事のないまま息を引き取ったのもこの地である。御息所の死後、宮は本邸である一条宮邸へ夕霧によって半ば強引に連れ戻され、世間に二人の仲が公然となる中、塗籠に閉じこもって抵抗するが、結局は既成事実によって結婚に至る。')">
+<rect x="60" y="80" width="330" height="320" fill="#f4ead6" stroke="var(--suou)" stroke-width="2.6"/>
+<rect x="55" y="75" width="340" height="330" fill="none" stroke="var(--suou)" stroke-width="1.2" stroke-dasharray="4,3"/>
+<text x="80" y="112" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--suou)">①</text>
+<text x="225" y="150" text-anchor="middle" font-family="Shippori Mincho" font-size="17" fill="var(--ink)">一条家</text>
+<text x="225" y="176" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">小野の山荘 → 一条宮邸</text>
+<text x="225" y="216" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・夕霧、見舞いを口実に</text>
+<text x="225" y="234" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">　宮に強引に迫る（小野）</text>
+<text x="225" y="264" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・一条御息所、誤解の末に</text>
+<text x="225" y="282" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">　危篤・死去（小野）</text>
+<text x="225" y="312" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・宮、一条宮邸へ連れ戻され</text>
+<text x="225" y="330" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">　塗籠に閉じこもって抵抗</text>
+<circle cx="365" cy="105" r="12" fill="var(--murasaki)"/>
+<text x="365" y="110" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">①</text>
+</g>
+
+<!-- ②夕霧邸（三条殿） -->
+<g class="scene-room" onclick="showScenePopup('②夕霧邸（三条殿）','夕霧と正妻・雲居雁が暮らす邸。御息所からの文を六条院から戻った夕霧が受け取ろうとした矢先、嫉妬に燃える雲居雁がこれを奪って隠してしまい、返事が遅れる直接の原因となった。落葉の宮との仲が世間に知れ渡った後、夕霧は養母・花散里に事情を聞かれ、帰宅すると嫉妬に狂った雲居雁と激しい夫婦喧嘩になる。翌朝、雲居雁は幼い子どもたちを連れて実家の致仕大臣邸へ帰ってしまい、夫婦は決裂する。')">
+<rect x="470" y="80" width="330" height="320" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.6"/>
+<text x="490" y="112" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--murasaki)">②</text>
+<text x="635" y="150" text-anchor="middle" font-family="Shippori Mincho" font-size="17" fill="var(--ink)">夕霧邸</text>
+<text x="635" y="176" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">三条殿</text>
+<text x="635" y="216" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・雲居雁、御息所の文を</text>
+<text x="635" y="234" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">　嫉妬から奪い隠す</text>
+<text x="635" y="264" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・激しい夫婦喧嘩の末、</text>
+<text x="635" y="282" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">　雲居雁は子らと実家へ</text>
+<text x="635" y="312" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・夫婦、事実上の決裂</text>
+</g>
+
+<defs>
+<marker id="arrowBetween" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/>
+</marker>
+</defs>
+<line x1="390" y1="240" x2="470" y2="240" stroke="var(--ink-soft)" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#arrowBetween)" marker-start="url(#arrowBetween)"/>
+<text x="430" y="228" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">文の行き違い</text>
+
+<text x="450" y="440" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">①一条家＝御息所の死と宮への強引な求婚の場　②夕霧邸＝雲居雁の嫉妬と夫婦の決裂の場、いずれも「後見を失う場所」として対をなす</text>
+</svg>
+</div>
+<div class="scene-popup" id="scenePopup" style="display:none;"></div>
+<p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">この帖は、落葉の宮が母という後見を失う一条家と、夕霧が正妻という後見を失う夕霧邸という、対照的な二つの「喪失の場」を軸に進む点が読みどころである。両者の間を行き違う一通の文が、悲劇の引き金になっている。</p>
+</section>
+
+<!-- 4. 用語解説 -->
+<section class="block" id="glossary">
+<div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+<dl class="gloss">
+<dt>加持（かじ）</dt>
+<dd>密教の修法により病気平癒や物の怪退散を祈ること。一条御息所は物の怪に悩まされ、加持のため律師のいる小野の山荘に移った。</dd>
+<dt>里下がり（さとさがり）</dt>
+<dd>結婚した女性が実家に帰ること。いわゆる「里帰り」にあたる。雲居雁は夕霧との夫婦喧嘩の末、子どもたちを連れて実家の致仕大臣邸へ里下がりし、そのまま夫婦は決裂する。</dd>
+<dt>心労（しんろう）</dt>
+<dd>心配や気苦労で心身をすり減らすこと。一条御息所は、夕霧と娘の関係についての誤解が解けぬまま心労を重ね、それが危篤・死去の一因になったと描かれる。</dd>
+<dt>塗籠（ぬりごめ）</dt>
+<dd>周囲を土壁で厚く塗り固めた、窓のない小部屋。寝所や納戸として使われた。落葉の宮は母の死後、夕霧の強引な求婚を拒むため、この塗籠に閉じこもって抵抗する。</dd>
+<dt>後見（こうけん）</dt>
+<dd>後ろ盾となって世話や庇護をすること、またその人。落葉の宮にとって母・一条御息所は唯一の後見であり、その死によって宮は後見を失い、夕霧の求婚に抗いきれなくなる。</dd>
+<dt>坎日（かんにち）</dt>
+<dd>陰陽道で外出や婿入りなどを忌むとされた凶日。夕霧は御息所からの文を受けた夜、坎日を理由に小野行きをためらい、文を送るだけで済ませてしまう。この律義さが、御息所の死という取り返しのつかない結果を招く一因となった。</dd>
+</dl>
+<div class="waka-grid">
+<div class="waka">
+<div class="speaker">夕霧（落葉の宮へ）</div>
+<div class="poem">山里のあはれをそふる夕霧に 立ち出でん空もなき心地して</div>
+<div class="trans-label">大意</div>
+<div class="trans">山里の物寂しさをいっそう募らせるこの夕霧が立ちこめており、ここを立ち去っていく気にもなれない心地がします（あなたのおそばを離れがたく思います）。</div>
+<div class="source">出典：『源氏物語』夕霧巻（原典）。本帖の巻名の由来歌。Wikipedia「夕霧（源氏物語）」ほか複数サイトで実在確認。</div>
+</div>
+<div class="waka">
+<div class="speaker">一条御息所（夕霧へ）</div>
+<div class="poem">女郎花しをるる野辺をいづことて ひと夜ばかりの宿をかりけむ</div>
+<div class="trans-label">大意</div>
+<div class="trans">女郎花が萎れてしまうような（不吉な）この野辺のどこを頼りに、一夜だけの宿をお借りになったのでしょうか（＝娘のもとに一晩お泊まりになったとは、一体どういうおつもりですか）。</div>
+<div class="source">出典：『源氏物語』夕霧巻（原典）。Wikipedia「夕霧（源氏物語）」、古典の改め、源氏物語道しるべ（源氏百首）の複数サイトで実在確認。</div>
+</div>
+</div>
+</section>
+
+<!-- 5. あらすじ -->
+<section class="block" id="story">
+<div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+<div class="timeline">
+<div class="tl-item"><h3>一条御息所、物の怪治療のため小野へ</h3><p>落葉の宮の母・一条御息所は物の怪に悩まされ、加持祈祷のため律師のいる比叡山西麓の小野の山荘に移る。落葉の宮も母に付き添って小野に身を寄せていた。</p></div>
+<div class="tl-item"><h3>八月中旬、夕霧が小野を訪問</h3><p>かねてより落葉の宮に恋心を募らせていた夕霧は、律師への相談と御息所の見舞いを口実に、八月中旬、小野の山荘を訪れる。</p></div>
+<div class="tl-item"><h3>霧にかこつけて一夜の宿を求める</h3><p>折からの霧にかこつけて宮に宿を求めた夕霧は、拒み続ける宮のかたわらで積年の思いを訴え続ける。二人の間に情事はなく、何事も起きぬまま夜は明ける。</p></div>
+<div class="tl-item"><h3>律師の誤報、御息所が二人の仲を誤解</h3><p>夕霧が宮のもとで一夜を明かし朝帰りしたことを、加持を行った律師が御息所に注進する。誤解した御息所は、真意を確かめるべく病をおして夕霧に文を認め、「女郎花しをるる野辺を…」の歌を送る。</p></div>
+<div class="tl-item"><h3>文を書き終えた直後、御息所は危篤に</h3><p>夕霧への文を書き終えた直後、一条御息所は容体が急変し、危篤状態に陥ってしまう。</p></div>
+<div class="tl-item"><h3>雲居雁、御息所の文を奪い隠す</h3><p>御息所からの文は、六条院に立ち寄ってから三条殿の自邸に戻った夕霧のもとへ夜遅く届けられるが、宵過ぎに正妻・雲居雁が背後から忍び寄り、これを奪い取って隠してしまう。</p></div>
+<div class="tl-item"><h3>坎日を理由に訪問を控え、返事のみで済ませる</h3><p>翌日の夕暮れになってようやく文を見つけた夕霧は、すぐに小野へ向かおうとするが、外出や婿入りを忌む坎日にあたることを気にして思いとどまり、文を送るだけで済ませてしまう。</p></div>
+<div class="tl-item"><h3>一条御息所、返事のないまま死去</h3><p>夕霧の訪れが一夜限りであったことに心を痛めていた一条御息所は、夕霧からの誠意ある返事を得られないまま、危篤の末に息を引き取る。</p></div>
+<div class="tl-item"><h3>落葉の宮、一条宮邸へ強引に連れ戻される</h3><p>後見を失った落葉の宮は、このまま山荘に残り出家したいと思うが、父・朱雀院から「女三宮も出家したばかりであり、姫宮たちが競うように出家するのは良くない」と諫められる。結局、夕霧によって半ば強引に本邸の一条宮邸へ連れ戻され、世間には既に二人の仲が公然のものとなっていた。</p></div>
+<div class="tl-item"><h3>夕霧、花散里に事情を聞かれ、雲居雁と激しい夫婦喧嘩に</h3><p>夕霧は養母・花散里から事の次第を尋ねられる。帰宅すると、嫉妬に狂った雲居雁との間で激しい夫婦喧嘩となる。</p></div>
+<div class="tl-item"><h3>宮は塗籠に閉じこもるが、既成事実が作られる</h3><p>何とか雲居雁をなだめて一条宮邸へ通う夕霧だが、落葉の宮は塗籠に閉じこもって出てこようとしない。結局、夕霧は強引に逢瀬を遂げ、既成事実によって結婚が成立してしまう。</p></div>
+<div class="tl-item"><h3>雲居雁、子どもたちを連れて実家へ里下がり</h3><p>翌朝、夕霧が邸に帰ると、雲居雁は幼い子どもたち数人を連れて実家の致仕大臣（内大臣）邸へ帰ってしまっていた。連れ戻しに行っても取り合おうとせず、夫婦は事実上決裂する。正妻にも去られ、宮にも心を開いてもらえぬまま、夕霧は色恋の辛さを身にしみて味わうことになる。</p></div>
+</div>
+</section>
+
+<!-- 6. 考察と深層考察 -->
+<section class="block" id="thoughts">
+<div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 律義さゆえの悲劇</div>
+<h3>坎日を守ったことが招いた取り返しのつかなさ</h3>
+<p>夕霧は御息所からの文を受け取った後、すぐに小野へ駆けつければ誤解を解けたはずですが、坎日という当時の慣習上のしきたりを律義に守ったために訪問を控え、文だけで済ませてしまいます。この生真面目さゆえの判断の遅れが、御息所の死という取り返しのつかない結果を招いた点は、本帖の悲劇の核心と言えます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 対照的な二つの「後見喪失」</div>
+<h3>一条家と夕霧邸、鏡合わせの喪失</h3>
+<p>落葉の宮は母という後見を失い、夕霧は正妻という後見（家庭の安定）を失います。同じ帖の中で、対をなす二つの喪失が並行して描かれている構成は、この帖全体を貫く「後見なき者の弱さ」というテーマを浮かび上がらせていると考えられます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 夕霧の「まめ人」神話が初めて崩れる意味</div>
+<h3>実直さの裏返しとしての強引さ</h3>
+<p>これまで夕霧は、「好き者」の父・光源氏と対比される形で、恋愛に不器用で誠実な「まめ人」として描かれてきました。しかし本帖では、その実直さが融通の利かなさや強引さへと反転し、拒む宮に対して力ずくで既成事実を作るという行動に及びます。恋愛経験の乏しさゆえに駆け引きや機微を欠いた振る舞いしかできない夕霧の姿は、彼の人物像がこれまでとは異なる危うさを帯び始めたことを示していると考えられます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 雲居雁の嫉妬が持つ物語的な意味</div>
+<h3>幼なじみの純愛が試される瞬間</h3>
+<p>雲居雁は、幼なじみとしての長い恋の末に夕霧の正妻となった女性であり、二人の結婚はこの物語の中でも数少ない「純愛の成就」として描かれてきました。その関係が本帖で初めて他の女性の影によって脅かされ、雲居雁が実家へ帰るという行動に出る展開は、一夫多妻を当然とする当時の結婚観に対して、女性の側から発せられる率直な異議申し立てとも読むことができます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 一条御息所の死が問いかけるもの</div>
+<h3>言葉が届かないことによる悲劇の反復</h3>
+<p>誤解や行き違いが人の死を招くという展開は、「葵」巻における六条御息所の生霊事件以来、この物語で繰り返し描かれてきたモチーフです。一条御息所の死もまた、当人同士の思いが正しく伝わらないことがもたらす悲劇として、物語全体に通底する主題の一つを引き継いでいると考えられます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 光源氏の不在が語るもの</div>
+<h3>次世代へと移る物語の重心</h3>
+<p>この帖で光源氏自身の直接的な言動がほとんど描かれず、事件が夕霧・落葉の宮・一条御息所・雲居雁という次世代の人物たちを中心に展開する点は、物語の重心が光源氏から夕霧の世代へと移りつつあることを示す構成上の意図とも読めます。</p>
+</div>
+<p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+</section>
+
+<!-- 7. 特筆事項 -->
+<section class="block" id="notes">
+<div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+<div class="note-card">
+<h3>夕霧という人物像の転換点</h3>
+<p>「葵」から「蜻蛉」まで長く登場する夕霧にとって、本帖は「まめ人」としての一途な人物像が初めて大きく揺らぐ帖である。以後の宇治十帖では、月の半分を雲居雁のもとに、半分を落葉の宮のもとに通う生活を送ることになり、本帖はその二重生活の始点として物語全体の中で重要な位置を占める。</p>
+</div>
+<div class="note-card">
+<h3>現代にも通じる夫婦喧嘩の場面</h3>
+<p>夕霧と雲居雁の応酬は、平安期の一夫多妻の理屈と、それに対する雲居雁の率直な言い分とが交錯する場面として知られ、現代の読者にも通じる夫婦間のやり取りとして紹介されることが多い場面である。</p>
+</div>
+<div class="note-card">
+<h3>「鈴虫」からの連続性</h3>
+<p>前帖「鈴虫」で描かれた、出家を望む女性たちを引き留め続ける光源氏の晩年の心境に対し、本帖では息子・夕霧が父とは異なる形で恋の危うさに直面する。物語がいよいよ光源氏の物語の終盤（次帖「御法」における紫の上の死）へと向かう中、次世代の物語が並走して描かれている点が読みどころである。</p>
+</div>
+</section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+const el = document.getElementById('scenePopup');
+if(!el) return;
+el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+el.style.display = 'block';
+}
+
+const CURRENT = 39;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+chapters.forEach(c=>{
+const tab = document.createElement(c.done ? 'a' : 'span');
+tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+tab.textContent = c.n + '.' + c.t;
+if(c.done){ tab.href = c.f; }
+tabsEl.appendChild(tab);
+const opt = document.createElement('option');
+opt.value = c.done ? c.f : '';
+opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+opt.disabled = !c.done;
+if(c.n===CURRENT) opt.selected = true;
+jumpEl.appendChild(opt);
+});
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+const nodes = {
+genji: {x:450, y:120, label:'光源氏'},
+yugiri: {x:450, y:300, label:'夕霧'},
+ochiba: {x:680, y:220, label:'落葉の宮'},
+ichijo: {x:680, y:420, label:'一条御息所'},
+kumoi: {x:220, y:420, label:'雲居雁'}
+};
+const edges = [
+{a:'genji', b:'yugiri', label:'父子', type:'kinship'},
+{a:'yugiri', b:'kumoi', label:'正妻、落葉の宮への恋に嫉妬し実家へ帰る', type:'kinship'},
+{a:'yugiri', b:'ochiba', label:'強引な恋慕、宮は拒み続ける', type:'emotion'},
+{a:'ochiba', b:'ichijo', label:'母子、御息所の死で後見を失う', type:'kinship'},
+{a:'yugiri', b:'ichijo', label:'誤解が心労を招き、返事のないまま死去', type:'emotion'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+edges.forEach(edge=>{
+const A=nodes[edge.a], B=nodes[edge.b];
+const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+const dx=B.x-A.x, dy=B.y-A.y;
+const len=Math.sqrt(dx*dx+dy*dy)||1;
+const nx=-dy/len, ny=dx/len;
+const offset = 15;
+const lx = mx + nx*offset, ly = my + ny*offset;
+const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+t.textContent = edge.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+const g = el('g',{class:'node'});
+const w = Math.max(96, n.label.length*13);
+g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+t.textContent = n.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+document.querySelectorAll('.filters button').forEach(btn=>{
+btn.addEventListener('click', ()=>{
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+const f = btn.dataset.f;
+document.querySelectorAll('.edge').forEach(e=>{
+e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+});
+});
+});
+</script>
+</body>
+</html>
