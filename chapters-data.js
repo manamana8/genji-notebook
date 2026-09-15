@@ -21,6 +21,6 @@ const chapters = [
  {n:32,t:"梅枝",f:"ch32_umegae.html",done:true},{n:33,t:"藤裏葉",f:"ch33_fujinouraba.html",done:true},{n:34,t:"若菜上",f:"ch34_wakana_jo.html",done:true},{n:35,t:"若菜下",f:"ch35_wakana_ge.html",done:true},{n:36,t:"柏木",f:"ch36_kashiwagi.html",done:true},
  {n:37,t:"横笛",f:"ch37_yokobue.html",done:true},{n:38,t:"鈴虫",f:"ch38_suzumushi.html",done:true},{n:39,t:"夕霧",f:"ch39_yugiri.html",done:true},{n:40,t:"御法",f:"ch40_minori.html",done:true},{n:41,t:"幻",f:"ch41_maboroshi.html",done:true},
  {n:42,t:"匂宮",f:"ch42_niounomiya.html",done:true},{n:43,t:"紅梅",f:"ch43_koubai.html",done:true},{n:44,t:"竹河",f:"ch44_takekawa.html",done:true},{n:45,t:"橋姫",f:"ch45_hashihime.html",done:true},{n:46,t:"椎本",f:"ch46_shiigamoto.html",done:true},
- {n:47,t:"総角",f:"ch47_agemaki.html",done:true},{n:48,t:"早蕨",f:"ch48_sawarabi.html",done:true},{n:49,t:"宿木"},{n:50,t:"東屋"},{n:51,t:"浮舟"},
+ {n:47,t:"総角",f:"ch47_agemaki.html",done:true},{n:48,t:"早蕨",f:"ch48_sawarabi.html",done:true},{n:49,t:"宿木",f:"ch49_yadorigi.html",done:true},{n:50,t:"東屋"},{n:51,t:"浮舟"},
  {n:52,t:"蜻蛉"},{n:53,t:"手習"},{n:54,t:"夢浮橋"}
 ];
