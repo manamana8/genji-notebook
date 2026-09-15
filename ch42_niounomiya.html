@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第42帖 匂宮 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--paper:#f5f0e6;
+--paper-deep:#eee6d6;
+--paper-deeper:#e6dbc2;
+--ink:#2b241e;
+--ink-soft:#5a5044;
+--murasaki:#4b2e51;
+--murasaki-deep:#382039;
+--suou:#8b3a3a;
+--yamabuki:#c08a34;
+--koke:#5c6b47;
+--gray:#8c8579;
+--kon:#2c3a63;
+--line:#d8cdb8;
+--radius:2px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+margin:0;
+background:var(--paper);
+color:var(--ink);
+font-family:"Zen Kaku Gothic New", sans-serif;
+line-height:1.85;
+-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+a{color:inherit;}
+header.top{
+position:sticky; top:0; z-index:50;
+background:var(--murasaki);
+color:#f2ead8;
+box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+.top-row{
+display:flex; align-items:center; justify-content:space-between;
+padding:12px 18px 8px;
+gap:12px;
+}
+.brand{
+font-family:"Shippori Mincho", serif;
+font-weight:700;
+font-size:1rem;
+display:flex; align-items:center; gap:8px;
+text-decoration:none;
+}
+.brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+select#jump{
+background:var(--murasaki-deep);
+color:#f2ead8;
+border:1px solid #6b4a70;
+border-radius:var(--radius);
+padding:6px 10px;
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+max-width:40vw;
+}
+nav.tabs{
+display:flex;
+overflow-x:auto;
+gap:2px;
+padding:0 10px 10px;
+scrollbar-width:thin;
+}
+nav.tabs::-webkit-scrollbar{height:4px;}
+.tab{
+flex:0 0 auto;
+padding:7px 12px;
+font-size:.8rem;
+color:#cdb8c9;
+background:transparent;
+border:none;
+border-bottom:2px solid transparent;
+white-space:nowrap;
+opacity:.55;
+text-decoration:none;
+}
+.tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+.tab.enabled{opacity:.85; color:#f2ead8;}
+.tab.enabled:hover{opacity:1;}
+main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+.frontispiece{
+padding:40px 0 30px;
+border-bottom:1px solid var(--line);
+margin-bottom:44px;
+}
+.frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+.frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+.frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+section.block{margin-bottom:58px;}
+.block-head{
+display:flex; align-items:baseline; gap:12px;
+border-bottom:1px solid var(--line);
+padding-bottom:10px; margin-bottom:22px;
+}
+.block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+.block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+.people-grid{
+display:grid;
+grid-template-columns:repeat(2, minmax(0, 1fr));
+gap:14px;
+}
+@media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+.person{
+background:var(--paper-deep);
+border-left:3px solid var(--suou);
+padding:16px 18px;
+min-width:0;
+}
+.person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+.person .name{font-weight:700; font-size:1rem;}
+.person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+.person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+.person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+.filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+.filters button{
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+padding:7px 14px;
+border:1px solid var(--line);
+background:var(--paper);
+color:var(--ink-soft);
+border-radius:16px;
+cursor:pointer;
+}
+.filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+.diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+.scene-room{cursor:pointer;}
+.scene-room rect{transition:opacity .15s ease;}
+.scene-room:hover rect{opacity:.75;}
+.scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+.scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+.node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+.node.memory rect{fill:#efe6da; stroke:var(--gray); stroke-width:1.4; stroke-dasharray:4,3; opacity:.85;}
+.node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+.node.memory text{fill:var(--ink-soft);}
+.edge line{stroke-width:2px;}
+.edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+.edge.kinship line{stroke:var(--gray);}
+.edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+.edge.conflict line{stroke:var(--kon);}
+.edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+.legend span{display:inline-flex; align-items:center; gap:6px;}
+.legend i{width:18px; height:3px; display:inline-block;}
+.legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+.gloss{border-top:1px solid var(--line);}
+.gloss dt{
+font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+border-bottom:1px solid var(--line);
+display:flex; align-items:baseline; gap:8px;
+}
+.gloss dt:first-of-type{border-top:none;}
+.gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+.waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
+@media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+.waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
+.waka.solo{grid-column:1 / -1;}
+.waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+.waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+.waka .trans{font-size:.82rem; color:var(--ink-soft);}
+.waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+.waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.timeline{position:relative; padding-left:26px;}
+.timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+.tl-item{position:relative; margin-bottom:26px;}
+.tl-item::before{
+content:''; position:absolute; left:-26px; top:4px;
+width:9px; height:9px; border-radius:50%;
+background:var(--yamabuki); border:2px solid var(--paper);
+box-shadow:0 0 0 1px var(--yamabuki);
+}
+.tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+.analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+.analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+.analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+.note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+.disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+#toTop{
+position:fixed; right:18px; bottom:18px; z-index:60;
+width:46px; height:46px; border-radius:50%;
+background:var(--murasaki); color:#f2ead8;
+border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+font-size:1.1rem; cursor:pointer;
+display:flex; align-items:center; justify-content:center;
+}
+#toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="top-row">
+<a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+<select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+</div>
+<nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+<div class="frontispiece">
+<div class="num">第42帖　第三部（宇治十帖）の開幕</div>
+<h1>匂宮</h1>
+<div class="kana">におうのみや</div>
+<p class="lead">光源氏の死から八年ほどが過ぎた世界を描く、宇治十帖の幕開けの帖。光源氏ほどの人物はどこにも現れないと世間が嘆く中、二人の貴公子が評判を集めていた。一人は今上帝と明石の中宮の第三皇子・匂宮（14〜21歳の物語期間中は15歳）。紫の上に格別に慈しまれて育ち、成人後は彼女の遺言により二条院を里邸とする、色好みで名高い宮である。もう一人は、表向きは光源氏と女三の宮の子だが実は柏木の子である薫（同14歳）。生まれつき芳香を放ち、元服後は昇進もめざましいが、漠然とした自分の出生への疑念を抱え、もの思いに沈みがちである。世間はこの二人を「匂ふ兵部卿、薫る中将」と並び称した。本帖は個々の劇的な事件よりも、対照的な二人の人物像と、光源氏亡き後の六条院ゆかりの人々の消息を紹介することに重きが置かれている。</p>
+</div>
+
+<!-- 1. 主な登場人物 -->
+<section class="block" id="people">
+<div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+<div class="people-grid">
+<div class="person"><div class="row"><span class="name">匂宮（におうのみや）</span><span class="age">15〜21歳</span></div><p>今上帝と明石の中宮の第三皇子。生前の紫の上に格別に可愛がられて育ち、その遺言により成人後は二条院を里邸とする。帝・后は宮中住まいを望むが、本人は心安い二条院暮らしを好む。元服後は兵部卿と呼ばれる。自由な恋愛を好み、色好みで名高い。薫に対抗して衣に香をたきしめている。</p></div>
+<div class="person"><div class="row"><span class="name">薫（かおる）</span><span class="age">14〜20歳</span></div><p>表向きは光源氏と女三の宮の子だが、実は柏木の子。生まれつき体から芳香を放つ。光源氏の死後、母・女三の宮とともに六条院を出て三条宮に移り住む。冷泉院・秋好中宮に格別に可愛がられて育てられ、14歳の2月に元服して侍従となり、秋には右近の中将に進む。自分の出生に漠然とした疑念を抱き、悶々として出家を思う。</p></div>
+<div class="person"><div class="row"><span class="name">明石の中宮</span><span class="age">推定32〜38歳</span></div><p>光源氏と明石の御方の娘。今上帝の中宮（后）。東宮・二の宮・匂宮・五の宮・女一の宮ら多くの子女の母。子どもたちの多くが今も六条院に住まう。年齢は複数の解説サイトで示される推定値で、本文中に明記された記述の確認はできません。</p></div>
+<div class="person"><div class="row"><span class="name">夕霧</span><span class="age">推定40〜46歳</span></div><p>光源氏の長男、左大将。落葉の宮を六条院の冬の町に迎え、三条殿に住む雲居雁のもとと一夜おきに月十五日ずつ律儀に通う。娘の六の君を匂宮あるいは薫に嫁がせたいと願い、まずは落葉の宮のもとで教養豊かな女性に育てようとしている。年齢は複数の解説サイトによる推定値です。</p></div>
+</div>
+</section>
+
+<!-- 2. 人物系図 -->
+<section class="block" id="relations">
+<div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+<div class="filters">
+<button data-f="all" class="active">すべて表示</button>
+<button data-f="kinship">血縁・婚姻</button>
+<button data-f="emotion">感情</button>
+<button data-f="conflict">政争・対立</button>
+<button data-f="alliance">政略同盟</button>
+<button data-f="loyalty">主従・忠誠</button>
+</div>
+<div class="diagram-wrap">
+<svg id="relmap" viewBox="0 0 940 500" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+<div class="legend">
+<span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+<span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+<span><i style="background:var(--kon);"></i>政争・対立</span>
+<span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+<span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+</div>
+<p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※点線の枠で示した「光源氏」「紫の上」「柏木」は、本帖の時点ですでに世を去っており、回想・背景としてのみ図に加えていることを表す図示上の工夫です（AIの表現上の判断）。「光源氏―薫」は表向きの父子関係、「柏木―薫」は実の父子関係（出生の秘密）であり、薫を挟んで二重に描いています。夕霧と匂宮を結ぶ「政略同盟」の線は、夕霧が娘の六の君を匂宮の妻にと望んでいる思惑を示したもので、本文時点でまだ縁組が成立したわけではありません。この帖の本文には「政争・対立」「主従・忠誠」にあたる関係の記述は見当たらないため、系図には血縁・婚姻／感情／政略同盟の3種類のみを図示しています（凡例は5種類とも共通表示）。</p>
+</section>
+
+<!-- 3. 空間・地理構造 -->
+<section class="block" id="scene">
+<div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 二条院と三条宮、対照的な二つの里邸</h2></div>
+<div class="diagram-wrap">
+<svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="900" height="480" fill="var(--paper)"/>
+
+<!-- ①二条院・匂宮の里邸 -->
+<g class="scene-room" onclick="showScenePopup('①二条院 ― 匂宮が好んで住む里邸','匂宮は今上帝と明石の中宮の子として本来なら宮中に部屋を持つ身分だが、幼少より紫の上に格別に慈しまれて育ち、その遺言により成人後は紫の上ゆかりの二条院を里邸としている。帝・后は宮中に住まわせたいと願うが、当人は「心安き古里」である二条院暮らしを好んでいる。自由な恋愛を好む色好みとして評判が高く、薫に対抗して衣に香をたきしめている。')">
+<rect x="60" y="90" width="330" height="290" fill="#f7ecd9" stroke="var(--yamabuki)" stroke-width="2.6"/>
+<rect x="55" y="85" width="340" height="300" fill="none" stroke="var(--yamabuki)" stroke-width="1.2" stroke-dasharray="4,3"/>
+<text x="80" y="122" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--yamabuki)">①</text>
+<text x="225" y="158" text-anchor="middle" font-family="Shippori Mincho" font-size="17" fill="var(--ink)">二条院</text>
+<text x="225" y="184" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">匂宮が好んで住む里邸</text>
+<text x="225" y="222" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・紫の上の遺言により継承</text>
+<text x="225" y="240" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・帝・后は宮中住まいを望む</text>
+<text x="225" y="270" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・本人は気楽な古里暮らしを好む</text>
+<text x="225" y="288" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・自由な恋の評判で知られる</text>
+<text x="225" y="306" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・元服後は「兵部卿」と呼ばれる</text>
+<circle cx="365" cy="115" r="12" fill="var(--yamabuki)"/>
+<text x="365" y="120" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#3a2a10">①</text>
+</g>
+
+<!-- ②三条宮・薫と女三の宮の住まい -->
+<g class="scene-room" onclick="showScenePopup('②三条宮 ― 薫が母・女三の宮と移り住んだ邸','薫の母・女三の宮は、光源氏の死後六条院を出て、父・朱雀院から譲られた三条宮に移り住んだ。薫もここで母とともに暮らしている。女三の宮は出家した尼として子育てに深くは関わらず、仏道にのみ心を寄せる日々を送っており、その静かで内省的な気配は薫の性格にも根深く影響しているとされる。薫自身は冷泉院・秋好中宮に格別に慈しまれて育てられ、出仕も順調に進むが、漠然とした出生への疑念を抱え、もの思いに沈みがちである。')">
+<rect x="470" y="90" width="330" height="290" fill="#efe4ce" stroke="var(--murasaki)" stroke-width="1.6"/>
+<text x="490" y="122" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--murasaki)">②</text>
+<text x="635" y="158" text-anchor="middle" font-family="Shippori Mincho" font-size="17" fill="var(--ink)">三条宮</text>
+<text x="635" y="184" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">薫が母・女三の宮と住む邸</text>
+<text x="635" y="222" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・光源氏没後、六条院を出て移住</text>
+<text x="635" y="240" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・女三の宮は出家し仏道に専心</text>
+<text x="635" y="270" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・薫は冷泉院・秋好中宮の庇護も受ける</text>
+<text x="635" y="288" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・出生の疑念を抱え出家を思う</text>
+<text x="635" y="306" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・生まれつき芳香を放つ</text>
+</g>
+
+<defs>
+<marker id="arrowBetween" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/>
+</marker>
+</defs>
+<line x1="390" y1="235" x2="470" y2="235" stroke="var(--ink-soft)" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#arrowBetween)"/>
+<text x="430" y="223" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">対照的な二人</text>
+
+<text x="450" y="440" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">同じ光源氏ゆかりの邸を出自としながら、それぞれ異なる里邸で対照的に育った二人の貴公子という構図が読み取れる</text>
+</svg>
+</div>
+<div class="scene-popup" id="scenePopup" style="display:none;"></div>
+<p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">かつて光源氏の没後、花散里は二条院の東の院へ、女三の宮は三条宮へとそれぞれ六条院を離れて移り住んだ。①では紫の上の遺産を継いで華やかな評判を保つ匂宮の姿が、②では母とともに静かに暮らしながらも出生の秘密を漠然と感じ取る薫の姿が描かれ、住まいの対照そのものが二人の人物像の違いを映し出している。</p>
+</section>
+
+<!-- 4. 用語解説 -->
+<section class="block" id="glossary">
+<div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+<dl class="gloss">
+<dt>匂ふ兵部卿、薫る中将</dt>
+<dd>本帖の巻名の由来となった、世間の人々が匂宮と薫を並び称した言い回し。原文には「世人は、匂ふ兵部卿、薫る中将と聞きにくく言ひつづけて」とある（出典：Wikipedia「匂宮」）。匂宮は薫物（たきもの）で人工的に「匂う」宮、薫は生まれつき体から自然に「薫る」中将として対比されている。</dd>
+<dt>兵部卿（ひょうぶきょう）</dt>
+<dd>兵部省の長官。親王が任じられることが多く、実務は伴わない名誉職的な官職。匂宮は元服後、この兵部卿に任じられ「兵部卿の宮」と呼ばれるようになる。</dd>
+<dt>中将（ちゅうじょう）</dt>
+<dd>近衛府の次官にあたる官職。薫は元服の年の秋、侍従から右近の中将に昇進する。「薫る中将」の呼び名はこの官職に由来する。</dd>
+<dt>元服（げんぷく）</dt>
+<dd>男子の成人を示す儀式。親王の場合は11歳から17歳ころに行うのが通例とされる。薫は14歳の2月に元服し、侍従に任じられた。</dd>
+<dt>薫物（たきもの）・空薫物（そらだきもの）</dt>
+<dd>香木を調合し、衣や室内にたきしめる平安貴族の香り文化。薫が生まれつき体から放つ自然の芳香に対抗して、匂宮は薫物に工夫を凝らし、人工の香りで張り合っている。</dd>
+</dl>
+<p style="font-size:.86rem;color:var(--ink-soft);margin-top:20px;">本帖に含まれる和歌は他の巻に比べて極めて少なく、物語論・回想を中心とした説明的な巻であるとされます（出典：源氏びより「源氏物語の和歌 全795首の一覧」による集計では本帖の和歌は1首とされていますが、その具体的な原文は複数の原文サイトで確認することができませんでした。確認できない事項として、和歌の本文はここには掲載しません）。かわりに、巻名の由来となった地の文の一節を上記に紹介しています。</p>
+</section>
+
+<!-- 5. あらすじ -->
+<section class="block" id="story">
+<div class="block-head"><span class="idx">5</span><h2>あらすじ（匂宮と薫、それぞれの紹介）</h2></div>
+<div class="timeline">
+<div class="tl-item"><h3>光源氏亡き後の世――跡を継ぐ者なしと嘆く世間</h3><p>光源氏が世を去ってから八年ほどが過ぎた。その面影を受け継ぐような人物は子孫にもなかなか現れず、世間の人々は光源氏ほどの人物はもういないと嘆いている。退位した冷泉院を引き合いに出すのも畏れ多く、当代随一の評判を集めているのは、今上帝の三の宮（匂宮）と、女三の宮腹の若君（薫）の二人であった。</p></div>
+<div class="tl-item"><h3>匂宮の生い立ちと人柄</h3><p>匂宮は今上帝と明石の中宮の第三皇子。生前の紫の上に格別に慈しまれて育ち、その遺言により成人後は紫の上ゆかりの二条院を里邸とする。帝・后は宮中に住まわせたいと願うが、本人は心安い古里暮らしを好む。元服後は兵部卿と呼ばれ、自由な恋愛を好む色好みとして評判高い。冷泉院の女一の宮に特に心を寄せている。</p></div>
+<div class="tl-item"><h3>薫の生い立ちと人柄</h3><p>薫は表向き光源氏と女三の宮の子だが、実は柏木の子である。光源氏の死後、母・女三の宮とともに六条院を出て三条宮に移り住み、冷泉院・秋好中宮に格別に慈しまれて育てられる。14歳の2月に元服して侍従となり、秋には右近の中将に昇進するなど官位の進みは順調だが、漠然と自分の出生に疑念を抱き、人生を味気なく思って出家を志すようになる。</p></div>
+<div class="tl-item"><h3>「匂ふ兵部卿、薫る中将」――香を競う二人</h3><p>薫の体には生まれつき仏の身にあるという不思議な芳香が備わっており、百歩離れても薫るという。匂宮はこれに対抗心を燃やし、薫物に工夫を凝らして負けじと香をたきしめる。世間はこの二人を「匂ふ兵部卿、薫る中将」と並び称し、聞きにくいほど言い続けたと記される。</p></div>
+<div class="tl-item"><h3>六条院ゆかりの人々のその後</h3><p>光源氏が没した後、六条院に集った女君たちはそれぞれの落ち着き先へと移った。花散里は二条院の東の院へ、女三の宮は父・朱雀院から譲られた三条宮へと移り、六条院そのものには明石の中宮の子たちの多くが暮らしている。夕霧は落葉の宮を六条院の冬の町に迎え、雲居雁のもとと落葉の宮のもとへ月に十五日ずつ律儀に通っている。</p></div>
+<div class="tl-item"><h3>夕霧の思惑――娘たちの婚儀を巡って</h3><p>夕霧は大勢いる娘たちを、それぞれ匂宮や薫に嫁がせたいと心に秘めている。特に藤典侍腹の六の君については、まず落葉の宮のもとで教養豊かな女性に育て上げようと考えるが、自由な恋を好む匂宮には身を固める意思がなく、夕霧の思惑どおりには進んでいない。</p></div>
+<div class="tl-item"><h3>対照的な二人の将来への含意</h3><p>華やかな色好みとして浮名を流す匂宮と、出生の秘密に思い悩み出家を志す薫。この対照的な二人の人物紹介をもって本帖は幕を閉じ、二人がやがて宇治の姉妹たちと関わっていく「宇治十帖」の物語が幕を開けることになる。</p></div>
+</div>
+</section>
+
+<!-- 6. 考察と深層考察 -->
+<section class="block" id="thoughts">
+<div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 事件でなく「対比」を描く帖の構成</div>
+<h3>個別の出来事より、二人の紹介そのものが主題</h3>
+<p>本帖には他の巻に見られるような劇的な事件がほとんど描かれず、匂宮と薫それぞれの生い立ち・評判・人柄を紹介することに大半が費やされています。あらすじも時系列の出来事の羅列というより、二人の人物紹介という構成をとらざるを得ない点に、この帖が「宇治十帖」全体の前提を整える序章的な性格を持つことが表れていると考えられます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 薫の「漠然とした疑念」が持つ意味</div>
+<h3>知らされていないのに、どこかで感じ取っている</h3>
+<p>薫は自分の出生の秘密を誰からも聞かされてはいませんが、「漠然と」疑念を抱いているとされます。誰にも尋ねようのないこの疑念が、薫を人生に対して常にどこか醒めた、もの思いに沈みがちな人物にしていると考えられ、この性格づけが後の宇治十帖全体を貫く薫の厭世的な人物像の起点になっていると読み取れます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 光源氏という「不在の中心」</div>
+<h3>語られない光源氏の死が、なお物語を支配する</h3>
+<p>本帖は光源氏の死そのものを描かず、その死後の世界から始まります。世間の人々が繰り返し「光源氏ほどの人物はいない」と語ることで、かえって光源氏という存在の大きさが逆説的に浮かび上がる構成になっています。匂宮・薫という新しい主人公たちの紹介が、常に光源氏という不在の基準点との比較の中で行われている点は注目に値します。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 二条院と三条宮、住まいが語る二人の対照</div>
+<h3>華やかな家に住む宮、静かな家に移った若君</h3>
+<p>匂宮が紫の上の遺産である二条院という「表舞台に近い家」を好んで受け継ぐ一方、薫は出家した母とともに、光源氏ゆかりの六条院を離れた「静かな家」である三条宮に移り住んでいます。この住まいの対比は、匂宮の外向きで華やかな人柄と、薫の内省的で出家志向の人柄という、両者の対照的な性格を暗示する図式として読み解くことができます（これは本文が明示的に述べているものではなく、AIによる読み解きです）。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 「匂う」「薫る」という嗅覚的美意識への転換</div>
+<h3>「光る君」から「匂う宮」「薫る中将」へ</h3>
+<p>物語の主人公はかつて「光る君」と呼ばれ、視覚的な光の輝きによってその美が形容されていました。それに対し、光源氏亡き後の世代を象徴する二人は「匂う」「薫る」という嗅覚的な美によって形容されています。光から香りへという形容の質的な変化は、物語の美意識そのものが次の世代へと移り変わったことを示す仕掛けとして読み取ることができます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 宇治十帖全体の構図を予告する対比</div>
+<h3>やがて宇治の姉妹たちと交錯する二人の運命</h3>
+<p>華やかで自由な恋を好む匂宮と、出生の秘密に悩み出家を志す薫という対照は、本帖では単なる人物紹介にとどまりますが、この後の宇治十帖において、二人が宇治の姉妹たち（大君・中君・浮舟）とそれぞれ異なる形で関わり、複雑な悲劇を生んでいく構図全体を、あらかじめ予告するものとして機能していると考えられます。</p>
+</div>
+<p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+</section>
+
+<!-- 7. 特筆事項 -->
+<section class="block" id="notes">
+<div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+<div class="note-card">
+<h3>第三部・宇治十帖の開幕を告げる帖</h3>
+<p>「匂宮」は、光源氏を主人公とする正編（第一部・第二部）が「幻」で実質的に幕を閉じたのを受け、光源氏の死後の世界を描く第三部の最初の帖にあたります。次帖「紅梅」「竹河」とあわせて「匂宮三帖」と呼ばれ、その後の第45帖「橋姫」から始まる「宇治十帖」へとつながる橋渡しの役割を担っています。</p>
+</div>
+<div class="note-card">
+<h3>巻名の由来と本来の題「匂兵部卿」</h3>
+<p>現在は「匂宮」の名で呼ばれることが一般的ですが、平安時代末期から室町時代初期にかけての注釈書や古い巻名目録では、いずれも「匂兵部卿（におうひょうぶきょう）」と呼ばれており、「匂宮」はその略称にあたるとされています（出典：Wikipedia「匂宮」）。</p>
+</div>
+<div class="note-card">
+<h3>「幻」から八年の空白</h3>
+<p>前帖「幻」で光源氏52歳の年末が描かれた後、本帖冒頭までの間に約8年の空白があるとされます。この間に光源氏の出家と死去があったと推測されますが、本文はその経緯を直接描いておらず、「雲隠」という本文を持たない巻名だけがその空白を象徴的に埋めています。</p>
+</div>
+</section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+const el = document.getElementById('scenePopup');
+if(!el) return;
+el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+el.style.display = 'block';
+}
+
+const CURRENT = 42;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+chapters.forEach(c=>{
+const tab = document.createElement(c.done ? 'a' : 'span');
+tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+tab.textContent = c.n + '.' + c.t;
+if(c.done){ tab.href = c.f; }
+tabsEl.appendChild(tab);
+const opt = document.createElement('option');
+opt.value = c.done ? c.f : '';
+opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+opt.disabled = !c.done;
+if(c.n===CURRENT) opt.selected = true;
+jumpEl.appendChild(opt);
+});
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+const nodes = {
+genji: {x:110, y:90, label:'光源氏', memory:true},
+kashiwagi: {x:370, y:90, label:'柏木', memory:true},
+kinjo: {x:700, y:90, label:'今上帝'},
+murasaki: {x:110, y:280, label:'紫の上', memory:true},
+nyosan: {x:370, y:280, label:'女三の宮'},
+akashichugu: {x:620, y:280, label:'明石の中宮'},
+yugiri: {x:860, y:280, label:'夕霧'},
+kaoru: {x:250, y:440, label:'薫'},
+niou: {x:780, y:440, label:'匂宮（兵部卿宮）'}
+};
+const edges = [
+{a:'genji', b:'kaoru', label:'表向きの父子', type:'kinship'},
+{a:'kashiwagi', b:'kaoru', label:'実の父子（出生の秘密）', type:'kinship'},
+{a:'nyosan', b:'kaoru', label:'母子、三条宮でともに暮らす', type:'kinship'},
+{a:'murasaki', b:'niou', label:'養育、二条院を託した遺言（回想）', type:'emotion'},
+{a:'kinjo', b:'akashichugu', label:'帝と后', type:'kinship'},
+{a:'kinjo', b:'niou', label:'父子', type:'kinship'},
+{a:'akashichugu', b:'niou', label:'母子', type:'kinship'},
+{a:'yugiri', b:'kaoru', label:'名目上の異母弟、秘密にうすうす気づく（AIの解釈を含む）', type:'kinship'},
+{a:'niou', b:'kaoru', label:'好敵手、香を競い合う', type:'emotion'},
+{a:'yugiri', b:'niou', label:'娘・六の君の婿にと望む', type:'alliance'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+edges.forEach(edge=>{
+const A=nodes[edge.a], B=nodes[edge.b];
+const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+const dx=B.x-A.x, dy=B.y-A.y;
+const len=Math.sqrt(dx*dx+dy*dy)||1;
+const nx=-dy/len, ny=dx/len;
+const offset = 15;
+const lx = mx + nx*offset, ly = my + ny*offset;
+const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+t.textContent = edge.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+const g = el('g',{class:'node'+(n.memory?' memory':'')});
+const w = Math.max(96, n.label.length*13);
+g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+t.textContent = n.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+document.querySelectorAll('.filters button').forEach(btn=>{
+btn.addEventListener('click', ()=>{
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+const f = btn.dataset.f;
+document.querySelectorAll('.edge').forEach(e=>{
+e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+});
+});
+});
+</script>
+</body>
+</html>
