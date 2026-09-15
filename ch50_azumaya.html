@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第50帖 東屋 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--paper:#f5f0e6;
+--paper-deep:#eee6d6;
+--paper-deeper:#e6dbc2;
+--ink:#2b241e;
+--ink-soft:#5a5044;
+--murasaki:#4b2e51;
+--murasaki-deep:#382039;
+--suou:#8b3a3a;
+--yamabuki:#c08a34;
+--koke:#5c6b47;
+--gray:#8c8579;
+--kon:#2c3a63;
+--line:#d8cdb8;
+--radius:2px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+margin:0;
+background:var(--paper);
+color:var(--ink);
+font-family:"Zen Kaku Gothic New", sans-serif;
+line-height:1.85;
+-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+a{color:inherit;}
+header.top{
+position:sticky; top:0; z-index:50;
+background:var(--murasaki);
+color:#f2ead8;
+box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+.top-row{
+display:flex; align-items:center; justify-content:space-between;
+padding:12px 18px 8px;
+gap:12px;
+}
+.brand{
+font-family:"Shippori Mincho", serif;
+font-weight:700;
+font-size:1rem;
+display:flex; align-items:center; gap:8px;
+text-decoration:none;
+}
+.brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+select#jump{
+background:var(--murasaki-deep);
+color:#f2ead8;
+border:1px solid #6b4a70;
+border-radius:var(--radius);
+padding:6px 10px;
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+max-width:40vw;
+}
+nav.tabs{
+display:flex;
+overflow-x:auto;
+gap:2px;
+padding:0 10px 10px;
+scrollbar-width:thin;
+}
+nav.tabs::-webkit-scrollbar{height:4px;}
+.tab{
+flex:0 0 auto;
+padding:7px 12px;
+font-size:.8rem;
+color:#cdb8c9;
+background:transparent;
+border:none;
+border-bottom:2px solid transparent;
+white-space:nowrap;
+opacity:.55;
+text-decoration:none;
+}
+.tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+.tab.enabled{opacity:.85; color:#f2ead8;}
+.tab.enabled:hover{opacity:1;}
+main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+.frontispiece{
+padding:40px 0 30px;
+border-bottom:1px solid var(--line);
+margin-bottom:44px;
+}
+.frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+.frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+.frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+section.block{margin-bottom:58px;}
+.block-head{
+display:flex; align-items:baseline; gap:12px;
+border-bottom:1px solid var(--line);
+padding-bottom:10px; margin-bottom:22px;
+}
+.block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+.block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+.people-grid{
+display:grid;
+grid-template-columns:repeat(2, minmax(0, 1fr));
+gap:14px;
+}
+@media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+.person{
+background:var(--paper-deep);
+border-left:3px solid var(--suou);
+padding:16px 18px;
+min-width:0;
+}
+.person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+.person .name{font-weight:700; font-size:1rem;}
+.person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+.person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+.person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+.filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+.filters button{
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+padding:7px 14px;
+border:1px solid var(--line);
+background:var(--paper);
+color:var(--ink-soft);
+border-radius:16px;
+cursor:pointer;
+}
+.filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+.diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+.scene-room{cursor:pointer;}
+.scene-room rect{transition:opacity .15s ease;}
+.scene-room:hover rect{opacity:.75;}
+.scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+.scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+.node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+.node.memory rect{fill:#efe6da; stroke:var(--gray); stroke-width:1.4; stroke-dasharray:4,3; opacity:.85;}
+.node.newcomer rect{stroke:var(--suou); stroke-width:2;}
+.node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+.node.memory text{fill:var(--ink-soft);}
+.edge line{stroke-width:2px;}
+.edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+.edge.kinship line{stroke:var(--gray);}
+.edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+.edge.conflict line{stroke:var(--kon);}
+.edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+.legend span{display:inline-flex; align-items:center; gap:6px;}
+.legend i{width:18px; height:3px; display:inline-block;}
+.legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+.gloss{border-top:1px solid var(--line);}
+.gloss dt{
+font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+border-bottom:1px solid var(--line);
+display:flex; align-items:baseline; gap:8px;
+}
+.gloss dt:first-of-type{border-top:none;}
+.gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+.waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
+@media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+.waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
+.waka.solo{grid-column:1 / -1;}
+.waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+.waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+.waka .trans{font-size:.82rem; color:var(--ink-soft);}
+.waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+.waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.timeline{position:relative; padding-left:26px;}
+.timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+.tl-item{position:relative; margin-bottom:26px;}
+.tl-item::before{
+content:''; position:absolute; left:-26px; top:4px;
+width:9px; height:9px; border-radius:50%;
+background:var(--yamabuki); border:2px solid var(--paper);
+box-shadow:0 0 0 1px var(--yamabuki);
+}
+.tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+.analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+.analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+.analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+.note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+.disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+#toTop{
+position:fixed; right:18px; bottom:18px; z-index:60;
+width:46px; height:46px; border-radius:50%;
+background:var(--murasaki); color:#f2ead8;
+border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+font-size:1.1rem; cursor:pointer;
+display:flex; align-items:center; justify-content:center;
+}
+#toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="top-row">
+<a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+<select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+</div>
+<nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+<div class="frontispiece">
+<div class="num">第50帖　宇治十帖　第六帖</div>
+<h1>東屋</h1>
+<div class="kana">あずまや</div>
+<p class="lead">薫二十六歳の八月から九月にかけての物語。陸奥から上京した常陸介の一家では、継娘の浮舟に良縁をと望み、左近の少将との縁談が調うが、浮舟が常陸介の実子でないと知った少将は、財産目当てに実の娘（浮舟の異母妹）へと乗り換えてしまう。浮舟を不憫に思った母・中将の君は、彼女を二条院の中の君のもとに預ける。ところが匂宮が偶然浮舟を見つけ、素性も知らぬまま強引に言い寄る一幕が起こり、宮中からの知らせでかろうじて事なきを得るが、この騒ぎを聞いた中将の君は驚いて浮舟を三条の粗末な小家に隠す。秋九月、亡き大君の面影を浮舟に見出していた薫は、弁の尼を仲立ちにこの小家を訪れ、雨夜に和歌を詠み交わして浮舟のもとへ入る。翌朝、薫は浮舟を車に乗せ、世評を憚ってひとまず宇治へと連れて行く。</p>
+</div>
+
+<!-- 1. 主な登場人物 -->
+<section class="block" id="people">
+<div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+<div class="people-grid">
+<div class="person"><div class="row"><span class="name">薫（かおる）</span><span class="age">26歳</span></div><p>光源氏の子とされるが実の父は柏木。権大納言・右大将。亡き大君の面影を宿す浮舟に関心を寄せながらも、受領の継娘という身分の低さにためらっていた。九月、三条の小家に浮舟を訪ね、迎え入れて宇治へ伴う。年齢はWikipedia「東屋」・「古典の改め」の両方で「薫26歳の八月から九月」と一致を確認した。</p></div>
+<div class="person"><div class="row"><span class="name">浮舟（うきふね）</span><span class="age">21歳前後</span></div><p>八の宮とその女房・中将の君との間に生まれた娘だが、八の宮に認知されなかった。常陸介の継娘として育ち、継父には実子でないゆえに冷遇される。婚約者だった左近の少将に妹への乗り換えで破談にされ、二条院の中の君のもとへ身を寄せるが、匂宮に強引に言い寄られて動転し、三条の小家に匿われる。九月、薫に見出され宇治へ伴われる。年齢は三省堂「ことばのコラム」に「21歳前後」、「古典の改め」に「20歳を過ぎた」との記載があり、近い年齢で一致しているが、本文中に確定年齢が明記されているわけではない。</p></div>
+<div class="person"><div class="row"><span class="name">中将の君（ちゅうじょうのきみ、浮舟の母）</span><span class="age">年齢確認できず</span></div><p>もと八の宮の女房で、浮舟の実母。八の宮に認知されず屋敷を追われ、のちに陸奥守（のちの常陸介）の後妻となった。継娘として冷遇される浮舟を不憫に思い、二条院の中の君に預ける。匂宮の一件を聞いて驚き、浮舟を三条の小家に隠す。薫からの浮舟への申し出には、自身が八の宮との身分違いで苦しんだ経験から当初消極的だった。</p></div>
+<div class="person"><div class="row"><span class="name">常陸介（ひたちのすけ）</span><span class="age">年齢確認できず</span></div><p>浮舟の継父。もとは陸奥守で、坂東（東国）暮らしが長い上達部出身の受領。実直で地方官としては有能だが、風流の理解は付け焼き刃という人柄。浮舟の実の娘でない事情から冷遇し、左近の少将が浮舟から実の娘に乗り換えた際にも、婚礼の調度をすべて実の娘に回してしまう。浮舟が薫のもとへ行くことにも当初不満を示す。</p></div>
+<div class="person"><div class="row"><span class="name">中の君（なかのきみ）</span><span class="age">前帖時点で25歳</span></div><p>八の宮の次女、亡き大君の妹。匂宮の妻として二条院に暮らす。異母妹・浮舟を不憫に思う母（中将の君）の願いを受け、浮舟を邸に迎え入れる。匂宮が浮舟に言い寄った騒ぎを知り、心を痛める。年齢は前帖「宿木」時点の値（本帖内で明記された年齢は確認できず）。</p></div>
+<div class="person"><div class="row"><span class="name">匂宮（におうのみや）</span><span class="age">前帖時点で26歳（単一情報源のみ）</span></div><p>今上帝の第三皇子、明石の中宮腹。中の君の邸で見知らぬ女房（浮舟）を見かけ、素性も確かめぬまま強引に言い寄る。宮中から明石の中宮急病の知らせが届いたため浮舟に未練を残しつつ退出し、ことなきを得る。年齢は前帖「宿木」時点の値で、本帖内で明記された年齢は確認できず。</p></div>
+</div>
+</section>
+
+<!-- 2. 人物系図 -->
+<section class="block" id="relations">
+<div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+<div class="filters">
+<button data-f="all" class="active">すべて表示</button>
+<button data-f="kinship">血縁・婚姻</button>
+<button data-f="emotion">感情</button>
+<button data-f="conflict">政争・対立</button>
+<button data-f="alliance">政略同盟</button>
+<button data-f="loyalty">主従・忠誠</button>
+</div>
+<div class="diagram-wrap">
+<svg id="relmap" viewBox="0 0 900 505" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+<div class="legend">
+<span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+<span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+<span><i style="background:var(--kon);"></i>政争・対立</span>
+<span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+<span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+</div>
+<p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※点線枠のノード（大君・八の宮）は、本帖より前にすでに死去した人物を、他の人物の回想・面影として配置したものです。「常陸介―浮舟」の線は、本文が描く継父の冷遇を「政争・対立」に分類していますが、これは家庭内の疎外を便宜的にこの区分にあてはめたAIの判断であり、朝廷内の政争そのものではありません。「匂宮―浮舟」の線は、匂宮の一方的な言い寄りを示すものであり、浮舟の側に応じる意思があったことを意味しません。</p>
+</section>
+
+<!-- 3. 空間・地理構造 -->
+<section class="block" id="scene">
+<div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 常陸介邸・二条院・三条の小家</h2></div>
+<div class="diagram-wrap">
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="900" height="420" fill="var(--paper)"/>
+
+<!-- ①常陸介邸 -->
+<g class="scene-room" onclick="showScenePopup('①常陸介邸 ― 浮舟が継父に冷遇される家','陸奥から上京した常陸介一家の邸。実子でない浮舟は継父・常陸介に疎まれ、婚約者だった左近の少将も浮舟が継子と知ると、実の娘である妹に乗り換えて破談となる。婚礼のために整えられていた調度もすべて妹方に奪われ、浮舟は行き場を失う。母・中将の君はこの仕打ちに耐えかね、浮舟を二条院の中の君のもとへ預けることを決意する。')">
+<rect x="35" y="70" width="250" height="290" fill="#e8eef2" stroke="var(--murasaki)" stroke-width="1.6"/>
+<text x="55" y="102" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--murasaki)">①</text>
+<text x="160" y="140" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--ink)">常陸介邸</text>
+<text x="160" y="164" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">浮舟が継父に冷遇される家</text>
+<text x="160" y="200" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">・左近少将、浮舟から妹へ乗り換え破談</text>
+<text x="160" y="222" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">・常陸介、調度をすべて妹方に回す</text>
+<text x="160" y="244" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">・中将の君、浮舟を二条院へ託す決意</text>
+<circle cx="255" cy="95" r="12" fill="var(--murasaki)"/>
+<text x="255" y="100" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">①</text>
+</g>
+
+<!-- ②二条院 -->
+<g class="scene-room" onclick="showScenePopup('②二条院 ― 中の君に身を寄せる浮舟、匂宮の危険な接近','匂宮の妻・中の君の邸。中将の君に託された浮舟は、しばらくここで暮らし始める。ところがある日、匂宮が邸内で見知らぬ女房（浮舟）を見かけ、素性も確かめぬまま強引に言い寄る。宮中から明石の中宮急病の知らせが届いたため、匂宮は浮舟に未練を残しつつも退出し、ことなきを得る。しかしすっかり動転した浮舟の様子を、乳母から聞いた中将の君は驚き、急いで浮舟を引き取ることを決める。')">
+<rect x="325" y="70" width="250" height="290" fill="#f7ecd9" stroke="var(--yamabuki)" stroke-width="1.6"/>
+<text x="345" y="102" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--yamabuki)">②</text>
+<text x="450" y="140" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--ink)">二条院</text>
+<text x="450" y="164" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">中の君に身を寄せる浮舟、匂宮の接近</text>
+<text x="450" y="200" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">・匂宮、見知らぬ女房と知らず言い寄る</text>
+<text x="450" y="222" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">・明石の中宮急病の知らせで匂宮退出</text>
+<text x="450" y="244" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">・中将の君、驚いて浮舟を引き取る</text>
+<circle cx="545" cy="95" r="12" fill="var(--yamabuki)"/>
+<text x="545" y="100" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#3a2a10">②</text>
+</g>
+
+<!-- ③三条の小家 -->
+<g class="scene-room" onclick="showScenePopup('③三条の小家 ― 薫が浮舟を迎え入れる隠れ家','匂宮の一件に驚いた中将の君が、浮舟を人目につかぬよう匿った三条の粗末な小家。造作もまだ整わない簡素な仮住まいで、雨の夜には軒先に雨だれの音が長く響く。九月十二日の雨夜、薫は弁の尼を仲立ちにこの家を訪れ、「さしとむる葎や繁き東屋のあまりほどふる雨そそきかな」と詠んで浮舟のもとへ入る（本帖の巻名由来）。翌朝、薫は浮舟を車に乗せ、世評を憚ってひとまず宇治の山荘へと連れて行く。')">
+<rect x="615" y="70" width="250" height="290" fill="#f4ead0" stroke="var(--suou)" stroke-width="2.2"/>
+<rect x="610" y="65" width="260" height="300" fill="none" stroke="var(--suou)" stroke-width="1.1" stroke-dasharray="4,3"/>
+<text x="635" y="102" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--suou)">③</text>
+<text x="740" y="140" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--ink)">三条の小家</text>
+<text x="740" y="164" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">薫が浮舟を迎え入れる隠れ家</text>
+<text x="740" y="200" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">・薫、雨夜に和歌を詠み浮舟のもとへ（帖名由来）</text>
+<text x="740" y="222" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">・翌朝、浮舟を車に乗せ出立</text>
+<text x="740" y="244" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">・行き先は宇治の山荘</text>
+<circle cx="835" cy="95" r="12" fill="var(--suou)"/>
+<text x="835" y="100" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">③</text>
+</g>
+
+<defs>
+<marker id="arrowBetween" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/>
+</marker>
+</defs>
+<line x1="285" y1="215" x2="325" y2="215" stroke="var(--ink-soft)" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#arrowBetween)"/>
+<text x="305" y="203" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9">母が託す</text>
+<line x1="575" y1="215" x2="615" y2="215" stroke="var(--ink-soft)" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#arrowBetween)"/>
+<text x="595" y="203" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9">母が匿う</text>
+
+<text x="450" y="392" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">冷遇の家から、危険な家へ、そして薫の隠れ家へ ― 居場所を持たない浮舟の移動の軌跡</text>
+</svg>
+</div>
+<div class="scene-popup" id="scenePopup" style="display:none;"></div>
+<p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">浮舟はこの帖で三度、住まいを移す。継父の家では実子でないゆえに疎まれ、頼った先の二条院では思わぬ危険にさらされ、匿われた三条の小家でようやく薫に見出される。しかしその「隠れ家」自体、浮舟自身が望んで得た居場所ではなく、翌朝にはさらに宇治へと運ばれていく。本帖を通じて浮舟が自らの意思で行き先を選ぶ場面は描かれない。</p>
+</section>
+
+<!-- 4. 用語解説 -->
+<section class="block" id="glossary">
+<div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+<dl class="gloss">
+<dt>東屋（あずまや）</dt>
+<dd>本帖の巻名。薫が三条の小家を訪れた雨夜に詠んだ歌「さしとむる葎や繁き東屋のあまりほどふる雨そそきかな」に由来する。「東屋」は元来、東国の質素な造りの住まいを指す語で、後世には庭園などの休憩用の小建築を指すようになった（出典：Wikipedia「東屋（源氏物語）」で確認）。</dd>
+<dt>常陸介（ひたちのすけ）</dt>
+<dd>浮舟の継父。もとは陸奥守で、のちに常陸介となった受領。上達部の出身だが地方暮らしが長く、地方官としては有能で誠実だが、都風の風流の理解には乏しい人柄として描かれる（出典：Wikipedia「常陸介（源氏物語）」で確認）。</dd>
+<dt>受領（ずりょう）</dt>
+<dd>地方に赴任し、行政の実務を実質的に取り仕切った国司の長官。財力を持つ者も多く、都の貴族から婿がねとして狙われることもあった。常陸介邸に求婚者が多かったのも、この経済力によるところが大きい。</dd>
+<dt>後妻（こうさい）</dt>
+<dd>先妻のあとに迎えられた妻。中将の君は常陸介にとって後妻にあたり、浮舟は常陸介の実子ではない連れ子として育てられたため、家庭内で肩身の狭い立場に置かれる。</dd>
+<dt>小家（こいえ）</dt>
+<dd>本帖で浮舟が匿われた「三条の小家」は、まだ造作の整わない粗末な仮住まいとして描かれる。雨の夜には軒先の雨だれの音が長く響く侘しい住まいであり、帖名「東屋」のイメージとも重なる。</dd>
+</dl>
+</section>
+
+<!-- 5. 和歌 -->
+<section class="block" id="waka">
+<div class="block-head"><span class="idx">4-2</span><h2>本帖の和歌</h2></div>
+<div class="waka-grid">
+<div class="waka solo">
+<div class="speaker">薫 → 浮舟（三条の小家にて、帖名由来の歌。九月十二日の雨夜）</div>
+<div class="poem">さしとむる　葎や繁き　東屋の　あまりほどふる　雨そそきかな</div>
+<div class="trans-label">現代語訳</div>
+<div class="trans">戸口を閉ざすほど葎が生い茂っているのだろうか。この東屋の軒先で、雨だれの落ちる中、あまりに長く待たされることだ。</div>
+<div class="source">出典：東屋巻（三省堂「ことばのコラム」〔倉田実氏〕に引用された原文で実在確認。本帖の巻名の由来となった歌）</div>
+</div>
+<div class="waka">
+<div class="speaker">浮舟 → 中将の君（三条の小家より、母への返歌）</div>
+<div class="poem">ひたぶるに<br>うれしからまし<br>世の中に<br>あらぬところと<br>思はましかば</div>
+<div class="trans-label">現代語訳</div>
+<div class="trans">ここが、この憂き世とは別の場所だと思えたなら、ただひたすらに嬉しいことでしょうに。</div>
+<div class="source">出典：東屋巻（渋谷栄一氏原文を引用するブログ「源氏物語 道しるべ」経由で確認）</div>
+</div>
+<div class="waka">
+<div class="speaker">中将の君 → 浮舟（返歌）</div>
+<div class="poem">うき世には<br>あらぬところを<br>もとめても<br>君がさかりを<br>見るよしもがな</div>
+<div class="trans-label">現代語訳</div>
+<div class="trans">この憂き世ではない場所をどこかに探してでも、あなたの美しい盛りの姿を見ていたいものです。</div>
+<div class="source">出典：東屋巻（渋谷栄一氏原文を引用するブログ「源氏物語 道しるべ」経由で確認）</div>
+</div>
+</div>
+<p style="font-size:.78rem;color:#9a9280;margin-top:14px;">※匂宮が浮舟に言い寄る場面など、本帖には他にも和歌が詠まれた可能性のある場面があるが、原文の字句を確実に確認できたもののみを上に掲載した。</p>
+</section>
+
+<!-- 6. あらすじ -->
+<section class="block" id="story">
+<div class="block-head"><span class="idx">5</span><h2>あらすじ</h2></div>
+<div class="timeline">
+<div class="tl-item"><h3>常陸介一家、浮舟に良縁をと願う</h3><p>陸奥から上京した常陸介一家では、高貴な血を引き一際美しく育った浮舟に、しきりに良縁を望んでいた。受領ながら裕福で家柄も卑しくない常陸介のもとには、それを目当てにした求婚者が多く集まる。</p></div>
+<div class="tl-item"><h3>浮舟、左近の少将と婚約する</h3><p>そうした求婚者の一人、左近の少将との縁談がまとまり、婚礼の準備が進められる。浮舟の母・中将の君は、身分違いの縁談にはもともと消極的な思いも抱いていた。</p></div>
+<div class="tl-item"><h3>少将、浮舟が継子と知り妹に乗り換える</h3><p>ところが財産目当てだった左近の少将は、浮舟が常陸介の実の娘ではなく継子であると知ると、たちまち心変わりし、実の娘である浮舟の異母妹に乗り換えて結婚してしまう。</p></div>
+<div class="tl-item"><h3>常陸介、浮舟のための調度を妹に回す</h3><p>実の娘の結婚を大いに喜んだ常陸介は、浮舟のために整えていた婚礼の調度や部屋を、そのまま妹の結婚のために取り上げてしまう。浮舟は行き場も面目も失う。</p></div>
+<div class="tl-item"><h3>中将の君、浮舟を二条院に預ける決意をする</h3><p>あまりの仕打ちに耐えかねた中将の君は、二条院に暮らす中の君（浮舟の異母姉）に浮舟を託すことを決意する。中の君は快く浮舟を迎え入れる。</p></div>
+<div class="tl-item"><h3>薫、中の君を介して浮舟に関心を寄せる</h3><p>亡き大君の面影を忘れられない薫は、以前から中の君を介して浮舟の存在を知り、心を寄せていた。しかし受領の継娘という浮舟の身分の低さに、なお迷いをぬぐえずにいる。中将の君も、身分違いの縁談への不安から当初は消極的だった。</p></div>
+<div class="tl-item"><h3>匂宮、見知らぬ浮舟を見つけ強引に言い寄る</h3><p>二条院に来て間もないある日、匂宮は邸内で見知らぬ女房（浮舟）を見かけ、「あなたは誰なのです。聞かせてもらえないうちは放しませんよ」と、素性も確かめぬまま強引に言い寄る。</p></div>
+<div class="tl-item"><h3>宮中からの知らせで、ことなきを得る</h3><p>折しも宮中から明石の中宮が急病であるとの知らせが届き、匂宮は浮舟に未練を残しつつも出かけていく。浮舟はかろうじて事なきを得たが、姉の夫に言い寄られるという出来事にすっかり動転してしまう。</p></div>
+<div class="tl-item"><h3>中将の君、驚いて浮舟を三条の小家に匿う</h3><p>この騒ぎを浮舟の乳母から聞いた中将の君は驚き、急いで浮舟を引き取り、人目につかぬよう三条にある造作もまだ整わない粗末な小家に隠す。</p></div>
+<div class="tl-item"><h3>秋九月、薫、弁の尼を介して小家を訪ねる</h3><p>浮舟が三条の隠れ家にいることを知った薫は、弁の尼に仲立ちを頼み、九月十二日の雨の夜、自らその小家を訪れる。</p></div>
+<div class="tl-item"><h3>薫、和歌を詠み浮舟のもとへ入る（帖名由来）</h3><p>雨がやまず長く待たされた薫は、簀子の端で「さしとむる葎や繁き東屋のあまりほどふる雨そそきかな」と詠み、浮舟のもとへ入っていく。この夜、二人は初めて契りを結ぶ。ここから本帖の巻名「東屋」が生まれた。</p></div>
+<div class="tl-item"><h3>翌朝、薫は浮舟を車に乗せ宇治へ向かう</h3><p>夜が明けきらぬうちに、薫は浮舟を車に乗せる。世評を憚った薫は、彼女をすぐに自邸へ迎えることはせず、ひとまず宇治の山荘へと連れて行くことにしたのである。浮舟は意外な成り行きにただ茫然とするばかりだった。</p></div>
+<div class="tl-item"><h3>薫、浮舟の教養の乏しさに思い悩む</h3><p>宇治に着いた薫は、亡き大君の面影を浮舟に映し見て偲ぶ一方、浮舟の顔立ちこそ大君に瓜二つであるものの、琴や古歌といった教養は大君とは比べ物にならないほど程遠いことに気づき、今後の浮舟の扱いをどうすべきか思い悩むのだった。</p></div>
+</div>
+</section>
+
+<!-- 7. 考察と深層考察 -->
+<section class="block" id="thoughts">
+<div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 浮舟という人物の不安定な立場</div>
+<h3>身分の低さと、居場所のなさ</h3>
+<p>浮舟は本帖の中で、常陸介邸・二条院・三条の小家・宇治と、次々に住まいを移されていきますが、そのいずれも自らの意思で選び取った場所ではありません。実父に認知されず、継父にも実子として扱われない浮舟の身分の低さは、彼女がその都度、他人の判断によって居場所を決められてしまう構造そのものを生み出しているといえます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 薫が浮舟に大君の面影を求め続ける危うさ</div>
+<h3>「形代」としての浮舟</h3>
+<p>薫は浮舟の顔立ちに亡き大君を重ねて心を動かされますが、同時にその教養の乏しさを気にかけ、今後の扱いに思い悩みます。この態度は、浮舟を対等な結婚相手としてではなく、大君の身代わり（形代）として迎え入れようとする危うさを示しているとも読めます。この読み方は本文が明示的に断定しているものではなく、AIによる読み解きです。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 匂宮の危険な接近が示すもの</div>
+<h3>好色さと、無自覚な暴力性</h3>
+<p>匂宮は浮舟が何者かを確かめもせず、屋敷内で見かけただけの女性に強引に言い寄ります。これは匂宮の生来の好色さの表れであると同時に、身分の低い女性に対しては相手の同意や事情を顧みずに近づいてよいという、当時の身分意識に基づく無自覚な暴力性を映し出しているとも考えられます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 女性たちの選択の乏しさ</div>
+<h3>中将の君・浮舟、それぞれの限られた手立て</h3>
+<p>中将の君は、娘を守るためにできることが「預ける」「匿う」という受け身の手立てに限られており、浮舟自身もまた、自分の将来について意見を述べる場面がほとんど描かれません。宇治十帖の女性たちが置かれた選択の乏しさが、本帖でも色濃く表れていると読み取れます（AIの読み解きです）。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 「東屋」という帖名が象徴するもの</div>
+<h3>雨宿りの侘しさと、待たされる時間</h3>
+<p>薫の歌に詠まれる「東屋」は、葎に覆われた粗末な建物で、雨だれの音の中でひたすら待たされる情景を描きます。これは薫が浮舟を待つ一夜の情景であると同時に、浮舟自身がこれまで、常に誰かの判断を待つしかなかった人生そのものを象徴しているとも読めます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 薫の「思い悩み」に潜む危うい兆候</div>
+<h3>対等な妻ではなく、代替物として</h3>
+<p>本帖の末尾で薫が浮舟の教養の乏しさを気にかける場面は、一見すると身を案じる態度にも見えますが、浮舟を大君の代わりとして値踏みする視線でもあります。この危うい兆候は、次帖「浮舟」以降に描かれる浮舟の苦悩の伏線になっていると考えられます（AIの読み解きであり、学術的に確定した解釈ではありません）。</p>
+</div>
+<p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+</section>
+
+<!-- 8. 特筆事項 -->
+<section class="block" id="notes">
+<div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+<div class="note-card">
+<h3>薫・匂宮・浮舟の三角関係が本格的に始まる帖</h3>
+<p>前帖「宿木」で名前だけ語られた浮舟が実際に姿を現し、薫に迎えられると同時に、匂宮からも危険な関心を向けられる本帖は、物語終盤を彩る三角関係が本格的に動き出す転換点にあたります。</p>
+</div>
+<div class="note-card">
+<h3>身分違いのヒロインという新しい設定</h3>
+<p>これまでの源氏物語のヒロインの多くが高貴な家柄の出身であったのに対し、浮舟は実父に認知されない受領の継娘という、物語の中でも際立って低い身分に置かれています。この設定が、以後の宇治十帖後半の悲劇性を強めていきます。</p>
+</div>
+<div class="note-card">
+<h3>「宇治」への回帰</h3>
+<p>薫が浮舟を自邸ではなくひとまず宇治の山荘へ連れて行く展開は、大君・中の君の記憶が刻まれた宇治という土地に、物語が再び回帰していくことを示しています。宇治は本帖以降も、浮舟の運命を左右する舞台であり続けます。</p>
+</div>
+</section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+const el = document.getElementById('scenePopup');
+if(!el) return;
+el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+el.style.display = 'block';
+}
+
+const CURRENT = 50;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+chapters.forEach(c=>{
+const tab = document.createElement(c.done ? 'a' : 'span');
+tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+tab.textContent = c.n + '.' + c.t;
+if(c.done){ tab.href = c.f; }
+tabsEl.appendChild(tab);
+const opt = document.createElement('option');
+opt.value = c.done ? c.f : '';
+opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+opt.disabled = !c.done;
+if(c.n===CURRENT) opt.selected = true;
+jumpEl.appendChild(opt);
+});
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+const nodes = {
+kaoru: {x:450, y:100, label:'薫'},
+oigimi: {x:599, y:172, label:'大君', memory:true},
+hachinomiya: {x:635, y:332, label:'八の宮', memory:true},
+chujonokimi: {x:532, y:461, label:'中将の君'},
+hitachinosuke: {x:368, y:461, label:'常陸介'},
+nakanokimi: {x:265, y:332, label:'中の君'},
+nioumiya: {x:301, y:172, label:'匂宮'},
+ukifune: {x:450, y:290, label:'浮舟'}
+};
+const edges = [
+{a:'kaoru', b:'oigimi', label:'忘れがたい面影（回想）', type:'emotion'},
+{a:'kaoru', b:'ukifune', label:'大君の面影を慕い迎え入れを決意', type:'emotion'},
+{a:'hachinomiya', b:'ukifune', label:'実の父娘だが認知されず（回想）', type:'kinship'},
+{a:'chujonokimi', b:'ukifune', label:'実の母娘', type:'kinship'},
+{a:'chujonokimi', b:'hitachinosuke', label:'後妻としての夫婦', type:'kinship'},
+{a:'hitachinosuke', b:'ukifune', label:'継父による冷遇', type:'conflict'},
+{a:'nakanokimi', b:'ukifune', label:'異母姉妹・身を寄せる', type:'kinship'},
+{a:'nioumiya', b:'nakanokimi', label:'夫婦', type:'kinship'},
+{a:'nioumiya', b:'ukifune', label:'強引な言い寄り・危険な接近', type:'emotion'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+edges.forEach(edge=>{
+const A=nodes[edge.a], B=nodes[edge.b];
+const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+const dx=B.x-A.x, dy=B.y-A.y;
+const len=Math.sqrt(dx*dx+dy*dy)||1;
+const nx=-dy/len, ny=dx/len;
+const offset = 15;
+const lx = mx + nx*offset, ly = my + ny*offset;
+const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+t.textContent = edge.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+const g = el('g',{class:'node'+(n.memory?' memory':'')+(n.newcomer?' newcomer':'')});
+const w = Math.max(96, n.label.length*13);
+g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+t.textContent = n.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+document.querySelectorAll('.filters button').forEach(btn=>{
+btn.addEventListener('click', ()=>{
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+const f = btn.dataset.f;
+document.querySelectorAll('.edge').forEach(e=>{
+e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+});
+});
+});
+</script>
+</body>
+</html>
