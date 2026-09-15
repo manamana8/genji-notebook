@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第44帖 竹河 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--paper:#f5f0e6;
+--paper-deep:#eee6d6;
+--paper-deeper:#e6dbc2;
+--ink:#2b241e;
+--ink-soft:#5a5044;
+--murasaki:#4b2e51;
+--murasaki-deep:#382039;
+--suou:#8b3a3a;
+--yamabuki:#c08a34;
+--koke:#5c6b47;
+--gray:#8c8579;
+--kon:#2c3a63;
+--line:#d8cdb8;
+--radius:2px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+margin:0;
+background:var(--paper);
+color:var(--ink);
+font-family:"Zen Kaku Gothic New", sans-serif;
+line-height:1.85;
+-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+a{color:inherit;}
+header.top{
+position:sticky; top:0; z-index:50;
+background:var(--murasaki);
+color:#f2ead8;
+box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+.top-row{
+display:flex; align-items:center; justify-content:space-between;
+padding:12px 18px 8px;
+gap:12px;
+}
+.brand{
+font-family:"Shippori Mincho", serif;
+font-weight:700;
+font-size:1rem;
+display:flex; align-items:center; gap:8px;
+text-decoration:none;
+}
+.brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+select#jump{
+background:var(--murasaki-deep);
+color:#f2ead8;
+border:1px solid #6b4a70;
+border-radius:var(--radius);
+padding:6px 10px;
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+max-width:40vw;
+}
+nav.tabs{
+display:flex;
+overflow-x:auto;
+gap:2px;
+padding:0 10px 10px;
+scrollbar-width:thin;
+}
+nav.tabs::-webkit-scrollbar{height:4px;}
+.tab{
+flex:0 0 auto;
+padding:7px 12px;
+font-size:.8rem;
+color:#cdb8c9;
+background:transparent;
+border:none;
+border-bottom:2px solid transparent;
+white-space:nowrap;
+opacity:.55;
+text-decoration:none;
+}
+.tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+.tab.enabled{opacity:.85; color:#f2ead8;}
+.tab.enabled:hover{opacity:1;}
+main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+.frontispiece{
+padding:40px 0 30px;
+border-bottom:1px solid var(--line);
+margin-bottom:44px;
+}
+.frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+.frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+.frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+section.block{margin-bottom:58px;}
+.block-head{
+display:flex; align-items:baseline; gap:12px;
+border-bottom:1px solid var(--line);
+padding-bottom:10px; margin-bottom:22px;
+}
+.block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+.block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+.people-grid{
+display:grid;
+grid-template-columns:repeat(2, minmax(0, 1fr));
+gap:14px;
+}
+@media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+.person{
+background:var(--paper-deep);
+border-left:3px solid var(--suou);
+padding:16px 18px;
+min-width:0;
+}
+.person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+.person .name{font-weight:700; font-size:1rem;}
+.person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+.person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+.person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+.filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+.filters button{
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+padding:7px 14px;
+border:1px solid var(--line);
+background:var(--paper);
+color:var(--ink-soft);
+border-radius:16px;
+cursor:pointer;
+}
+.filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+.diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+.scene-room{cursor:pointer;}
+.scene-room rect{transition:opacity .15s ease;}
+.scene-room:hover rect{opacity:.75;}
+.scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+.scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+.node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+.node.memory rect{fill:#efe6da; stroke:var(--gray); stroke-width:1.4; stroke-dasharray:4,3; opacity:.85;}
+.node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+.node.memory text{fill:var(--ink-soft);}
+.edge line{stroke-width:2px;}
+.edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+.edge.kinship line{stroke:var(--gray);}
+.edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+.edge.conflict line{stroke:var(--kon);}
+.edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+.legend span{display:inline-flex; align-items:center; gap:6px;}
+.legend i{width:18px; height:3px; display:inline-block;}
+.legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+.gloss{border-top:1px solid var(--line);}
+.gloss dt{
+font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+border-bottom:1px solid var(--line);
+display:flex; align-items:baseline; gap:8px;
+}
+.gloss dt:first-of-type{border-top:none;}
+.gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+.waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
+@media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+.waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
+.waka.solo{grid-column:1 / -1;}
+.waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+.waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+.waka .trans{font-size:.82rem; color:var(--ink-soft);}
+.waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+.waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.timeline{position:relative; padding-left:26px;}
+.timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+.tl-item{position:relative; margin-bottom:26px;}
+.tl-item::before{
+content:''; position:absolute; left:-26px; top:4px;
+width:9px; height:9px; border-radius:50%;
+background:var(--yamabuki); border:2px solid var(--paper);
+box-shadow:0 0 0 1px var(--yamabuki);
+}
+.tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+.analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+.analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+.analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+.note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+.disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+#toTop{
+position:fixed; right:18px; bottom:18px; z-index:60;
+width:46px; height:46px; border-radius:50%;
+background:var(--murasaki); color:#f2ead8;
+border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+font-size:1.1rem; cursor:pointer;
+display:flex; align-items:center; justify-content:center;
+}
+#toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="top-row">
+<a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+<select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+</div>
+<nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+<div class="frontispiece">
+<div class="num">第44帖　匂宮三帖の第三帖（最終帖）</div>
+<h1>竹河</h1>
+<div class="kana">たけかわ</div>
+<p class="lead">物語の視点は再び、光源氏ゆかりの人々から離れる。髭黒太政大臣が亡くなった後、遺された北の方・玉鬘は、三男二女を抱えてひとり一族を切り盛りしていた。とりわけ美しいと評判の二人の姫君（大君・中の君）には、今上帝からも、退位した冷泉院からも所望の声がかかる。後見を失った身でどちらに参らせるべきか、玉鬘は思い悩む。薫や、夕霧の息子・蔵人少将もまた、大君に恋心を寄せる求婚者だった。正月、玉鬘邸に集った若者たちが催馬楽「竹河」を謡い興じたことから、この帖は「竹河」と呼ばれる。冒頭で語り手自らが「かつて髭黒・玉鬘に仕えた女房の伝え聞き」と述べる異色の巻でもある。</p>
+</div>
+
+<!-- 1. 主な登場人物 -->
+<section class="block" id="people">
+<div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+<div class="people-grid">
+<div class="person"><div class="row"><span class="name">玉鬘（たまかずら）</span><span class="age">47〜56歳</span></div><p>故髭黒太政大臣の北の方。物語冒頭で夫に先立たれ、三男二女を抱えて一族を切り盛りする。二人の娘の縁組先（今上帝か冷泉院か）に思い悩み、最終的に大君を冷泉院のもとへ参らせる決断を下す。年齢は複数の情報源で一致を確認した。</p></div>
+<div class="person"><div class="row"><span class="name">大君（おおいぎみ）</span><span class="age">物語冒頭で18〜19歳頃</span></div><p>玉鬘と故髭黒との長女。薫15歳の頃の場面で18〜19歳とする資料があるが、この年齢は単一の情報源によるもので、複数情報源での一致は確認できません。妹・中の君との桜を賭けた碁に負け、玉鬘の意向により冷泉院のもとへ参院する。院に深く寵愛され一男一女を儲けるが、その寵愛ゆえに周囲の嫉妬を買い、里下がりが多くなる。</p></div>
+<div class="person"><div class="row"><span class="name">中の君（なかのきみ）</span><span class="age">年齢確認できません</span></div><p>玉鬘と故髭黒との次女。姉と桜を賭けた碁に勝つ。後に玉鬘の尚侍の役を譲り受け、今上帝のもとへ入内する。冷泉院に嫁いだ姉が気苦労の多い日々を送るのに対し、中の君は却って気楽に過ごしているとされる。</p></div>
+<div class="person"><div class="row"><span class="name">薫（かおる）</span><span class="age">14〜23歳</span></div><p>表向きは光源氏の子とされるが、実の父は柏木という出生の秘密を抱える四位侍従。世間の公達にありがちな好色めいたところがなく「まめ人」と評される一方、玉鬘家には姉の邸のように親しく出入りし、和琴の音色が亡き柏木に似ていると玉鬘に涙ぐまれる場面もある。物語終盤には中納言に昇進する。年齢は複数の情報源で一致を確認した。</p></div>
+<div class="person"><div class="row"><span class="name">冷泉院（れいぜいいん）</span><span class="age">43〜52歳</span></div><p>すでに譲位した院。実は光源氏の子（表向きは桐壺帝の子）という出生の秘密を持つが、本帖の時点でこれを知る者は限られる。かつて玉鬘の出仕がかなわなかった経緯があり、その娘・大君を深く寵愛する。異母妹にあたる弘徽殿女御（大君からは義理の叔母）も縁組を後押しした。年齢は複数の情報源で一致を確認した。</p></div>
+<div class="person"><div class="row"><span class="name">蔵人少将（くろうどのしょうしょう）</span><span class="age">19〜20歳頃</span></div><p>夕霧と雲居雁の五男。容貌に優れ、玉鬘の息子たちとも親しく出入りするうち、垣間見た大君に恋い焦がれる。母・雲居雁を通じて玉鬘に働きかけるが、大君は冷泉院のもとへ参院してしまい、失意を味わう。年齢は大君と同じ場面（垣間見の場）での推定によるもので、複数情報源での一致は確認できません。</p></div>
+<div class="person"><div class="row"><span class="name">藤侍従（とうのじじゅう）</span><span class="age">年齢確認できません</span></div><p>玉鬘の末子で、まだ殿上出仕前の少年。帖名の由来となる和歌のやりとりで、薫からの手紙に返歌をした人物とされる。音楽の才は薫や兄たちに及ばず、専ら盃をすすめる役を務めるが、皆で「竹河」を歌う場面にも加わる。</p></div>
+</div>
+</section>
+
+<!-- 2. 人物系図 -->
+<section class="block" id="relations">
+<div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+<div class="filters">
+<button data-f="all" class="active">すべて表示</button>
+<button data-f="kinship">血縁・婚姻</button>
+<button data-f="emotion">感情</button>
+<button data-f="conflict">政争・対立</button>
+<button data-f="alliance">政略同盟</button>
+</div>
+<div class="diagram-wrap">
+<svg id="relmap" viewBox="0 0 940 620" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+<div class="legend">
+<span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+<span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+<span><i style="background:var(--kon);"></i>政争・対立</span>
+<span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+</div>
+<p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※点線の枠で示した「髭黒」「柏木」は、本帖の時点ですでに世を去っており、回想・背景としてのみ図に加えていることを表す図示上の工夫です（AIの表現上の判断）。「冷泉院―大君」「今上帝―中の君」の線は、それぞれ参院・入内という正式な間柄が成立した後の関係を血縁・婚姻として示したもので、それ以前の求愛段階を表すものではありません。「玉鬘―冷泉院」の政略同盟の線は、玉鬘が思案の末に大君を冷泉院へ託した判断を表したもので、両者の間に事前の密約があったことを示すものではありません。「今上帝―玉鬘」の政争・対立の線は、大君を得られなかった今上帝の不興と、それに伴う玉鬘への風当たりを図示したもので、本文では直接には今上帝の御子たちが玉鬘を責めたと記されている点に注意してください。いずれもAIによる図示上の解釈を含みます。この帖の本文には「主従・忠誠」にあたる記述は見当たらないため、系図には血縁・婚姻／感情／政争・対立／政略同盟の4種類のみを図示しています（凡例は5種類のうち4種類のみ表示）。</p>
+</section>
+
+<!-- 3. 空間・地理構造 -->
+<section class="block" id="scene">
+<div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 玉鬘邸と冷泉院</h2></div>
+<div class="diagram-wrap">
+<svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="900" height="480" fill="var(--paper)"/>
+
+<!-- ①玉鬘邸 -->
+<g class="scene-room" onclick="showScenePopup('①玉鬘邸 ― 求婚者たちが集う場、薫が出入りする場','髭黒亡き後、玉鬘が三男二女とともに暮らす邸。正月には玉鬘の兄弟の按察使大納言（紅梅）、藤中納言（髭黒の長男）、夕霧とその息子たちが年賀に訪れ、催馬楽「竹河」を謡い興じる。薫は四位侍従として玉鬘家に姉の邸のように親しく出入りし、和琴を弾いては亡き柏木や致仕大臣を偲ばせる。三月には二人の姫君が御簾をあげて桜を賭けた碁を打ち、それを垣間見た蔵人少将がいっそう大君への思いを募らせる。玉鬘家の子女たちと薫・蔵人少将ら若い公達が行き交う、活気と思惑の入り交じる場である。')">
+<rect x="60" y="90" width="360" height="290" fill="#f7ecd9" stroke="var(--yamabuki)" stroke-width="2.6"/>
+<rect x="55" y="85" width="370" height="300" fill="none" stroke="var(--yamabuki)" stroke-width="1.2" stroke-dasharray="4,3"/>
+<text x="80" y="122" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--yamabuki)">①</text>
+<text x="240" y="158" text-anchor="middle" font-family="Shippori Mincho" font-size="17" fill="var(--ink)">玉鬘邸</text>
+<text x="240" y="184" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">求婚者たちが集う場</text>
+<text x="240" y="222" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・正月＝催馬楽「竹河」を謡う宴</text>
+<text x="240" y="240" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・薫が親しく出入りし和琴を弾く</text>
+<text x="240" y="270" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・三月＝姫君二人の桜の賭け碁</text>
+<text x="240" y="288" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・蔵人少将、垣間見て恋心を募らせる</text>
+<text x="240" y="306" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・玉鬘、縁組先に思い悩む</text>
+<circle cx="395" cy="115" r="12" fill="var(--yamabuki)"/>
+<text x="395" y="120" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#3a2a10">①</text>
+</g>
+
+<!-- ②冷泉院 -->
+<g class="scene-room" onclick="showScenePopup('②冷泉院 ― 大君が参院する先','退位した冷泉院の御所。かつて玉鬘の出仕がかなわなかった因縁の地でもある。玉鬘は後見のなさを案じつつ、今上帝のもとより競争の少ない冷泉院を選び、四月に大君を参院させる。冷泉院は深く大君を寵愛し、翌年には女宮を、数年後には男御子を儲けるが、寵愛の深さゆえに周囲の嫉妬を招き、大君は里下がりを重ねるようになる。翌日冷泉院が薫を召し、前夜の男踏歌の様子を語り合う場面では、御簾の内から大君自身が「竹河」の夜を思い出す歌を詠みかける一幕もある。')">
+<rect x="480" y="90" width="330" height="290" fill="#efe4ce" stroke="var(--murasaki)" stroke-width="1.6"/>
+<text x="500" y="122" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--murasaki)">②</text>
+<text x="645" y="158" text-anchor="middle" font-family="Shippori Mincho" font-size="17" fill="var(--ink)">冷泉院</text>
+<text x="645" y="184" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">大君が入内する先</text>
+<text x="645" y="222" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・四月、大君が参院</text>
+<text x="645" y="240" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・深い寵愛、女宮・男御子を出産</text>
+<text x="645" y="270" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・周囲の嫉妬による気苦労</text>
+<text x="645" y="288" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・里下がりが多くなる</text>
+<text x="645" y="306" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・薫が院に召され旧交を温める</text>
+</g>
+
+<defs>
+<marker id="arrowBetween" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/>
+</marker>
+</defs>
+<line x1="420" y1="235" x2="480" y2="235" stroke="var(--ink-soft)" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#arrowBetween)"/>
+<text x="450" y="223" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">大君の参院</text>
+
+<text x="450" y="440" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">玉鬘邸で育まれた求婚と迷いが、大君の冷泉院への参院という一つの決断へと結実していく</text>
+</svg>
+</div>
+<div class="scene-popup" id="scenePopup" style="display:none;"></div>
+<p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">①では、後見を失った玉鬘家に薫・蔵人少将ら若い公達が出入りし、二人の姫君を巡る思惑が静かに渦巻く。②では、玉鬘の決断の結果として大君が身を置くことになった冷泉院の御所が描かれ、深い寵愛と、それゆえの気苦労という両面が示される。二つの空間は、玉鬘家という一つの家の「求婚される場」と「嫁ぎ先」として対になっている。</p>
+</section>
+
+<!-- 4. 用語解説 -->
+<section class="block" id="glossary">
+<div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+<dl class="gloss">
+<dt>竹河（たけかわ）</dt>
+<dd>本帖の巻名の由来。催馬楽（民間歌謡を宮中で洗練させた歌曲）の曲名でもある。正月、玉鬘邸に集った若者たちがこの曲を謡い興じたことにちなむ。さらに本文中では、薫が藤侍従に贈った和歌「竹河のはしうち出でしひとふしに深き心の底は知りきや」と、その返歌「竹河に夜を更かさじといそぎしもいかなる節を思ひおかまし」の贈答が、帖名の直接の由来として言及される（出典：Wikipediaほか複数の解説サイトで一致確認）。</dd>
+<dt>尚侍（ないしのかみ）</dt>
+<dd>内侍司（ないしのつかさ）の長官。本来は帝の側近くに仕え、奏請・伝宣を司る女官の最高位だが、後には後宮の妃に準じる立場としても扱われた。玉鬘自身がこの職にあり、本帖では中の君にこの役を譲って今上帝のもとへ入内させる。</dd>
+<dt>入内（じゅだい）</dt>
+<dd>女性が帝の後宮に正式に入ること。本帖では中の君が玉鬘の尚侍の役を継いで今上帝のもとへ入内する。</dd>
+<dt>参院（さんいん）</dt>
+<dd>譲位した院（上皇）のもとへ女性が入ること。本帖では大君が冷泉院のもとへ参院し、深く寵愛される。</dd>
+<dt>里下がり（さとさがり）</dt>
+<dd>後宮や院に仕える女性が、実家へ帰ること。本帖では、冷泉院の寵愛を一身に受けた大君が周囲の嫉妬を買い、気苦労から里下がりを重ねるようになる。</dd>
+</dl>
+</section>
+
+<!-- 5. 和歌 -->
+<section class="block" id="waka">
+<div class="block-head"><span class="idx">4-2</span><h2>本帖の和歌</h2></div>
+<div class="waka-grid">
+<div class="waka">
+<div class="speaker">薫 → 藤侍従（帖名由来の贈答歌・その一）</div>
+<div class="poem">竹河の<br>橋うち出でし<br>一節に<br>深き心の<br>底は知りきや</div>
+<div class="trans-label">現代語訳</div>
+<div class="trans">竹河の歌の一節をふと口ずさんだそのひとふしに込めた、私の深い心の底を分かってくれましたか。</div>
+<div class="source">出典：竹河巻（Wikisource「源氏物語（渋谷栄一校訂）」、渋谷栄一氏『源氏物語の世界』で原文を確認。帖名の由来として複数の解説サイトでも一致確認）</div>
+</div>
+<div class="waka">
+<div class="speaker">藤侍従 → 薫（帖名由来の贈答歌・その二）</div>
+<div class="poem">竹河に<br>夜を更かさじと<br>いそぎしも<br>いかなる節を<br>思ひおかまし</div>
+<div class="trans-label">現代語訳</div>
+<div class="trans">竹河を謡ったあの夜、夜を更かすまいと急いで帰られたけれど、いったいどの一節を心に留めておかれたのでしょうか。</div>
+<div class="source">出典：竹河巻（Wikisource「源氏物語（渋谷栄一校訂）」、渋谷栄一氏『源氏物語の世界』で原文を確認）</div>
+</div>
+<div class="waka">
+<div class="speaker">薫と大君（推定）の贈答歌・その一</div>
+<div class="poem">竹河の<br>その夜のことは<br>思ひ出づや<br>しのぶばかりの<br>節はなけれど</div>
+<div class="trans-label">現代語訳</div>
+<div class="trans">竹河を謡ったあの夜のことを覚えておいでですか。取り立てて偲ぶほどの出来事ではなかったけれど。</div>
+<div class="source">出典：竹河巻（Wikisource「源氏物語（渋谷栄一校訂）」で原文を確認。話者は地の文の敬語や文脈から薫・大君と推定されるが、本セッションで確認した範囲では、注釈書による確定した通説の一致は確認できません。</div>
+</div>
+<div class="waka">
+<div class="speaker">薫と大君（推定）の贈答歌・その二</div>
+<div class="poem">流れての<br>頼めむなしき<br>竹河に<br>世は憂きものと<br>思ひ知りにき</div>
+<div class="trans-label">現代語訳</div>
+<div class="trans">末長くという頼みも空しかった竹河のあの夜を思うにつけ、この世は辛いものだと思い知りました。</div>
+<div class="source">出典：竹河巻（Wikisource「源氏物語（渋谷栄一校訂）」で原文を確認。話者の推定については左の一首と同様、確認できません。</div>
+</div>
+</div>
+</section>
+
+<!-- 6. あらすじ -->
+<section class="block" id="story">
+<div class="block-head"><span class="idx">5</span><h2>あらすじ</h2></div>
+<div class="timeline">
+<div class="tl-item"><h3>異色の語り出し</h3><p>本帖は、源氏一族から離れた「後の大殿」（髭黒）のあたりに仕えていた老女房の生き残りが問わず語りに話したこと、という体裁で始まる、五十四帖中唯一の冒頭を持つ。髭黒太政大臣が亡くなった後、玉鬘は遺された三男二女を抱え、後見を失った家を一人で切り盛りしていた。</p></div>
+<div class="tl-item"><h3>二人の姫君への求婚</h3><p>美しいと評判の高い大君・中の君には、今上帝からも冷泉院からも所望の声がかかる。今上帝の後宮にはすでに義妹の明石の中宮がおり、冷泉院には異母妹の弘徽殿女御がいるため、玉鬘はどちらに参らせるべきか判断に迷う。薫や、夕霧の五男・蔵人少将も大君に思いを寄せる求婚者だった。</p></div>
+<div class="tl-item"><h3>正月、玉鬘邸での年賀と「竹河」</h3><p>正月、玉鬘の兄弟である按察使大納言（紅梅）、藤中納言（髭黒の長男）、夕霧とその子息たちが玉鬘邸に年賀に訪れる。薫15歳の正月下旬、若者たちが集まって催馬楽「竹河」を謡い興じ、玉鬘は薫の弾く和琴の音色が亡き父・致仕大臣や亡き弟・柏木に似ていることに気づき、涙ぐむ。</p></div>
+<div class="tl-item"><h3>薫と藤侍従の贈答歌</h3><p>翌朝、薫は玉鬘の末子・藤侍従のもとへ、前夜の非礼を詫びる文を送る。そこに添えられていたのが「竹河のはしうち出でしひとふしに深き心の底は知りきや」の歌であった。この手紙は寝殿に持ち込まれ、玉鬘をはじめ一同が薫の見事な筆跡に感心する。藤侍従はまだ幼い筆で「竹河に夜を更かさじといそぎしもいかなる節を思ひおかまし」と返し、これが帖名の由来となる。</p></div>
+<div class="tl-item"><h3>梅の花盛り、薫の再訪</h3><p>正月二十日過ぎ、梅の花が盛りの頃、「まめ人」と評されることを物足りなく思っていた薫が玉鬘邸を再訪する。若い女房たちと戯れ、玉鬘家の子息たちとも親しく交流する様子が描かれる。</p></div>
+<div class="tl-item"><h3>三月、姫君二人の賭け碁と垣間見</h3><p>三月、桜の盛りの夕暮れ時、大君と中の君は御簾を上げ、庭先の桜を賭けて碁を打つ。三番勝負で二番勝った方が桜を自分のものとする約束で、結果は中の君の勝ちとなる。この様子を蔵人少将が垣間見て、大君への思いをいっそう募らせる。</p></div>
+<div class="tl-item"><h3>玉鬘、大君を冷泉院へ参らせる決意</h3><p>玉鬘は思案の末、後見のなさゆえに競争の激しい今上帝の後宮よりも、すでに落ち着いた冷泉院のもとへ大君を参らせる方が安心だと判断する。これを知った蔵人少将は落胆し、母・雲居雁に訴える。雲居雁からの文に玉鬘は頭を悩ませるが、決意は変わらない。</p></div>
+<div class="tl-item"><h3>大君の参院、今上帝の不興</h3><p>四月、大君は冷泉院のもとへ参院し、深く寵愛される。一方、大君を得られなかった今上帝は機嫌を損ね、玉鬘の息子たちは母を責める。玉鬘家の中でも、この決断を巡って複雑な空気が流れる。</p></div>
+<div class="tl-item"><h3>大君の出産と中の君の入内</h3><p>翌年四月、大君は女宮を出産する。玉鬘は自らの尚侍の役を中の君に譲り、今上帝のもとへ入内させる。かくして姉妹はそれぞれ別の宮廷に身を置くことになった。</p></div>
+<div class="tl-item"><h3>大君の男御子出産と気苦労</h3><p>その後も冷泉院の大君への寵愛は冷めやらず、数年後には男御子を儲ける。冷泉院はおおいに喜ぶが、もともと子が少なかった院だけに、かえって周囲の女房たちからの嫉妬を買い、大君は気苦労から里下がりを重ねるようになる。対照的に、中の君は今上帝のもとで却って気楽に過ごしているとされる。</p></div>
+<div class="tl-item"><h3>翌年の男踏歌、薫と大君の再会</h3><p>翌年の正月、男踏歌の行事の後、薫は冷泉院に召される。院は前夜の蔵人少将の月光に映える舞姿などを語り、しみじみとした空気の中、御簾の内から大君（推定）が「竹河のその夜のことは思ひ出づや」と、かつて共に「竹河」を謡った夜を思い出す歌を詠みかける。ひとしきり感慨を交わした後、「流れての頼めむなしき竹河に世は憂きものと思ひ知りにき」という歌が続き、人々はその物哀れな様子に心を動かされる。</p></div>
+<div class="tl-item"><h3>数年後、薫と蔵人少将の昇進</h3><p>それから数年の月日が流れ、薫は中納言に、蔵人少将も宰相中将に、それぞれ順調に昇進する。玉鬘は、大君の不遇な境遇や、自分の息子たちの出世の遅れを、薫や蔵人少将の順調な出世と比べては悔しく思い、後悔の念が絶えない。</p></div>
+</div>
+</section>
+
+<!-- 7. 考察と深層考察 -->
+<section class="block" id="thoughts">
+<div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 後見を失った女性の宮仕えの困難</div>
+<h3>髭黒という「後見」の不在が、玉鬘家の全ての迷いの根にある</h3>
+<p>玉鬘が娘の縁組先を最後まで決めかねる背景には、髭黒という強力な後見人を失ったことがあります。今上帝の後宮にはすでに義妹・明石の中宮という盤石な後見を持つ妃がおり、そこに割って入るのは危険だと玉鬘は判断します。一人の女性が政治的な後見なしに一族を導くことの難しさが、本帖全体を通じて描かれているように読み取れます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 大君と中の君、対照的な運命</div>
+<h3>「勝った」中の君と「賭けに負けた」大君の、その後の明暗</h3>
+<p>賭け碁に勝った中の君はやがて今上帝のもとで気楽に過ごし、負けて桜を譲った大君は冷泉院のもとで深く寵愛されながらも気苦労の多い日々を送ります。幼い頃の他愛ない勝負の結果が、そのまま姉妹の対照的な人生の伏線であったかのように配置されている点は、物語の構成上の巧みさとして注目に値します。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 薫が求婚に加わりながら本筋へ向かう伏線</div>
+<h3>「まめ人」薫が、なぜ大君に心を寄せたのか</h3>
+<p>出家の志を持つとされる薫が、世間の公達らしい色恋には無縁と評されながらも、大君への求婚に加わっている点は一見矛盾するようにも映ります。しかし薫が大君に結ばれることなく終わるこの巻の経験は、次の本筋・宇治十帖において、薫が大君（八の宮の娘、同名の別人物）や浮舟へ向かう恋愛のパターン、すなわち「求めながらも結ばれない」薫の恋愛の型を先取りしているとも読み取れます（これは本文が明示的に述べているものではなく、AIによる読み解きです）。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 玉鬘十帖の後日談としての一区切り</div>
+<h3>栄華の頂点にいた玉鬘の、報われない晩年</h3>
+<p>かつて玉鬘十帖で光源氏や髭黒、多くの公達から求愛された玉鬘は、本帖では一転して、娘の不遇と息子たちの出世の遅れを嘆く母として描かれます。この落差は、若く美しかった女性が年を重ね、当時者から一族を導く側に回ったときに直面する現実を描いているとも読み取れ、玉鬘という一人物の物語に一つの区切りをつける役割を果たしているように見えます。</p>
+</div>
+<p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+</section>
+
+<!-- 8. 特筆事項 -->
+<section class="block" id="notes">
+<div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+<div class="note-card">
+<h3>匂宮三帖の最終帖、玉鬘十帖の後日談</h3>
+<p>「竹河」は「匂宮」「紅梅」に続く匂宮三帖の最終帖であると同時に、第22〜31帖「玉鬘十帖」の後日談としての性格も持ちます。物語全体の本筋である宇治十帖（第45帖「橋姫」以降）からは離れた挿話的な内容ですが、薫が求婚者の一人として登場する点で、次帖以降への緩やかな橋渡しにもなっています。</p>
+</div>
+<div class="note-card">
+<h3>五十四帖中唯一の語り手の名乗り</h3>
+<p>本帖は、冒頭で語り手自身が「源氏の御族からは離れた、後の大殿（髭黒）あたりにいた老女房の生き残りが問わず語りに話したこと」と、自らの立場を明かす点で五十四帖中唯一の構成を持ちます。この特異な語り出しや、官位の記述に矛盾が見られる点（薫が中納言に、紅梅が右大臣に、夕霧が左大臣にそれぞれ昇進しているにもかかわらず、続く帖では昇進以前の官名で呼ばれる箇所がある）などから、紫式部以外の作者による後記説・別作者説が古くから唱えられています。ただし、こうした現象は構想上の問題として説明できるとして、これらの説を否定する見解も存在し、学術的に確定した通説はありません（出典：Wikipedia「竹河」、脚注の研究文献一覧）。</p>
+</div>
+<div class="note-card">
+<h3>物語内の時系列における位置づけ</h3>
+<p>本帖は薫14〜23歳、匂宮15〜24歳の頃の物語とされ、玉鬘十帖の後日談でありながら、時系列としては次帖「橋姫」以降の宇治十帖とほぼ地続きの時期にあたります。年立の解釈には研究者によって幅があり、確定した通説として断定はできません。</p>
+</div>
+</section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+const el = document.getElementById('scenePopup');
+if(!el) return;
+el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+el.style.display = 'block';
+}
+
+const CURRENT = 44;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+chapters.forEach(c=>{
+const tab = document.createElement(c.done ? 'a' : 'span');
+tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+tab.textContent = c.n + '.' + c.t;
+if(c.done){ tab.href = c.f; }
+tabsEl.appendChild(tab);
+const opt = document.createElement('option');
+opt.value = c.done ? c.f : '';
+opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+opt.disabled = !c.done;
+if(c.n===CURRENT) opt.selected = true;
+jumpEl.appendChild(opt);
+});
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+const nodes = {
+tamakazura: {x:470, y:310, label:'玉鬘'},
+higekuro: {x:307, y:147, label:'髭黒', memory:true},
+kashiwagi: {x:240, y:310, label:'柏木', memory:true},
+oigimi: {x:470, y:80, label:'大君'},
+kaoru: {x:633, y:147, label:'薫'},
+reizei: {x:700, y:310, label:'冷泉院'},
+shosho: {x:633, y:473, label:'蔵人少将'},
+nakanokimi: {x:470, y:540, label:'中の君'},
+kinjo: {x:307, y:473, label:'今上帝'}
+};
+const edges = [
+{a:'tamakazura', b:'higekuro', label:'死別の配偶者', type:'kinship'},
+{a:'higekuro', b:'oigimi', label:'父娘', type:'kinship'},
+{a:'higekuro', b:'nakanokimi', label:'父娘', type:'kinship'},
+{a:'tamakazura', b:'oigimi', label:'母娘', type:'kinship'},
+{a:'tamakazura', b:'nakanokimi', label:'母娘', type:'kinship'},
+{a:'kashiwagi', b:'kaoru', label:'実の父子（出生の秘密）', type:'kinship'},
+{a:'kaoru', b:'oigimi', label:'求婚・恋心', type:'emotion'},
+{a:'shosho', b:'oigimi', label:'求婚・恋心', type:'emotion'},
+{a:'reizei', b:'oigimi', label:'参院・寵愛', type:'kinship'},
+{a:'kinjo', b:'nakanokimi', label:'入内', type:'kinship'},
+{a:'tamakazura', b:'reizei', label:'大君を託す決断', type:'alliance'},
+{a:'kinjo', b:'tamakazura', label:'大君を得られず不興', type:'conflict'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+edges.forEach(edge=>{
+const A=nodes[edge.a], B=nodes[edge.b];
+const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+const dx=B.x-A.x, dy=B.y-A.y;
+const len=Math.sqrt(dx*dx+dy*dy)||1;
+const nx=-dy/len, ny=dx/len;
+const offset = 15;
+const lx = mx + nx*offset, ly = my + ny*offset;
+const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+t.textContent = edge.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+const g = el('g',{class:'node'+(n.memory?' memory':'')});
+const w = Math.max(96, n.label.length*13);
+g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+t.textContent = n.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+document.querySelectorAll('.filters button').forEach(btn=>{
+btn.addEventListener('click', ()=>{
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+const f = btn.dataset.f;
+document.querySelectorAll('.edge').forEach(e=>{
+e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+});
+});
+});
+</script>
+</body>
+</html>
