@@ -19,7 +19,7 @@ const chapters = [
  {n:22,t:"玉鬘",f:"ch22_tamakazura.html",done:true},{n:23,t:"初音",f:"ch23_hatsune.html",done:true},{n:24,t:"胡蝶",f:"ch24_kochou.html",done:true},{n:25,t:"蛍",f:"ch25_hotaru.html",done:true},{n:26,t:"常夏",f:"ch26_tokonatsu.html",done:true},
  {n:27,t:"篝火",f:"ch27_kagaribi.html",done:true},{n:28,t:"野分",f:"ch28_nowaki.html",done:true},{n:29,t:"行幸",f:"ch29_miyuki.html",done:true},{n:30,t:"藤袴",f:"ch30_fujibakama.html",done:true},{n:31,t:"真木柱",f:"ch31_makibashira.html",done:true},
  {n:32,t:"梅枝",f:"ch32_umegae.html",done:true},{n:33,t:"藤裏葉",f:"ch33_fujinouraba.html",done:true},{n:34,t:"若菜上",f:"ch34_wakana_jo.html",done:true},{n:35,t:"若菜下",f:"ch35_wakana_ge.html",done:true},{n:36,t:"柏木",f:"ch36_kashiwagi.html",done:true},
- {n:37,t:"横笛",f:"ch37_yokobue.html",done:true},{n:38,t:"鈴虫",f:"ch38_suzumushi.html",done:true},{n:39,t:"夕霧",f:"ch39_yugiri.html",done:true},{n:40,t:"御法",f:"ch40_minori.html",done:true},{n:41,t:"幻"},
+ {n:37,t:"横笛",f:"ch37_yokobue.html",done:true},{n:38,t:"鈴虫",f:"ch38_suzumushi.html",done:true},{n:39,t:"夕霧",f:"ch39_yugiri.html",done:true},{n:40,t:"御法",f:"ch40_minori.html",done:true},{n:41,t:"幻",f:"ch41_maboroshi.html",done:true},
  {n:42,t:"匂宮"},{n:43,t:"紅梅"},{n:44,t:"竹河"},{n:45,t:"橋姫"},{n:46,t:"椎本"},
  {n:47,t:"総角"},{n:48,t:"早蕨"},{n:49,t:"宿木"},{n:50,t:"東屋"},{n:51,t:"浮舟"},
  {n:52,t:"蜻蛉"},{n:53,t:"手習"},{n:54,t:"夢浮橋"}

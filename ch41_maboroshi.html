@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第41帖 幻 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--paper:#f5f0e6;
+--paper-deep:#eee6d6;
+--paper-deeper:#e6dbc2;
+--ink:#2b241e;
+--ink-soft:#5a5044;
+--murasaki:#4b2e51;
+--murasaki-deep:#382039;
+--suou:#8b3a3a;
+--yamabuki:#c08a34;
+--koke:#5c6b47;
+--gray:#8c8579;
+--kon:#2c3a63;
+--line:#d8cdb8;
+--radius:2px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+margin:0;
+background:var(--paper);
+color:var(--ink);
+font-family:"Zen Kaku Gothic New", sans-serif;
+line-height:1.85;
+-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+a{color:inherit;}
+header.top{
+position:sticky; top:0; z-index:50;
+background:var(--murasaki);
+color:#f2ead8;
+box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+.top-row{
+display:flex; align-items:center; justify-content:space-between;
+padding:12px 18px 8px;
+gap:12px;
+}
+.brand{
+font-family:"Shippori Mincho", serif;
+font-weight:700;
+font-size:1rem;
+display:flex; align-items:center; gap:8px;
+text-decoration:none;
+}
+.brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+select#jump{
+background:var(--murasaki-deep);
+color:#f2ead8;
+border:1px solid #6b4a70;
+border-radius:var(--radius);
+padding:6px 10px;
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+max-width:40vw;
+}
+nav.tabs{
+display:flex;
+overflow-x:auto;
+gap:2px;
+padding:0 10px 10px;
+scrollbar-width:thin;
+}
+nav.tabs::-webkit-scrollbar{height:4px;}
+.tab{
+flex:0 0 auto;
+padding:7px 12px;
+font-size:.8rem;
+color:#cdb8c9;
+background:transparent;
+border:none;
+border-bottom:2px solid transparent;
+white-space:nowrap;
+opacity:.55;
+text-decoration:none;
+}
+.tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+.tab.enabled{opacity:.85; color:#f2ead8;}
+.tab.enabled:hover{opacity:1;}
+main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+.frontispiece{
+padding:40px 0 30px;
+border-bottom:1px solid var(--line);
+margin-bottom:44px;
+}
+.frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+.frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+.frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+section.block{margin-bottom:58px;}
+.block-head{
+display:flex; align-items:baseline; gap:12px;
+border-bottom:1px solid var(--line);
+padding-bottom:10px; margin-bottom:22px;
+}
+.block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+.block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+.people-grid{
+display:grid;
+grid-template-columns:repeat(2, minmax(0, 1fr));
+gap:14px;
+}
+@media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+.person{
+background:var(--paper-deep);
+border-left:3px solid var(--suou);
+padding:16px 18px;
+min-width:0;
+}
+.person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+.person .name{font-weight:700; font-size:1rem;}
+.person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+.person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+.person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+.filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+.filters button{
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+padding:7px 14px;
+border:1px solid var(--line);
+background:var(--paper);
+color:var(--ink-soft);
+border-radius:16px;
+cursor:pointer;
+}
+.filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+.diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+.scene-room{cursor:pointer;}
+.scene-room rect{transition:opacity .15s ease;}
+.scene-room:hover rect{opacity:.75;}
+.scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+.scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+.node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+.node.memory rect{fill:#efe6da; stroke:var(--gray); stroke-width:1.4; stroke-dasharray:4,3; opacity:.85;}
+.node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+.node.memory text{fill:var(--ink-soft);}
+.edge line{stroke-width:2px;}
+.edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+.edge.kinship line{stroke:var(--gray);}
+.edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+.edge.conflict line{stroke:var(--kon);}
+.edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+.legend span{display:inline-flex; align-items:center; gap:6px;}
+.legend i{width:18px; height:3px; display:inline-block;}
+.legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+.gloss{border-top:1px solid var(--line);}
+.gloss dt{
+font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+border-bottom:1px solid var(--line);
+display:flex; align-items:baseline; gap:8px;
+}
+.gloss dt:first-of-type{border-top:none;}
+.gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+.waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
+@media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+.waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
+.waka.solo{grid-column:1 / -1;}
+.waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+.waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+.waka .trans{font-size:.82rem; color:var(--ink-soft);}
+.waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+.waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.timeline{position:relative; padding-left:26px;}
+.timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+.tl-item{position:relative; margin-bottom:26px;}
+.tl-item::before{
+content:''; position:absolute; left:-26px; top:4px;
+width:9px; height:9px; border-radius:50%;
+background:var(--yamabuki); border:2px solid var(--paper);
+box-shadow:0 0 0 1px var(--yamabuki);
+}
+.tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+.analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+.analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+.analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+.note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+.disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+#toTop{
+position:fixed; right:18px; bottom:18px; z-index:60;
+width:46px; height:46px; border-radius:50%;
+background:var(--murasaki); color:#f2ead8;
+border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+font-size:1.1rem; cursor:pointer;
+display:flex; align-items:center; justify-content:center;
+}
+#toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="top-row">
+<a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+<select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+</div>
+<nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+<div class="frontispiece">
+<div class="num">第41帖</div>
+<h1>幻</h1>
+<div class="kana">まぼろし</div>
+<p class="lead">光源氏52歳、正月から十二月の晦日までの一年間の物語。紫の上を失った光源氏は、年賀の客にも会わず引きこもり、女房たちを相手に後悔と懺悔の日々を過ごす。四季が巡るごとに、紫の上が愛した二条院（あるいは六条院）の花や鳥に触れては、その面影を偲んで涙する。四月には花散里と衣替えの歌を交わし、五月雨には夕霧に一周忌の手配を頼み、八月の命日には紫の上発願の曼荼羅供養を営む。神無月（十月）には出家を心に決め、年の暮れには須磨滞在中に届いた紫の上の手紙の束を、涙ながらにすべて焼き捨てる。十二月の御仏名の席で久々に人前に姿を現し、大晦日には無邪気にはしゃぐ孫の三の宮（匂宮）を見つめながら、最後の新年を迎える支度をする。光源氏を主人公とする物語（正編）の、実質的な終幕を告げる一帖である。</p>
+</div>
+
+<!-- 1. 主な登場人物 -->
+<section class="block" id="people">
+<div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+<div class="people-grid">
+<div class="person"><div class="row"><span class="name">光源氏</span><span class="age">52歳</span></div><p>准太上天皇。前年秋に紫の上を失い、正月から年末まで、四季それぞれの折々に彼女を偲んで涙する一年を送る。年賀の客にも会わず引きこもり、女房たちを相手に懺悔と述懐を重ねる。年の暮れには紫の上の手紙をすべて焼き、出家への決意を固めていく。</p></div>
+<div class="person"><div class="row"><span class="name">紫の上</span><span class="age">回想の存在</span></div><p>前帖「御法」で八月十四日に43歳で世を去った、光源氏の最愛の伴侶。本帖には実際には登場せず、四季折々の花鳥風月のたびに光源氏の追憶の中に立ち現れる「不在の中心人物」として物語全体を貫く。</p></div>
+<div class="person"><div class="row"><span class="name">明石の中宮</span><span class="age">推定24歳前後</span></div><p>光源氏と明石の御方の娘、今上帝の中宮。正月、紫の上が可愛がっていた三の宮（匂宮）を光源氏の慰めとして残し、宮中へ帰る。前帖「御法」の時点で23歳とされ、本帖は一年後にあたるため24歳前後と推定されるが、本帖時点の年齢を明記した資料の一致は確認できません。</p></div>
+<div class="person"><div class="row"><span class="name">夕霧</span><span class="age">推定31歳前後</span></div><p>光源氏の長男、左大将。五月雨の頃、父に紫の上の一周忌の手配を頼まれる。ほととぎすの声を聞きながら、亡き人を偲ぶ光源氏の傍らに宿直し、唱和の歌を詠む。前帖時点で30歳とされ、本帖は一年後にあたるため31歳前後と推定されるが、確認できません。</p></div>
+<div class="person"><div class="row"><span class="name">花散里</span><span class="age">年齢確認できません</span></div><p>六条院・夏の町に住む源氏の妻の一人。四月、衣替えの装束とともに歌を贈り、光源氏と歌を詠み交わす。かつて紫の上が生前に用意していた更衣の装束を思いやる、控えめな心遣いが描かれる。</p></div>
+<div class="person"><div class="row"><span class="name">明石の御方（明石の君）</span><span class="age">年齢確認できません</span></div><p>光源氏の妻の一人、明石の中宮の実母。春、光源氏が久々に訪れて一夜を過ごすが、その心中は終始紫の上と比べられ、「なほ人にはまさりたれ」と評されつつも、慰めきれない悲しみが描かれる。</p></div>
+<div class="person"><div class="row"><span class="name">女三の宮</span><span class="age">年齢確認できません</span></div><p>光源氏の正妻格。若菜下巻での密通事件の後に出家した尼宮。光源氏が見舞うも、俗世を離れた身として「もの思ひもなし」という趣旨の返事をし、光源氏の悲しみを紛らわすことはできない。</p></div>
+<div class="person"><div class="row"><span class="name">三の宮（後の匂宮）</span><span class="age">年齢確認できません</span></div><p>光源氏と明石の中宮の子、紫の上が特に目をかけて育てた孫。紫の上の遺言どおり対の前の紅梅を大切にし、大晦日には無邪気に追儺（鬼やらい）をはしゃぎまわり、光源氏に最後の年の暮れを実感させる。</p></div>
+</div>
+</section>
+
+<!-- 2. 人物系図 -->
+<section class="block" id="relations">
+<div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+<div class="filters">
+<button data-f="all" class="active">すべて表示</button>
+<button data-f="kinship">血縁・婚姻</button>
+<button data-f="emotion">感情</button>
+<button data-f="conflict">政争・対立</button>
+<button data-f="alliance">政略同盟</button>
+<button data-f="loyalty">主従・忠誠</button>
+</div>
+<div class="diagram-wrap">
+<svg id="relmap" viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+<div class="legend">
+<span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+<span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+<span><i style="background:var(--kon);"></i>政争・対立</span>
+<span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+<span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+</div>
+<p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※点線の枠で示した「紫の上」は、本帖には実際には登場せず光源氏の追憶の中にのみ存在することを表す図示上の工夫です（AIの表現上の判断）。この帖の本文には、政争・対立、政略同盟、主従・忠誠にあたる関係の記述は見当たらないため、系図には血縁・婚姻／感情の2種類のみを図示しています（凡例は5種類とも共通表示）。光源氏と紫の上を結ぶ感情の線、および紫の上と匂宮・明石の中宮を結ぶ線の情感的な解釈は、原文の記述をもとにしたAIの読み解きを含みます。</p>
+</section>
+
+<!-- 3. 空間・地理構造 -->
+<section class="block" id="scene">
+<div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 移ろう四季と、燃え尽きる手紙</h2></div>
+<div class="diagram-wrap">
+<svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="900" height="480" fill="var(--paper)"/>
+
+<!-- ①二条院・四季を通じて紫の上を偲ぶ場 -->
+<g class="scene-room" onclick="showScenePopup('①光源氏の邸 ― 四季を通じて紫の上を偲ぶ場','正月から秋にかけて、光源氏は紫の上が愛した庭の花や鳥、季節の行事に触れるたびにその面影を偲ぶ。紅梅に来る鴬、山吹の花、五月雨のほととぎす、夏の蛍、七夕の露、九月の菊と、四季それぞれの景物が悲しみの依代となる。なお本文では「六条院」とも「二条院」ともとれる記述が入り混じっており、注釈書によって前半を二条院、後半を六条院とする説もあり、舞台がどちらか厳密には確定されていません。')">
+<rect x="60" y="90" width="330" height="290" fill="#f7ecd9" stroke="var(--yamabuki)" stroke-width="2.6"/>
+<rect x="55" y="85" width="340" height="300" fill="none" stroke="var(--yamabuki)" stroke-width="1.2" stroke-dasharray="4,3"/>
+<text x="80" y="122" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--yamabuki)">①</text>
+<text x="225" y="158" text-anchor="middle" font-family="Shippori Mincho" font-size="17" fill="var(--ink)">光源氏の邸</text>
+<text x="225" y="184" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">四季を通じて紫の上を偲ぶ場</text>
+<text x="225" y="222" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・春―紅梅・山吹に涙する</text>
+<text x="225" y="240" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・夏―ほととぎす・蛍を見る</text>
+<text x="225" y="270" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・秋―七夕・一周忌・菊の露</text>
+<text x="225" y="288" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・舞台は六条院／二条院か</text>
+<text x="225" y="306" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">　注釈書間でも確定されず</text>
+<circle cx="365" cy="115" r="12" fill="var(--yamabuki)"/>
+<text x="365" y="120" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#3a2a10">①</text>
+</g>
+
+<!-- ②年末・手紙を焼く場面 -->
+<g class="scene-room" onclick="showScenePopup('②年末 ― 紫の上からの手紙を焼く場面','年が明けたら出家する心づもりの光源氏は、身辺の整理を始める。その途中、須磨に流離していた頃に紫の上から届いた手紙の束が出てきた。墨の色は今書いたばかりのように美しく、千年の形見にもできそうなほどだが、出家すればもう見ることもないだろうと思い、涙ながらにすべて破って焼いてしまう。この挿話は、竹取物語でかぐや姫からの不死の薬を帝が八月十五日に焼く場面から着想を得たと考えられており、紫の上の火葬の日（旧暦八月十五日）とも呼応しています。')">
+<rect x="470" y="90" width="330" height="290" fill="#efe4ce" stroke="var(--murasaki)" stroke-width="1.6"/>
+<text x="490" y="122" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--murasaki)">②</text>
+<text x="635" y="158" text-anchor="middle" font-family="Shippori Mincho" font-size="17" fill="var(--ink)">年末の一室</text>
+<text x="635" y="184" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">紫の上からの手紙を焼く場面</text>
+<text x="635" y="222" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・出家に向けた身辺整理の最中</text>
+<text x="635" y="240" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・須磨時代の紫の上の手紙束</text>
+<text x="635" y="270" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・涙ながらにすべて破り焼く</text>
+<text x="635" y="288" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・竹取物語の不死薬焼却との</text>
+<text x="635" y="306" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">　類似が指摘される</text>
+</g>
+
+<defs>
+<marker id="arrowBetween" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/>
+</marker>
+</defs>
+<line x1="390" y1="235" x2="470" y2="235" stroke="var(--ink-soft)" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#arrowBetween)"/>
+<text x="430" y="223" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">正月から年末へ</text>
+
+<text x="450" y="440" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">一年をかけて四季を巡りながら悲しみを反芻したのち、年末に過去そのものを焼き捨てて出家へ向かう、という時間の構造が読み取れる</text>
+</svg>
+</div>
+<div class="scene-popup" id="scenePopup" style="display:none;"></div>
+<p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">本帖には劇的な場所の移動はなく、同じ邸で一年をかけて四季が巡る点に特徴がある。①では花・鳥・虫の音といった景物のたびに紫の上が想起され、②ではその一年の終わりに、過去の記憶そのもの（手紙）を手放すことで出家への決意が固まっていく。空間の静けさと、時間の重みの対比が読みどころである。</p>
+</section>
+
+<!-- 4. 用語解説 -->
+<section class="block" id="glossary">
+<div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+<dl class="gloss">
+<dt>出家の準備・身辺整理</dt>
+<dd>俗世を離れる決意を固めた者が、生前の手紙や持ち物など、後に残ると具合の悪いものを整理すること。光源氏は年が明けたら出家する心づもりで身辺整理を始め、その中で紫の上の手紙の束に行き当たり、すべて焼き捨てている。</dd>
+<dt>御仏名（おぶつみょう）</dt>
+<dd>十二月十九日から三日間、宮中や貴族の邸で行われた仏事。過去・現在・未来の三世の諸仏の名号を唱え、一年の罪障を懺悔する。光源氏は紫の上の死後初めて、この御仏名の席で人前に姿を現した。</dd>
+<dt>一周忌（曼荼羅供養）</dt>
+<dd>人の死後満一年の忌日に営む法要。本帖では、紫の上の一周忌にあたる八月の命日に、生前彼女自身が発願していた極楽曼荼羅の供養が営まれている。手配は夕霧に依頼された。</dd>
+<dt>五節（ごせち）</dt>
+<dd>十一月中旬、新嘗祭・豊明節会に際して催される宮中行事で、五節舞姫による舞が披露される。光源氏はこの華やかな季節の空気の中、かつて筑紫の五節舞姫と縁があったことなどを思い出しながらも、行事に加われぬ孤独を歌に詠んでいる。</dd>
+<dt>追儺（ついな）</dt>
+<dd>大晦日の夜に行われた、鬼や疫病を追い払う宮中儀式（いわゆる「鬼やらい」）。三の宮（匂宮）が無邪気にはしゃぎまわる様子を見て、光源氏はこれが自分にとって最後の追儺になるだろうと思う。</dd>
+</dl>
+<div class="waka-grid">
+<div class="waka">
+<div class="speaker">光源氏（明石の御方への贈歌）</div>
+<div class="poem">なくなくも帰りにしかな仮の世はいづこもつひの常世ならぬに</div>
+<div class="trans-label">大意</div>
+<div class="trans">泣く泣くあなたのもとから帰って来たことです。この仮初めの世は、どこであっても永遠の住処ではないのですから。</div>
+<div class="source">出典：『源氏物語』幻巻（原典）。渋谷栄一氏の原文対訳サイト（genji-monogatari.net）で実在確認。</div>
+</div>
+<div class="waka">
+<div class="speaker">明石の御方（光源氏への返歌）</div>
+<div class="poem">雁がゐし苗代水の絶えしより映りし花の影をだに見ず</div>
+<div class="trans-label">大意</div>
+<div class="trans">雁が羽を休めていた苗代の水が涸れてしまってからというもの、そこに映っていた花の姿さえ見ることがなくなりました（＝紫の上が亡くなってからは、あなたのお越しも途絶えてしまいました）。</div>
+<div class="source">出典：『源氏物語』幻巻（原典）。同上サイトで実在確認。</div>
+</div>
+<div class="waka">
+<div class="speaker">花散里（光源氏への贈歌）</div>
+<div class="poem">夏衣立ち替へてける今日ばかり古き思ひもすすみやはせぬ</div>
+<div class="trans-label">大意</div>
+<div class="trans">夏の衣に着替えるこの日ばかりは、亡き方への昔ながらの思いも、いっそう募られるのではありませんか。</div>
+<div class="source">出典：『源氏物語』幻巻（原典）。渋谷栄一氏の原文対訳サイトで実在確認。</div>
+</div>
+<div class="waka">
+<div class="speaker">光源氏（花散里への返歌）</div>
+<div class="poem">羽衣の薄きに変はる今日よりは空蝉の世ぞいとど悲しき</div>
+<div class="trans-label">大意</div>
+<div class="trans">薄い夏の衣に替わる今日からは、この儚い世がいっそう悲しく思われることです。</div>
+<div class="source">出典：『源氏物語』幻巻（原典）。同上サイトで実在確認。</div>
+</div>
+<div class="waka">
+<div class="speaker">光源氏（独詠、ほととぎすに寄せて）</div>
+<div class="poem">亡き人を偲ぶる宵の村雨に濡れてや来つる山ほととぎす</div>
+<div class="trans-label">大意</div>
+<div class="trans">亡き人を偲ぶこの宵に降るにわか雨に濡れてやって来たのだろうか、山ほととぎすよ。</div>
+<div class="source">出典：『源氏物語』幻巻（原典）。渋谷栄一氏の原文対訳サイトで実在確認。</div>
+</div>
+<div class="waka">
+<div class="speaker">夕霧（唱和歌）</div>
+<div class="poem">ほととぎす君につてなむふるさとの花橘は今ぞ盛りと</div>
+<div class="trans-label">大意</div>
+<div class="trans">ほととぎすよ、あの方（紫の上）にお伝えしておくれ、この昔ながらの邸の花橘は、今がまさに盛りですと。</div>
+<div class="source">出典：『源氏物語』幻巻（原典）。同上サイトで実在確認。「君」は紫の上を指すとされる。</div>
+</div>
+<div class="waka">
+<div class="speaker">中将の君（一周忌の日、詠歌）</div>
+<div class="poem">君恋ふる涙は際もなきものを今日をば何の果てといふらむ</div>
+<div class="trans-label">大意</div>
+<div class="trans">あなた様（紫の上）を恋い慕う涙は尽きることがありませんのに、どうして今日を「一周忌の果て」などと言うのでしょうか。</div>
+<div class="source">出典：『源氏物語』幻巻（原典）。渋谷栄一氏の原文対訳サイトで実在確認。</div>
+</div>
+<div class="waka">
+<div class="speaker">光源氏（中将の君への返歌）</div>
+<div class="poem">人恋ふるわが身も末になりゆけど残り多かる涙なりけり</div>
+<div class="trans-label">大意</div>
+<div class="trans">人を恋い慕うわが身もやがて終わりに近づいてゆくのに、それでもまだ、涙は尽きることなく残っているのだなあ。</div>
+<div class="source">出典：『源氏物語』幻巻（原典）。同上サイトで実在確認。</div>
+</div>
+<div class="waka solo">
+<div class="speaker">光源氏（独詠、帖名の由来となった歌）</div>
+<div class="poem">大空をかよふ幻夢にだに見えこぬ魂の行方たづねよ</div>
+<div class="trans-label">大意</div>
+<div class="trans">大空を自在に行き交う幻術士よ、夢にさえその姿を見せてくれないあの人（紫の上）の魂の行方を、捜し出しておくれ。</div>
+<div class="source">出典：『源氏物語』幻巻（原典）。Wikipedia「幻（源氏物語）」・渋谷栄一氏の原文対訳サイトの双方で実在確認。第1帖「桐壺」で桐壺帝が桐壺更衣を偲んで詠んだ「尋ねゆく幻もがな…」と呼応する歌とされる。</div>
+</div>
+<div class="waka solo">
+<div class="speaker">光源氏（独詠、手紙を焼く場面）</div>
+<div class="poem">死出の山越えにし人を慕ふとて跡を見つつもなほ惑ふかな</div>
+<div class="trans-label">大意</div>
+<div class="trans">死出の山を越えて逝ってしまった人を慕うあまり、その筆跡を見つめながら、なお心が惑うことだ。</div>
+<div class="source">出典：『源氏物語』幻巻（原典）。渋谷栄一氏の原文対訳サイトで実在確認。</div>
+</div>
+<div class="waka solo">
+<div class="speaker">光源氏（独詠、物語中最後の詠歌）</div>
+<div class="poem">もの思ふと過ぐる月日も知らぬ間に年もわが世も今日や尽きぬる</div>
+<div class="trans-label">大意</div>
+<div class="trans">もの思いに沈んで過ごすうちに月日の経つのも知らぬ間に、この一年も、そしてわが人生も、今日で尽きてしまうのだろうか。</div>
+<div class="source">出典：『源氏物語』幻巻（原典）。Wikipedia「幻（源氏物語）」・渋谷栄一氏の原文対訳サイトの双方で実在確認。光源氏の物語中における最後の和歌（辞世の歌）とされる。</div>
+</div>
+</div>
+</section>
+
+<!-- 5. あらすじ -->
+<section class="block" id="story">
+<div class="block-head"><span class="idx">5</span><h2>あらすじ（時系列）</h2></div>
+<div class="timeline">
+<div class="tl-item"><h3>新春、紫の上のいない正月（光源氏52歳）</h3><p>紫の上が世を去り、また新しい年がめぐってきた。新春の光を見ても光源氏の悲しみは改まらず、年賀に訪れる人々にも会おうとせず、引きこもりがちに過ごす。</p></div>
+<div class="tl-item"><h3>明石の中宮、三の宮を残して宮中へ帰る</h3><p>明石の中宮は、紫の上が可愛がっていた三の宮（後の匂宮）を光源氏の慰めとして留め置き、自身は宮中へと帰参する。</p></div>
+<div class="tl-item"><h3>女房たちを相手に後悔と懺悔の日々</h3><p>光源氏は紫の上に仕えていた中納言の君・中将の君ら女房たちを話し相手に、これまでの人生における恋の遍歴や紫の上との日々を振り返り、後悔と懺悔の言葉を重ねる。雪の朝、女三の宮降嫁の折の思い出も語られる。</p></div>
+<div class="tl-item"><h3>人前に姿を見せず、独居を続ける</h3><p>老いの果てに人からもの笑いにされることを恐れ、光源氏は親しい者以外には決して姿を見せず、涙にくれる日々を送る。</p></div>
+<div class="tl-item"><h3>春深まる頃、蛍兵部卿宮との歌の贈答</h3><p>紅梅に鴬が鳴くのを見て、光源氏は「植ゑて見し花のあるじもなき宿に…」と独詠する。訪れた蛍兵部卿宮とも歌を詠み交わすが、慰めにはならない。</p></div>
+<div class="tl-item"><h3>女三の宮・明石の御方への訪問、深まる悲しみ</h3><p>三月、女三の宮のもとを訪れるが、俗世を離れた尼宮の返事に慰められることはない。明石の御方のもとにも立ち寄り一夜を過ごすが、紫の上と比べては悲しみが募るばかりであった。</p></div>
+<div class="tl-item"><h3>四月、花散里との衣替えの歌の贈答</h3><p>夏の衣に着替える日、花散里から装束とともに歌が届き、光源氏も返歌する。かつて紫の上が用意していた更衣の装束を思いやる、しみじみとしたやり取りが交わされる。</p></div>
+<div class="tl-item"><h3>五月雨の頃、夕霧に一周忌の手配を依頼</h3><p>五月雨の降り続く夜、見舞いに訪れた夕霧に紫の上の一周忌の準備を頼む。ほととぎすの声を聞き、光源氏と夕霧は歌を詠み交わし、夕霧はそのまま宿直する。</p></div>
+<div class="tl-item"><h3>盛夏、蛍を見て亡き人を偲ぶ</h3><p>暑い盛りの日、蛍が飛ぶ姿を眺めながら、光源氏はかことがましく鳴く虫の声にも涙し、亡き人への尽きせぬ思いを独詠する。</p></div>
+<div class="tl-item"><h3>七夕、そして八月の一周忌・曼荼羅供養</h3><p>七夕の夜、二星の逢瀬を思いながら露に濡れる庭に涙を落とす。八月の命日には、紫の上が生前発願していた極楽曼荼羅の供養が営まれ、中納言の君と光源氏が歌を詠み交わす。</p></div>
+<div class="tl-item"><h3>九月九日、重陽の菊の露に涙する</h3><p>綿おおいをした菊を見て、かつて紫の上と共に朝露を眺めた日々を思い出し、一人袂に置く露（涙）を独詠する。</p></div>
+<div class="tl-item"><h3>神無月（十月）、出家を心に決める</h3><p>時雨がちな夕暮れ、空を渡る雁を羨ましく見つめながら、帖名の由来となった「大空をかよふ幻…」の歌を詠む。この頃、出家への決意がいよいよ固まっていく。</p></div>
+<div class="tl-item"><h3>十一月、五節の頃の孤独</h3><p>宮中で五節の華やかな行事が催される中、光源氏はそれに加わることのできない孤独を歌に詠み、かつて筑紫の五節舞姫と縁があった昔を思い出す。</p></div>
+<div class="tl-item"><h3>年の暮れ、紫の上の手紙を焼く</h3><p>年が明けたら出家しようと心に決めた光源氏は身辺の整理を始める。その中で、須磨に流離していた頃に紫の上から届いた手紙の束が出てきた。墨の色も昨日書かれたかのように美しく、千年の形見にもなり得るほどだが、出家すればもう目にすることもないだろうと思い、涙ながらにすべて破って焼いてしまう。</p></div>
+<div class="tl-item"><h3>十二月、御仏名の席に人前で初めて姿を現す</h3><p>紫の上の死後初めて、光源氏は御仏名の席で公に姿を現す。その姿は「光る君」と愛でられた若き日よりも一層美しく光り輝いており、昔を知る僧や貴族たちは皆涙を流した。</p></div>
+<div class="tl-item"><h3>大晦日、追儺にはしゃぐ三の宮を見つめる</h3><p>晦日、追儺（鬼やらい）にはしゃぎまわる三の宮（匂宮）の姿を見て、光源氏はこれが自分にとって最後になるだろうと思う。「もの思ふと過ぐる月日も…」と物語中最後の歌を詠み、最後の新年を迎えるための支度をするところで、この帖は閉じられる。</p></div>
+</div>
+</section>
+
+<!-- 6. 考察と深層考察 -->
+<section class="block" id="thoughts">
+<div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 四季の反復による悲しみの追体験</div>
+<h3>「紫の上のいない四季」をなぞる一年の構造</h3>
+<p>本帖は、正月から年末まで一年をかけて四季が巡る構成を取ります。紅梅・山吹・ほととぎす・蛍・七夕・菊と、これまでの巻で幾度も描かれてきた季節の景物が、本帖では一つ残らず「紫の上のいない」景色として描き直されます。かつて生き生きと描かれた四季の情趣が、喪失の確認装置として反復される点に、この帖ならではの構成的な工夫が読み取れます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 出家を先延ばしにし続けた一年</div>
+<h3>「今はとて」と思いながら踏み切れない光源氏</h3>
+<p>光源氏は年始から「今年一年をこうして過ごしたら出家しよう」という思いを繰り返し抱きながら、実際に出家に踏み切るのは年が明けた後（本帖の外）とされています。四季を通じて何度も出家への意志を語りながら先延ばしにし続ける姿は、紫の上への執着が最後まで断ち切れなかったことの裏返しとして読むことができます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 手紙を焼く場面と『竹取物語』</div>
+<h3>燃やされた過去、かぐや姫の不死薬との呼応</h3>
+<p>光源氏が紫の上の手紙を焼く場面は、紫の上が火葬されたのと同じ旧暦八月十五日に、『竹取物語』でかぐや姫が月へ帰った際に残した不死の薬を帝が焼く挿話から着想を得たと考えられています。不死の薬を焼くことが「かぐや姫のいない世で長生きしても意味がない」という帝の心情を表すのと同様に、光源氏が紫の上の手紙を焼く行為も、彼女のいない世界で過去の記憶だけを抱え続けることの意味を、みずから断ち切る行為として読み解くことができます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 桐壺帝の嘆きとの円環構造</div>
+<h3>物語の始まりと終わりを結ぶ「幻」の歌</h3>
+<p>本帖の帖名の由来となった光源氏の歌「大空をかよふ幻…」は、物語の第1帖「桐壺」で、光源氏の父・桐壺帝が亡き桐壺更衣を偲んで詠んだ「尋ねゆく幻もがな…」と明確に呼応する歌です。父が最愛の妻を喪って詠んだ歌と同じ心情を、息子である光源氏もまた、最愛の妻を喪って詠むことになる——この円環構造は、物語全体を通じて「愛する者の喪失」という主題が繰り返されてきたことを、最後にもう一度浮かび上がらせる仕掛けと考えられます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ この帖が正編の実質的な終幕であること</div>
+<h3>光源氏が物語の表舞台から静かに退場する一帖</h3>
+<p>『源氏物語』全54帖のうち、光源氏を中心に据えた物語（いわゆる正編）は本帖「幻」までとされます。次帖「匂兵部卿」は本帖から数年後、光源氏の死後の世界を描いており、光源氏自身の死そのものはどの巻にも直接描かれません。四季を巡りながら紫の上を偲び続け、出家への決意を固めていくこの帖は、光源氏という人物が読者の前から静かに姿を消していく、その最後の足取りとして位置づけられます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 次帖「雲隠」が本文を持たない意味</div>
+<h3>語らないことで語る、光源氏の死</h3>
+<p>「幻」と次の第42帖「匂兵部卿」の間には、帖名のみで本文を持たない「雲隠」が伝統的に置かれてきました。光源氏の死を直接描かず、帖名だけを残して本文を空白にするという扱いは、古くから彼の死を暗示する演出と解されています。本帖で光源氏が一年をかけて悲しみを反芻し、出家への決意を固めていく過程を丹念に描いた直後に、その死そのものを「語らない」という選択がなされている点は、この物語の生と死の描き方における際立った特徴といえます。</p>
+</div>
+<p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+</section>
+
+<!-- 7. 特筆事項 -->
+<section class="block" id="notes">
+<div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+<div class="note-card">
+<h3>物語全体から見た「幻」帖の位置づけ</h3>
+<p>「幻」は、光源氏が主人公として登場する物語（正編）の最後の一帖である。华やかな栄華の物語として始まった『源氏物語』第一部・第二部が、最終的には一人の老いた男が、最愛の人を失った悲しみの中で静かに人前から姿を消していく物語として幕を閉じる構成は、この作品全体の主題——栄華の頂点にも、必ず影と喪失が伴うこと——を象徴的に示していると考えられます。</p>
+</div>
+<div class="note-card">
+<h3>光源氏の独詠歌がもっとも多い帖の一つ</h3>
+<p>ある源氏物語研究サイトの指摘によれば、光源氏の独詠歌がとりわけ多い帖として、須磨巻と本帖「幻」がほぼ同数（12首前後）とされています（出典：classicstudies.jimdofree.com「光源氏の和歌」）。須磨（都からの追放という人生前半の危機）と幻（最愛の人の喪失という人生後半の危機）の双方で独詠が集中している点は、光源氏の人生における二つの大きな喪失の時期を、和歌の分布という数量的な側面からも裏づける指摘として興味深いものです。</p>
+</div>
+<div class="note-card">
+<h3>「雲隠」という伝承的な巻</h3>
+<p>「雲隠」は、現存する多くの写本において帖名のみが伝わり本文を持たない巻とされています。古くから光源氏の死が暗示された巻と解釈されてきましたが、その成立事情や位置づけについては研究者の間でも見解が分かれており、確定的な結論は出ていません。</p>
+</div>
+</section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+const el = document.getElementById('scenePopup');
+if(!el) return;
+el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+el.style.display = 'block';
+}
+
+const CURRENT = 41;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+chapters.forEach(c=>{
+const tab = document.createElement(c.done ? 'a' : 'span');
+tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+tab.textContent = c.n + '.' + c.t;
+if(c.done){ tab.href = c.f; }
+tabsEl.appendChild(tab);
+const opt = document.createElement('option');
+opt.value = c.done ? c.f : '';
+opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+opt.disabled = !c.done;
+if(c.n===CURRENT) opt.selected = true;
+jumpEl.appendChild(opt);
+});
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+const nodes = {
+genji: {x:400, y:250, label:'光源氏'},
+murasaki: {x:630, y:390, label:'紫の上', memory:true},
+akashichugu: {x:760, y:160, label:'明石の中宮'},
+yugiri: {x:760, y:390, label:'夕霧'},
+hanachirusato: {x:130, y:160, label:'花散里'},
+akashinokata: {x:130, y:390, label:'明石の御方'},
+nyosan: {x:400, y:110, label:'女三の宮'},
+niou: {x:590, y:70, label:'匂宮（三の宮）'}
+};
+const edges = [
+{a:'genji', b:'murasaki', label:'一年をかけての追慕、手紙を焼く別れ（回想）', type:'emotion'},
+{a:'genji', b:'akashichugu', label:'実の父娘', type:'kinship'},
+{a:'genji', b:'yugiri', label:'父子', type:'kinship'},
+{a:'genji', b:'hanachirusato', label:'六条院の妻の一人、衣替えの贈答', type:'kinship'},
+{a:'genji', b:'akashinokata', label:'六条院の妻の一人', type:'kinship'},
+{a:'genji', b:'nyosan', label:'名目上の夫婦、慰められぬ訪れ（AIの解釈を含む）', type:'kinship'},
+{a:'genji', b:'niou', label:'祖父と孫', type:'kinship'},
+{a:'murasaki', b:'niou', label:'亡き祖母同然の存在、紅梅を託した遺言（回想）', type:'kinship'},
+{a:'murasaki', b:'akashichugu', label:'養母子（薄雲以来、回想）', type:'kinship'},
+{a:'akashichugu', b:'niou', label:'母子', type:'kinship'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+edges.forEach(edge=>{
+const A=nodes[edge.a], B=nodes[edge.b];
+const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+const dx=B.x-A.x, dy=B.y-A.y;
+const len=Math.sqrt(dx*dx+dy*dy)||1;
+const nx=-dy/len, ny=dx/len;
+const offset = 15;
+const lx = mx + nx*offset, ly = my + ny*offset;
+const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+t.textContent = edge.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+const g = el('g',{class:'node'+(n.memory?' memory':'')});
+const w = Math.max(96, n.label.length*13);
+g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+t.textContent = n.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+document.querySelectorAll('.filters button').forEach(btn=>{
+btn.addEventListener('click', ()=>{
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+const f = btn.dataset.f;
+document.querySelectorAll('.edge').forEach(e=>{
+e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+});
+});
+});
+</script>
+</body>
+</html>
