@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第43帖 紅梅 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--paper:#f5f0e6;
+--paper-deep:#eee6d6;
+--paper-deeper:#e6dbc2;
+--ink:#2b241e;
+--ink-soft:#5a5044;
+--murasaki:#4b2e51;
+--murasaki-deep:#382039;
+--suou:#8b3a3a;
+--yamabuki:#c08a34;
+--koke:#5c6b47;
+--gray:#8c8579;
+--kon:#2c3a63;
+--line:#d8cdb8;
+--radius:2px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+margin:0;
+background:var(--paper);
+color:var(--ink);
+font-family:"Zen Kaku Gothic New", sans-serif;
+line-height:1.85;
+-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+a{color:inherit;}
+header.top{
+position:sticky; top:0; z-index:50;
+background:var(--murasaki);
+color:#f2ead8;
+box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+.top-row{
+display:flex; align-items:center; justify-content:space-between;
+padding:12px 18px 8px;
+gap:12px;
+}
+.brand{
+font-family:"Shippori Mincho", serif;
+font-weight:700;
+font-size:1rem;
+display:flex; align-items:center; gap:8px;
+text-decoration:none;
+}
+.brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+select#jump{
+background:var(--murasaki-deep);
+color:#f2ead8;
+border:1px solid #6b4a70;
+border-radius:var(--radius);
+padding:6px 10px;
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+max-width:40vw;
+}
+nav.tabs{
+display:flex;
+overflow-x:auto;
+gap:2px;
+padding:0 10px 10px;
+scrollbar-width:thin;
+}
+nav.tabs::-webkit-scrollbar{height:4px;}
+.tab{
+flex:0 0 auto;
+padding:7px 12px;
+font-size:.8rem;
+color:#cdb8c9;
+background:transparent;
+border:none;
+border-bottom:2px solid transparent;
+white-space:nowrap;
+opacity:.55;
+text-decoration:none;
+}
+.tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+.tab.enabled{opacity:.85; color:#f2ead8;}
+.tab.enabled:hover{opacity:1;}
+main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+.frontispiece{
+padding:40px 0 30px;
+border-bottom:1px solid var(--line);
+margin-bottom:44px;
+}
+.frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+.frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+.frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+section.block{margin-bottom:58px;}
+.block-head{
+display:flex; align-items:baseline; gap:12px;
+border-bottom:1px solid var(--line);
+padding-bottom:10px; margin-bottom:22px;
+}
+.block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+.block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+.people-grid{
+display:grid;
+grid-template-columns:repeat(2, minmax(0, 1fr));
+gap:14px;
+}
+@media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+.person{
+background:var(--paper-deep);
+border-left:3px solid var(--suou);
+padding:16px 18px;
+min-width:0;
+}
+.person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+.person .name{font-weight:700; font-size:1rem;}
+.person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+.person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+.person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+.filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+.filters button{
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+padding:7px 14px;
+border:1px solid var(--line);
+background:var(--paper);
+color:var(--ink-soft);
+border-radius:16px;
+cursor:pointer;
+}
+.filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+.diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+.scene-room{cursor:pointer;}
+.scene-room rect{transition:opacity .15s ease;}
+.scene-room:hover rect{opacity:.75;}
+.scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+.scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+.node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+.node.memory rect{fill:#efe6da; stroke:var(--gray); stroke-width:1.4; stroke-dasharray:4,3; opacity:.85;}
+.node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+.node.memory text{fill:var(--ink-soft);}
+.edge line{stroke-width:2px;}
+.edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+.edge.kinship line{stroke:var(--gray);}
+.edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+.edge.conflict line{stroke:var(--kon);}
+.edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+.legend span{display:inline-flex; align-items:center; gap:6px;}
+.legend i{width:18px; height:3px; display:inline-block;}
+.legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+.gloss{border-top:1px solid var(--line);}
+.gloss dt{
+font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+border-bottom:1px solid var(--line);
+display:flex; align-items:baseline; gap:8px;
+}
+.gloss dt:first-of-type{border-top:none;}
+.gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+.waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
+@media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+.waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
+.waka.solo{grid-column:1 / -1;}
+.waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+.waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+.waka .trans{font-size:.82rem; color:var(--ink-soft);}
+.waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+.waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.timeline{position:relative; padding-left:26px;}
+.timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+.tl-item{position:relative; margin-bottom:26px;}
+.tl-item::before{
+content:''; position:absolute; left:-26px; top:4px;
+width:9px; height:9px; border-radius:50%;
+background:var(--yamabuki); border:2px solid var(--paper);
+box-shadow:0 0 0 1px var(--yamabuki);
+}
+.tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+.analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+.analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+.analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+.note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+.disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+#toTop{
+position:fixed; right:18px; bottom:18px; z-index:60;
+width:46px; height:46px; border-radius:50%;
+background:var(--murasaki); color:#f2ead8;
+border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+font-size:1.1rem; cursor:pointer;
+display:flex; align-items:center; justify-content:center;
+}
+#toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="top-row">
+<a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+<select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+</div>
+<nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+<div class="frontispiece">
+<div class="num">第43帖　匂宮三帖の第二帖</div>
+<h1>紅梅</h1>
+<div class="kana">こうばい</div>
+<p class="lead">舞台は光源氏ゆかりの人々から離れ、故頭中将（致仕の大臣）の一族の後日談へと移る。故柏木の同母弟にあたる按察使大納言は、幼少より美声と才気で知られ、今では一族の柱として権勢を誇っていた。先妻を亡くした後、髭黒大将の娘・真木柱を後妻に迎えている。真木柱は先夫・故蛍兵部卿宮との間に一女（宮の御方）を、大納言との間に一男（大夫の君）をもうけており、大納言の先妻の娘である大君・中の君と合わせ、四人の子どもたちが分け隔てなく育てられていた。大君はすでに東宮に入内している。大納言は次女・中の君を今を時めく匂宮に、と願うが、匂宮が心を寄せるのは、控えめで内気な宮の御方であった。庭先に美しく咲く紅梅の一枝に和歌を添えて匂宮に贈ったことから、この帖は「紅梅」と呼ばれる。</p>
+</div>
+
+<!-- 1. 主な登場人物 -->
+<section class="block" id="people">
+<div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+<div class="people-grid">
+<div class="person"><div class="row"><span class="name">紅梅の大納言（こうばいのだいなごん）</span><span class="age">54〜55歳</span></div><p>故致仕の大臣（頭中将）の次男。故柏木の同母弟にあたり、正式には按察使大納言という。幼少より利発で美声と評判が高く、賢木帖では童殿上して光源氏の前で催馬楽「高砂」を歌ったこともある。先妻を亡くした後、真木柱を後妻に迎えた。次女・中の君を匂宮に嫁がせたいと願っている。年齢は複数の情報源で一致を確認した。</p></div>
+<div class="person"><div class="row"><span class="name">真木柱（まきばしら）</span><span class="age">年齢確認できません</span></div><p>髭黒大将と先の北の方（式部卿宮の娘）の娘。かつて祖父・式部卿宮のもとで故蛍兵部卿宮と結婚し宮の御方を生んだが、宮に先立たれた後、紅梅の大納言と再婚した。おおらかで当世風な人柄とされ、先妻の娘と自分の娘・宮の御方を分け隔てなく慈しむが、匂宮が宮の御方に思いを寄せていることには複雑な思いを抱いている。年齢は一つの解説サイトによる推定計算のみで、複数情報源での一致は確認できません。</p></div>
+<div class="person"><div class="row"><span class="name">大君（おおいぎみ）</span><span class="age">26歳</span></div><p>紅梅の大納言と先妻との長女。すでに東宮に入内しており、麗景殿と呼ばれる。年齢は一つの情報源のみで確認しており、複数情報源での一致は確認できません。</p></div>
+<div class="person"><div class="row"><span class="name">中の君（なかのきみ）</span><span class="age">24歳</span></div><p>紅梅の大納言と先妻との次女。西の御方とも呼ばれる。大納言は匂宮の妻にと望んでいるが、匂宮自身の関心は宮の御方に向いている。年齢は一つの情報源のみで確認しており、複数情報源での一致は確認できません。</p></div>
+<div class="person"><div class="row"><span class="name">宮の御方（みやのおんかた）</span><span class="age">年齢確認できません</span></div><p>真木柱と故蛍兵部卿宮との娘で、東の姫君とも呼ばれる。父・蛍兵部卿宮ゆずりの音楽の才（琵琶）を持つ。非常に内気な性格で、義父である大納言にすら姿を見せないほどだが、異母姉である中の君とは仲がよい。匂宮から思いを寄せられているが、後見のない身の上から結婚を考えていない。</p></div>
+<div class="person"><div class="row"><span class="name">匂宮（におうのみや）</span><span class="age">25歳</span></div><p>今上帝と明石の中宮の第三皇子。前帖に続き薫と並び評判の貴公子。紅梅の大納言が次女・中の君との縁組をほのめかしても気乗りせず、控えめな宮の御方への関心を隠さない。大納言の息子・大夫の君を格別にかわいがっている。</p></div>
+</div>
+</section>
+
+<!-- 2. 人物系図 -->
+<section class="block" id="relations">
+<div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+<div class="filters">
+<button data-f="all" class="active">すべて表示</button>
+<button data-f="kinship">血縁・婚姻</button>
+<button data-f="emotion">感情</button>
+<button data-f="conflict">政争・対立</button>
+<button data-f="alliance">政略同盟</button>
+<button data-f="loyalty">主従・忠誠</button>
+</div>
+<div class="diagram-wrap">
+<svg id="relmap" viewBox="0 0 940 570" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+<div class="legend">
+<span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+<span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+<span><i style="background:var(--kon);"></i>政争・対立</span>
+<span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+<span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+</div>
+<p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※点線の枠で示した「蛍兵部卿宮」は、本帖の時点ですでに世を去っており、回想・背景としてのみ図に加えていることを表す図示上の工夫です（AIの表現上の判断）。「紅梅の大納言―匂宮」の政略同盟の線は、大納言が次女・中の君を匂宮に嫁がせたいと望んでいる思惑を示したもので、本文時点で縁組が成立したわけではありません。「真木柱―匂宮」は図中には設けておらず、真木柱の複雑な心情は本文中の記述として3節で扱っています。「大夫の君―匂宮」の主従・忠誠の線は、大夫の君が匂宮に格別にかわいがられ、取り次ぎ役として仕えている様子を表したものです。この帖の本文には「政争・対立」にあたる記述は見当たらないため、系図には血縁・婚姻／感情／政略同盟／主従・忠誠の4種類のみを図示しています（凡例は5種類とも共通表示）。</p>
+</section>
+
+<!-- 3. 空間・地理構造 -->
+<section class="block" id="scene">
+<div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 紅梅の大納言邸、三人の姫君の住まい</h2></div>
+<div class="diagram-wrap">
+<svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="900" height="480" fill="var(--paper)"/>
+
+<!-- ①大納言邸・娘たちの住まい -->
+<g class="scene-room" onclick="showScenePopup('①紅梅の大納言邸 ― 三人の姫君の住まいと匂宮への働きかけ','大納言の七間の寝殿には、南面に大納言夫妻、西面に中の君、東面に宮の御方が住まうとされる。異母姉妹である三人の姫君（大君はすでに東宮に入内）は分け隔てなく育てられ、琵琶の名手である宮の御方を師のようにして音楽を習い合ってきた。大納言は東の対の軒近くに咲く紅梅を折らせ、匂宮にかわいがられている息子・大夫の君に託して、和歌とともに匂宮のもとへ届けさせる。表向きは中の君との縁組をほのめかす歌だが、匂宮の関心はもっぱら控えめな宮の御方に向いている。')">
+<rect x="60" y="90" width="360" height="290" fill="#f7ecd9" stroke="var(--yamabuki)" stroke-width="2.6"/>
+<rect x="55" y="85" width="370" height="300" fill="none" stroke="var(--yamabuki)" stroke-width="1.2" stroke-dasharray="4,3"/>
+<text x="80" y="122" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--yamabuki)">①</text>
+<text x="240" y="158" text-anchor="middle" font-family="Shippori Mincho" font-size="17" fill="var(--ink)">紅梅の大納言邸</text>
+<text x="240" y="184" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">三人の姫君の住まい</text>
+<text x="240" y="222" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・西面＝中の君／東面＝宮の御方</text>
+<text x="240" y="240" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・軒近くの紅梅を折り匂宮へ贈る</text>
+<text x="240" y="270" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・大夫の君が取り次ぎ役を担う</text>
+<text x="240" y="288" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・表向きは中の君との縁談</text>
+<text x="240" y="306" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・匂宮の本心は宮の御方に</text>
+<circle cx="395" cy="115" r="12" fill="var(--yamabuki)"/>
+<text x="395" y="120" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#3a2a10">①</text>
+</g>
+
+<!-- ②真木柱の心情 -->
+<g class="scene-room" onclick="showScenePopup('②真木柱の心情 ― 先夫の忘れ形見への複雑な思い','真木柱は、大君の後見に忙しい合間にも、宮の御方（先夫・故蛍兵部卿宮との忘れ形見）の縁談を気にかけている。匂宮からの好意は身に余る良縁とも思えるが、匂宮が好色との評判高く、近ごろは宇治の八の宮の姫君にも心を寄せているらしいとの噂も耳にしており、素直に歓迎する気持ちにはなれない。実の娘である大君・中の君への配慮と、先夫の忘れ形見である宮の御方への複雑な愛情との間で、真木柱の心は揺れ続けている。')">
+<rect x="480" y="90" width="330" height="290" fill="#efe4ce" stroke="var(--murasaki)" stroke-width="1.6"/>
+<text x="500" y="122" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--murasaki)">②</text>
+<text x="645" y="158" text-anchor="middle" font-family="Shippori Mincho" font-size="17" fill="var(--ink)">真木柱の心情</text>
+<text x="645" y="184" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">先夫の忘れ形見への複雑な思い</text>
+<text x="645" y="222" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・宮の御方＝故蛍兵部卿宮との娘</text>
+<text x="645" y="240" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・匂宮の好意は良縁とも思える</text>
+<text x="645" y="270" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・匂宮の好色な評判に躊躇</text>
+<text x="645" y="288" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・宇治八の宮の姫君への執心の噂</text>
+<text x="645" y="306" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・実子と先夫の娘との間で揺れる</text>
+</g>
+
+<defs>
+<marker id="arrowBetween" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/>
+</marker>
+</defs>
+<line x1="420" y1="235" x2="480" y2="235" stroke="var(--ink-soft)" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#arrowBetween)"/>
+<text x="450" y="223" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">同じ邸の内で</text>
+
+<text x="450" y="440" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">同じ大納言邸を舞台に、大納言の政略的な働きかけと、真木柱の母としての複雑な心情とが同時に進行している</text>
+</svg>
+</div>
+<div class="scene-popup" id="scenePopup" style="display:none;"></div>
+<p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">大納言邸の七間の寝殿には、南面に大納言夫妻、西面に中の君、東面に宮の御方が住むとされる。同じ屋根の下で、大納言は娘たちの縁談を進めようと匂宮への働きかけを重ね、真木柱は実子と先夫の忘れ形見との間で複雑な思いを抱き続けている。①では邸内での具体的な働きかけの動きが、②ではそれを見守る真木柱の内面が描かれ、空間としては一つの邸でありながら、そこに集う人々の思惑が幾重にも交錯している。</p>
+</section>
+
+<!-- 4. 用語解説 -->
+<section class="block" id="glossary">
+<div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+<dl class="gloss">
+<dt>紅梅（こうばい）</dt>
+<dd>本帖の巻名の由来。大納言邸の東の対の軒近くに美しく咲いた紅梅の一枝を、大納言が息子・大夫の君に持たせて匂宮のもとへ届けさせたことによる。大納言はこの花に和歌を添え、匂宮に娘との縁組をほのめかした（出典：渋谷栄一氏『源氏物語の世界』ほか複数の解説サイトで一致確認）。</dd>
+<dt>按察使大納言（あぜちのだいなごん）</dt>
+<dd>大納言が按察使（地方行政を監督する令外官）を兼ねた呼称。本帖の主人公である「紅梅の大納言」の正式な呼び名で、本文中でもこの呼称が用いられる。</dd>
+<dt>後太政大臣（のちのおほきおとど）／致仕の大臣（ちじのおとど）</dt>
+<dd>紅梅の大納言の父、かつての頭中将のこと。すでに引退し「致仕の大臣」と呼ばれる。柏木・紅梅の大納言・弘徽殿女御の父にあたる。</dd>
+<dt>麗景殿（れいけいでん）</dt>
+<dd>紅梅の大納言の長女・大君が東宮妃として賜っている御殿の名。本文中では大君自身を指して「麗景殿」と呼ぶこともある。</dd>
+<dt>童殿上（わらわてんじょう）</dt>
+<dd>元服前の少年が宮中に出仕すること。大納言の息子・大夫の君はこの身分で匂宮に近侍しており、匂宮と紅梅の大納言との間の取り次ぎ役を務めている。紅梅の大納言自身もかつて童殿上して光源氏に親しく仕えた過去を持つ（賢木帖）。</dd>
+</dl>
+</section>
+
+<!-- 5. 和歌 -->
+<section class="block" id="waka">
+<div class="block-head"><span class="idx">4-2</span><h2>本帖の和歌</h2></div>
+<div class="waka-grid">
+<div class="waka">
+<div class="speaker">紅梅の大納言 → 匂宮（大夫の君に託して）</div>
+<div class="poem">心ありて<br>風のにほはす<br>園の梅に<br>まづ鶯の<br>とはずやあるべき</div>
+<div class="trans-label">現代語訳</div>
+<div class="trans">貴方への気持ちがあって、風が匂いを運ぶ園の梅（中の君）に、鶯（匂宮）が真っ先に訪ねてこないということがありましょうか。</div>
+<div class="source">出典：紅梅巻（左大臣光永「源氏物語」原文・現代語訳サイト roudokus.com、渋谷栄一氏『源氏物語の世界』ほか複数サイトで原文を確認）</div>
+</div>
+<div class="waka">
+<div class="speaker">匂宮 → 紅梅の大納言（大夫の君を介して）</div>
+<div class="poem">花の香に<br>さそはれぬべき<br>身なりせば<br>風のたよりを<br>過ぐさましやは</div>
+<div class="trans-label">現代語訳</div>
+<div class="trans">花の香に誘われるような我が身でしたら、風のたよりを見過ごしたりするものでしょうか（いや、そうではありません）。</div>
+<div class="source">出典：紅梅巻（roudokus.com、渋谷栄一氏『源氏物語の世界』で原文を確認）</div>
+</div>
+<div class="waka">
+<div class="speaker">紅梅の大納言 → 匂宮</div>
+<div class="poem">本つ香の<br>にほへる君が<br>袖ふれば<br>花もえならぬ<br>名をや散らさむ</div>
+<div class="trans-label">現代語訳</div>
+<div class="trans">もともと良い香りが備わっている貴方の袖が触れれば、花もまたいいようもなくすばらしい評判を広めることでしょう（婿に迎えれば娘の評判も上がる、の意）。</div>
+<div class="source">出典：紅梅巻（roudokus.com、渋谷栄一氏『源氏物語の世界』で原文を確認）</div>
+</div>
+<div class="waka">
+<div class="speaker">匂宮 → 紅梅の大納言</div>
+<div class="poem">花の香を<br>にほはす宿に<br>とめゆかば<br>いろにめづとや<br>人のとがめむ</div>
+<div class="trans-label">現代語訳</div>
+<div class="trans">花の香を漂わせる宿を訪ねて行ったなら、色好みだと人が咎めることでしょう。</div>
+<div class="source">出典：紅梅巻（roudokus.com、渋谷栄一氏『源氏物語の世界』で原文を確認）</div>
+</div>
+</div>
+</section>
+
+<!-- 6. あらすじ -->
+<section class="block" id="story">
+<div class="block-head"><span class="idx">5</span><h2>あらすじ</h2></div>
+<div class="timeline">
+<div class="tl-item"><h3>紅梅の大納言家の紹介</h3><p>物語の舞台は光源氏ゆかりの人々から離れ、故頭中将（致仕の大臣）の一族の後日談へと移る。故柏木のすぐ下の弟にあたる按察使大納言は、幼少より利発で華やかな性質を持ち、月日とともに出世を重ね、今では帝の信任も厚い一族の柱となっていた。先妻を亡くした後、髭黒大将の娘・真木柱を後妻に迎えている。</p></div>
+<div class="tl-item"><h3>真木柱の再婚と四人の子どもたち</h3><p>真木柱は、かつて父・式部卿宮のもとで故蛍兵部卿宮と結婚し、宮の御方を生んだが、宮に先立たれた。その後、人目を忍んで通っていた紅梅の大納言と、年月を経て公然と夫婦となった。大納言には先妻との間に大君・中の君の二人の娘があり、真木柱との間には大夫の君という男の子が一人生まれている。真木柱は連れ子の宮の御方を含め、四人の子どもたちを分け隔てなく慈しみ育てた。</p></div>
+<div class="tl-item"><h3>三人の姫君、それぞれの立場</h3><p>大君はすでに裳着を終え東宮に入内し、麗景殿と呼ばれている。中の君も同じ邸の西面に住み、大納言は次女の縁組先として今を時めく匂宮を望んでいる。宮の御方は東面に住み、父・蛍兵部卿宮ゆずりの琵琶の才を持つが、非常に内気な性格で、義父の大納言にすら姿を見せようとしない。異母姉妹たちは分け隔てなく育ち、音楽の稽古などでは宮の御方を師のようにして学んできた。</p></div>
+<div class="tl-item"><h3>大納言、紅梅を若君に託して匂宮に贈る</h3><p>ある日、大納言邸の東の対の軒近くに紅梅が美しく咲いているのを見た大納言は、匂宮が内裏にいると聞き、一枝を折らせて息子の大夫の君に持たせ、和歌を添えて匂宮のもとへ届けさせる。歌は表向き次女・中の君との縁組をほのめかすものだった。大納言はその折、かつて自らが童であった頃、光源氏に親しく仕えたことを懐かしく思い出し、感慨にふける。</p></div>
+<div class="tl-item"><h3>匂宮と大夫の君の睦まじいやりとり</h3><p>紅梅を受け取った匂宮は、その色香をたいそう気に入り、大夫の君を自室に招き入れて親しく語らう。匂宮は大夫の君に「宮中だけでなく気楽な二条院にも遊びに来るように」と誘い、その夜は大夫の君を側に泊まらせるほど親しくする。匂宮は大夫の君を通じて、実は中の君ではなく宮の御方に心を寄せていることをそれとなく明かす。</p></div>
+<div class="tl-item"><h3>大夫の君の複雑な思い</h3><p>大夫の君は、匂宮が異母姉の宮の御方に思いを寄せていることを知り、子供心にもうれしく思う。東宮に入内した大君に比べ、控えめな宮の御方が世に見出されずにいることを物足りなく感じていた大夫の君は、せめて匂宮と宮の御方の仲を取り持ちたいと願うようになる。</p></div>
+<div class="tl-item"><h3>大納言、重ねて和歌を贈るも匂宮の心解けず</h3><p>匂宮からの返歌に満足しない大納言は、周囲には陰口めいた軽口を叩きつつも、再び和歌を添えて娘との縁組をほのめかす。匂宮はさすがに心を動かされる様子を見せつつも、なお警戒を解かず、はっきりとした返事を避ける。大納言は匂宮の態度を恨めしく思う。</p></div>
+<div class="tl-item"><h3>真木柱の複雑な心情</h3><p>大君の後見に忙しい真木柱は、宮の御方の縁談にも心を配っている。匂宮からの好意は身に余る良縁とも思えるが、匂宮が好色との評判が高く、近ごろは宇治の八の宮の姫君にも執心らしいとの噂を耳にしており、素直には喜べない。実の娘たちへの配慮と、先夫の忘れ形見である宮の御方への愛情との間で、真木柱の苦労は尽きない。巻末には、匂宮が宇治の八の宮のもとへ足繁く通っているらしいという噂が唐突に言及され、宇治十帖の物語がすでに背後で進行していることがうかがえる。</p></div>
+</div>
+</section>
+
+<!-- 7. 考察と深層考察 -->
+<section class="block" id="thoughts">
+<div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 政略と本心のすれ違い</div>
+<h3>大納言の思惑が娘ではなく連れ子にすり替わる皮肉</h3>
+<p>大納言は実の娘・中の君を匂宮に嫁がせようと画策しますが、匂宮の関心はもっぱら血のつながらない宮の御方に向いています。大納言家の政略が思うように運ばず、当人の与り知らぬところで別の縁が育ちつつあるという構図は、光源氏の時代のような強い主導権を持つ人物が不在になった第三部の世界を象徴しているように読み取れます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 真木柱という人物の再登場が持つ意味</div>
+<h3>玉鬘十帖の登場人物が、次の世代の縁談の中心に</h3>
+<p>真木柱は第31帖「真木柱」で髭黒大将と北の方の悲しい別れの当事者として描かれた少女でした。あの帖から数十年を経て、本帖では自らも先夫と死別し再婚した後妻として、今度は自分の娘の縁談に悩む母の立場で再登場します。一人の女性の人生が、玉鬘十帖から匂宮三帖へと、世代を超えて物語をつなぐ役割を果たしている点は注目に値します。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 「継子」への複雑な愛情という反復されるモチーフ</div>
+<h3>真木柱自身も、かつて継母との関係に苦しんだ過去を持つ</h3>
+<p>真木柱はかつて、父・髭黒が玉鬘と再婚した際、継母との関係に複雑な思いを抱いた過去を持つ人物です（真木柱帖）。今、真木柱自身が「先夫の忘れ形見」である宮の御方を我が子として慈しみながらも、その縁談には複雑な感情を抱くという構図は、血のつながりと家族の情愛のあり方をめぐる物語全体のモチーフが、世代を超えて反復されていることを示しているように読み取れます（これは本文が明示的に述べているものではなく、AIによる読み解きです）。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 宇治十帖の本筋への静かな接続</div>
+<h3>挿話的な帖の末尾に忍ばせられた伏線</h3>
+<p>本帖は基本的に紅梅家の内輪の縁談を描く挿話的な内容ですが、末尾で唐突に「匂宮が宇治の八の宮の姫君のもとに足繁く通っている」という噂が言及されます。読者はこの時点でまだ八の宮が誰であるかを知らされておらず、宇治十帖の本筋（第45帖「橋姫」以降）がすでに背後で並行して進行していることが、この一言によってさりげなく示されています。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 匂宮の人物像に加わる新たな陰影</div>
+<h3>血のつながりより「人柄」に惹かれる匂宮</h3>
+<p>匂宮が、政略的に用意された中の君ではなく、後見もなく控えめな宮の御方に心を寄せる様子は、前帖「匂宮」で描かれた自由奔放な色好みの人物像に、身分や利害にとらわれない一面があることを示しています。この人物造形は、後に宇治十帖で中の君や浮舟と関わっていく匂宮の恋愛観の伏線として機能しているとも読み取れます。</p>
+</div>
+<p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+</section>
+
+<!-- 8. 特筆事項 -->
+<section class="block" id="notes">
+<div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+<div class="note-card">
+<h3>匂宮三帖の第二帖、宇治十帖への静かな橋渡し</h3>
+<p>「紅梅」は前帖「匂宮」、次帖「竹河」とあわせて「匂宮三帖」と呼ばれる一群の帖の一つです。物語全体の本筋である宇治十帖（第45帖「橋姫」以降）からはやや外れた挿話的な内容ですが、巻末の「八の宮の姫君」への言及によって、宇治十帖の物語がすでに背後で進行していることをうかがわせます。</p>
+</div>
+<div class="note-card">
+<h3>物語内の時系列における位置づけ</h3>
+<p>本帖は薫24歳・匂宮25歳の頃の物語とされ、年立の上では次帖「椎本」「総角」とほぼ並行する時期の出来事とされています（出典：note「毎週一帖源氏物語」ほか）。年立の解釈には研究者によって幅があり、確定した通説として断定はできません。</p>
+</div>
+<div class="note-card">
+<h3>紅梅の大納言という人物の系譜上の位置</h3>
+<p>紅梅の大納言は、賢木帖で童殿上する少年として初登場して以来、弁少将・右大弁などを経て按察使大納言に至った人物です。物語の後半では「紅梅右大臣」とも称されるようになるとされ、頭中将（致仕の大臣）の血筋が物語の第三部でも重要な役割を担い続けていることを示しています。</p>
+</div>
+</section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+const el = document.getElementById('scenePopup');
+if(!el) return;
+el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+el.style.display = 'block';
+}
+
+const CURRENT = 43;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+chapters.forEach(c=>{
+const tab = document.createElement(c.done ? 'a' : 'span');
+tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+tab.textContent = c.n + '.' + c.t;
+if(c.done){ tab.href = c.f; }
+tabsEl.appendChild(tab);
+const opt = document.createElement('option');
+opt.value = c.done ? c.f : '';
+opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+opt.disabled = !c.done;
+if(c.n===CURRENT) opt.selected = true;
+jumpEl.appendChild(opt);
+});
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+const nodes = {
+koubai: {x:470, y:70, label:'紅梅の大納言'},
+makibashira: {x:633, y:137, label:'真木柱'},
+miyanokata: {x:700, y:300, label:'宮の御方（東の姫君）'},
+niou: {x:633, y:463, label:'匂宮'},
+nakanokimi: {x:470, y:530, label:'中の君'},
+oigimi: {x:307, y:463, label:'大君'},
+taifu: {x:240, y:300, label:'大夫の君（若君）'},
+hotaru: {x:307, y:137, label:'蛍兵部卿宮', memory:true}
+};
+const edges = [
+{a:'koubai', b:'makibashira', label:'再婚（後妻）', type:'kinship'},
+{a:'koubai', b:'oigimi', label:'父娘（先妻の子）', type:'kinship'},
+{a:'koubai', b:'nakanokimi', label:'父娘（先妻の子）', type:'kinship'},
+{a:'koubai', b:'taifu', label:'父子', type:'kinship'},
+{a:'makibashira', b:'miyanokata', label:'母娘', type:'kinship'},
+{a:'makibashira', b:'taifu', label:'母子', type:'kinship'},
+{a:'hotaru', b:'miyanokata', label:'実の父娘（故人・回想）', type:'kinship'},
+{a:'niou', b:'miyanokata', label:'執心・恋心', type:'emotion'},
+{a:'koubai', b:'niou', label:'中の君の婿にと望む', type:'alliance'},
+{a:'taifu', b:'niou', label:'取り次ぎ役として仕える', type:'loyalty'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+edges.forEach(edge=>{
+const A=nodes[edge.a], B=nodes[edge.b];
+const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+const dx=B.x-A.x, dy=B.y-A.y;
+const len=Math.sqrt(dx*dx+dy*dy)||1;
+const nx=-dy/len, ny=dx/len;
+const offset = 15;
+const lx = mx + nx*offset, ly = my + ny*offset;
+const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+t.textContent = edge.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+const g = el('g',{class:'node'+(n.memory?' memory':'')});
+const w = Math.max(96, n.label.length*13);
+g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+t.textContent = n.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+document.querySelectorAll('.filters button').forEach(btn=>{
+btn.addEventListener('click', ()=>{
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+const f = btn.dataset.f;
+document.querySelectorAll('.edge').forEach(e=>{
+e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+});
+});
+});
+</script>
+</body>
+</html>
