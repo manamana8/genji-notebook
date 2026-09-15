@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第48帖 早蕨 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--paper:#f5f0e6;
+--paper-deep:#eee6d6;
+--paper-deeper:#e6dbc2;
+--ink:#2b241e;
+--ink-soft:#5a5044;
+--murasaki:#4b2e51;
+--murasaki-deep:#382039;
+--suou:#8b3a3a;
+--yamabuki:#c08a34;
+--koke:#5c6b47;
+--gray:#8c8579;
+--kon:#2c3a63;
+--line:#d8cdb8;
+--radius:2px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+margin:0;
+background:var(--paper);
+color:var(--ink);
+font-family:"Zen Kaku Gothic New", sans-serif;
+line-height:1.85;
+-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+a{color:inherit;}
+header.top{
+position:sticky; top:0; z-index:50;
+background:var(--murasaki);
+color:#f2ead8;
+box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+.top-row{
+display:flex; align-items:center; justify-content:space-between;
+padding:12px 18px 8px;
+gap:12px;
+}
+.brand{
+font-family:"Shippori Mincho", serif;
+font-weight:700;
+font-size:1rem;
+display:flex; align-items:center; gap:8px;
+text-decoration:none;
+}
+.brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+select#jump{
+background:var(--murasaki-deep);
+color:#f2ead8;
+border:1px solid #6b4a70;
+border-radius:var(--radius);
+padding:6px 10px;
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+max-width:40vw;
+}
+nav.tabs{
+display:flex;
+overflow-x:auto;
+gap:2px;
+padding:0 10px 10px;
+scrollbar-width:thin;
+}
+nav.tabs::-webkit-scrollbar{height:4px;}
+.tab{
+flex:0 0 auto;
+padding:7px 12px;
+font-size:.8rem;
+color:#cdb8c9;
+background:transparent;
+border:none;
+border-bottom:2px solid transparent;
+white-space:nowrap;
+opacity:.55;
+text-decoration:none;
+}
+.tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+.tab.enabled{opacity:.85; color:#f2ead8;}
+.tab.enabled:hover{opacity:1;}
+main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+.frontispiece{
+padding:40px 0 30px;
+border-bottom:1px solid var(--line);
+margin-bottom:44px;
+}
+.frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+.frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+.frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+section.block{margin-bottom:58px;}
+.block-head{
+display:flex; align-items:baseline; gap:12px;
+border-bottom:1px solid var(--line);
+padding-bottom:10px; margin-bottom:22px;
+}
+.block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+.block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+.people-grid{
+display:grid;
+grid-template-columns:repeat(2, minmax(0, 1fr));
+gap:14px;
+}
+@media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+.person{
+background:var(--paper-deep);
+border-left:3px solid var(--suou);
+padding:16px 18px;
+min-width:0;
+}
+.person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+.person .name{font-weight:700; font-size:1rem;}
+.person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+.person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+.person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+.filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+.filters button{
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+padding:7px 14px;
+border:1px solid var(--line);
+background:var(--paper);
+color:var(--ink-soft);
+border-radius:16px;
+cursor:pointer;
+}
+.filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+.diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+.scene-room{cursor:pointer;}
+.scene-room rect{transition:opacity .15s ease;}
+.scene-room:hover rect{opacity:.75;}
+.scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+.scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+.node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+.node.memory rect{fill:#efe6da; stroke:var(--gray); stroke-width:1.4; stroke-dasharray:4,3; opacity:.85;}
+.node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+.node.memory text{fill:var(--ink-soft);}
+.edge line{stroke-width:2px;}
+.edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+.edge.kinship line{stroke:var(--gray);}
+.edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+.edge.conflict line{stroke:var(--kon);}
+.edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+.legend span{display:inline-flex; align-items:center; gap:6px;}
+.legend i{width:18px; height:3px; display:inline-block;}
+.legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+.gloss{border-top:1px solid var(--line);}
+.gloss dt{
+font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+border-bottom:1px solid var(--line);
+display:flex; align-items:baseline; gap:8px;
+}
+.gloss dt:first-of-type{border-top:none;}
+.gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+.waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
+@media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+.waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
+.waka.solo{grid-column:1 / -1;}
+.waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+.waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+.waka .trans{font-size:.82rem; color:var(--ink-soft);}
+.waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+.waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.timeline{position:relative; padding-left:26px;}
+.timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+.tl-item{position:relative; margin-bottom:26px;}
+.tl-item::before{
+content:''; position:absolute; left:-26px; top:4px;
+width:9px; height:9px; border-radius:50%;
+background:var(--yamabuki); border:2px solid var(--paper);
+box-shadow:0 0 0 1px var(--yamabuki);
+}
+.tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+.analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+.analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+.analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+.note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+.disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+#toTop{
+position:fixed; right:18px; bottom:18px; z-index:60;
+width:46px; height:46px; border-radius:50%;
+background:var(--murasaki); color:#f2ead8;
+border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+font-size:1.1rem; cursor:pointer;
+display:flex; align-items:center; justify-content:center;
+}
+#toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="top-row">
+<a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+<select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+</div>
+<nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+<div class="frontispiece">
+<div class="num">第48帖　宇治十帖　第四帖</div>
+<h1>早蕨</h1>
+<div class="kana">さわらび</div>
+<p class="lead">薫二十五歳の春の物語。八の宮も大君も亡くした宇治で、中の君のもとに山の阿闍梨から例年通り早蕨や土筆が届けられ、中の君は亡き人々を偲んで涙を落とす。宇治通いが難しくなった匂宮は、二月上旬、中の君を京の二条院に迎える決意を固め、後見人の薫がその上京の支度に心を配る。上京前日、薫は宇治を訪れ、中の君と亡き大君の思い出を夜更けまで語り合い、彼女を匂宮に譲ったことへの後悔の念に駆られる。中の君は二条院で匂宮に手厚く迎えられるが、桜の盛りに薫が見舞いに訪れると、匂宮は二人の間柄にかすかな疑念を抱き始める。</p>
+</div>
+
+<!-- 1. 主な登場人物 -->
+<section class="block" id="people">
+<div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+<div class="people-grid">
+<div class="person"><div class="row"><span class="name">薫（かおる）</span><span class="age">25歳</span></div><p>光源氏の子とされるが実の父は柏木。中納言。亡き大君への思いを断ち切れぬまま、後見人として中の君の上京の世話を焼く。中の君を自ら匂宮に取り持ったことを悔い、彼女に亡き大君の面影を重ねる複雑な心情を抱く。年齢は複数の解説サイト（渋谷栄一氏『源氏物語の世界』を引用するjames.3zoku.com、classicstudies、三省堂ことばのコラム、ダ・ヴィンチWeb等）で一致を確認した。</p></div>
+<div class="person"><div class="row"><span class="name">中の君（なかのきみ）</span><span class="age">25歳</span></div><p>八の宮の次女。父・姉を相次いで亡くし、宇治にひとり残されていたが、匂宮に迎えられて京の二条院に移る。住み慣れた宇治を離れる寂しさと、新生活への不安を抱えながら上京する。年齢は三省堂「ことばのコラム」で確認した。</p></div>
+<div class="person"><div class="row"><span class="name">匂宮（におうのみや）</span><span class="age">26歳（単一情報源のみ）</span></div><p>今上帝の第三皇子、明石の中宮腹。宇治への往来が母后・父帝から問題視され難しくなったため、中の君を二条院に迎える決意をする。中の君を手厚く迎える一方、桜の盛りに薫が訪ねて来たことに、二人の間柄への疑念を抱き始める。年齢はダ・ヴィンチWebでのみ確認しており、他の情報源との一致は確認できていない。なお「源氏物語年立」（Wikipedia）は、正編の記述からは匂宮が薫より1歳年長となる一方、宇治十帖の「浮舟」巻の記述からは薫が匂宮より2〜3歳年上と読めるとしており、両者の年齢差には物語内でも整合しない箇所がある旨を付記する。</p></div>
+<div class="person"><div class="row"><span class="name">弁の尼（べんのあま）</span><span class="age">60歳前後</span></div><p>柏木の乳母子で、八の宮家に長く仕えてきた老女房。大君の死を機に出家し、中の君が京へ移った後も宇治の邸に残り、留守を守る決心をしている。年齢は三省堂「ことばのコラム」で確認した。</p></div>
+</div>
+</section>
+
+<!-- 2. 人物系図 -->
+<section class="block" id="relations">
+<div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+<div class="filters">
+<button data-f="all" class="active">すべて表示</button>
+<button data-f="kinship">血縁・婚姻</button>
+<button data-f="emotion">感情</button>
+<button data-f="conflict">政争・対立</button>
+<button data-f="alliance">政略同盟</button>
+<button data-f="loyalty">主従・忠誠</button>
+</div>
+<div class="diagram-wrap">
+<svg id="relmap" viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+<div class="legend">
+<span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+<span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+<span><i style="background:var(--kon);"></i>政争・対立</span>
+<span><i class="dashed" style="color:var(--yamabuki);"></i>政略同盟</span>
+<span><i class="dashed" style="color:var(--yamabuki);"></i>主従・忠誠</span>
+</div>
+<p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※点線枠のノード（大君）は、前帖で死去した人物を薫の回想・追慕の対象として配置したものです。「薫―中の君」の線は、本文が明記する薫の後悔（中の君を匂宮に取り持ったことへの未練）にもとづきますが、そこに「亡き大君の面影を重ねる」という含みを読み込む点は、本文の直接の記述というより通説的な読み解きに近く、便宜的に「感情」に分類しています。「明石の中宮―匂宮」の線は、宮中の派閥争いのような政治的対立ではなく、母親が息子の宇治通いを問題視したという家庭内の制止を指しており、前帖に続き既存の凡例のうち最も近い「政争・対立」に便宜的に分類しています。「匂宮―六の君」の線は、本帖時点では夕霧が裳着を行い縁組を思案している段階にとどまり、結婚が成立したわけではありません。</p>
+</section>
+
+<!-- 3. 空間・地理構造 -->
+<section class="block" id="scene">
+<div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 宇治から二条院へ</h2></div>
+<div class="diagram-wrap">
+<svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="900" height="480" fill="var(--paper)"/>
+
+<!-- ①宇治 -->
+<g class="scene-room" onclick="showScenePopup('①宇治 ― 中の君が上京前に過ごす邸、大君を偲ぶ場','八の宮亡きあと、大君も世を去った宇治の山荘。中の君はここでただひとり、父の法の師であった宇治山の阿闍梨から届く早蕨・土筆に、亡き父と姉への尽きせぬ思いを募らせる。正月下旬には薫がここを訪れて匂宮に胸中を語り、上京前夜には薫自身が宇治を訪ね、紅梅の香りの中で中の君と大君の思い出を夜更けまで語り合う。老女房・弁は大君の死を機に出家しており、中の君の上京後もこの邸に残って留守を守る決心をしている。中の君にとっては、生まれ育ち、父と姉を見送った、離れがたい土地である。')">
+<rect x="60" y="90" width="380" height="290" fill="#e8eef2" stroke="var(--murasaki)" stroke-width="1.6"/>
+<text x="80" y="122" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--murasaki)">①</text>
+<text x="250" y="158" text-anchor="middle" font-family="Shippori Mincho" font-size="17" fill="var(--ink)">宇治</text>
+<text x="250" y="184" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">早蕨の便り・薫との別れの夜・弁の尼が残る地</text>
+<text x="250" y="222" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・阿闍梨から早蕨・土筆が届き、亡き人を偲ぶ</text>
+<text x="250" y="240" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・上京前日、薫が訪れ夜更けまで語り合う</text>
+<text x="250" y="270" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・薫、出家した弁の尼と対面する</text>
+<text x="250" y="288" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・弁の尼はこの邸に残り、留守を守る決心をする</text>
+<circle cx="415" cy="115" r="12" fill="var(--murasaki)"/>
+<text x="415" y="120" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">①</text>
+</g>
+
+<!-- ②二条院 -->
+<g class="scene-room" onclick="showScenePopup('②二条院 ― 中の君が匂宮に迎えられる新居','匂宮が中の君のために整えた京の新居。二月七日の夜、中の君はここに到着し、待ちかねていた匂宮自らが車のもとに寄って下ろし、手厚く迎え入れる。薫の住む三条院とは隣町にあたり、以後薫はしばしばここを訪ねるようになる。桜の盛りには薫が見舞いに訪れ、中の君と親しく語り合う姿に、匂宮はかすかな疑念を抱き始める。中の君にとっては、宇治とは何もかもが異なる、見も知らぬ晴れやかな邸である。')">
+<rect x="480" y="90" width="360" height="290" fill="#f7ecd9" stroke="var(--yamabuki)" stroke-width="2.6"/>
+<rect x="475" y="85" width="370" height="300" fill="none" stroke="var(--yamabuki)" stroke-width="1.2" stroke-dasharray="4,3"/>
+<text x="500" y="122" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--yamabuki)">②</text>
+<text x="660" y="158" text-anchor="middle" font-family="Shippori Mincho" font-size="17" fill="var(--ink)">二条院</text>
+<text x="660" y="184" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">中の君の新居・匂宮との結婚生活の始まり</text>
+<text x="660" y="222" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・二月七日、中の君到着、匂宮自ら出迎える</text>
+<text x="660" y="240" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・薫の住む三条院と隣町、薫がしばしば訪れる</text>
+<text x="660" y="270" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・桜の盛り、薫の訪問に匂宮が疑念を抱く</text>
+<text x="660" y="288" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--ink-soft)">・宇治とは対照的な、晴れやかな新生活の場</text>
+<circle cx="815" cy="115" r="12" fill="var(--yamabuki)"/>
+<text x="815" y="120" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#3a2a10">②</text>
+</g>
+
+<defs>
+<marker id="arrowBetween" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/>
+</marker>
+</defs>
+<line x1="440" y1="235" x2="480" y2="235" stroke="var(--ink-soft)" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#arrowBetween)"/>
+<text x="460" y="223" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">二月上旬、上京</text>
+
+<text x="450" y="440" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">亡き人を偲ぶ宇治から、匂宮との新生活が始まる二条院へ ― 宇治十帖の舞台が京へ移り始める</text>
+</svg>
+</div>
+<div class="scene-popup" id="scenePopup" style="display:none;"></div>
+<p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">①は父と姉を失った中の君にとって過去と喪失の記憶が積み重なる土地であり、②はそこから一転して匂宮との新生活が始まる晴れやかな土地である。二つの空間は物理的に大きく離れており、中の君の上京は単なる移動ではなく、宇治十帖の舞台が宇治から京へ移り始める本帖の性格を象徴している。</p>
+</section>
+
+<!-- 4. 用語解説 -->
+<section class="block" id="glossary">
+<div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+<dl class="gloss">
+<dt>早蕨（さわらび）</dt>
+<dd>本帖の巻名。中の君が詠んだ「この春はたれにか見せむ亡き人のかたみに摘める峰の早蕨」の歌に由来する。早蕨は芽を出したばかりの若い蕨（わらび）を指し、山の阿闍梨から毎年届けられる山菜が、亡き八の宮・大君を偲ぶよすがとして描かれる（出典：Wikipedia「早蕨」、james.3zoku.com「源氏物語を読む」で確認）。</dd>
+<dt>阿闍梨（あじゃり）</dt>
+<dd>密教などで弟子を指導する高徳の僧への敬称。本帖では、生前の八の宮の仏道の師であった宇治山の阿闍梨が、例年通り早蕨・土筆を中の君のもとへ贈り、亡き宮への変わらぬ思いを示す。</dd>
+<dt>土筆（つくし）</dt>
+<dd>スギナの胞子茎で、早春に芽を出す山野草。本帖冒頭、阿闍梨から早蕨とともに中の君のもとへ届けられ、宇治に再び巡ってきた春を告げる品として描かれる。</dd>
+<dt>裳着（もぎ）</dt>
+<dd>女子の成人を祝う儀式で、初めて裳（も）を着ける通過儀礼。本帖では、夕霧が匂宮に六の君を入れようと考えていた矢先に中の君の上京を知り、それでも予定通り六の君の裳着を行う場面が描かれる。</dd>
+<dt>後見人（こうけんにん）</dt>
+<dd>後ろ盾となって世話や庇護を行う人物。本帖の薫は、中の君にとって義理の兄にあたる立場から、彼女の上京の支度を細やかに取り仕切る後見人として振る舞う。</dd>
+</dl>
+</section>
+
+<!-- 5. 和歌 -->
+<section class="block" id="waka">
+<div class="block-head"><span class="idx">4-2</span><h2>本帖の和歌</h2></div>
+<div class="waka-grid">
+<div class="waka">
+<div class="speaker">阿闍梨 → 中の君（新春の早蕨に添えた贈歌）</div>
+<div class="poem">君にとて<br>あまたの春を<br>摘みしかば<br>常を忘れぬ<br>初蕨なり</div>
+<div class="trans-label">現代語訳</div>
+<div class="trans">亡き八の宮様に長年お摘みしてまいりましたので、今年もいつも通りに、初蕨を献上いたします。</div>
+<div class="source">出典：早蕨巻（james.3zoku.com「源氏物語を読む」、渋谷栄一氏『源氏物語の世界』の区分にもとづく原文で実在確認）</div>
+</div>
+<div class="waka">
+<div class="speaker">中の君 → 阿闍梨（帖名由来の返歌）</div>
+<div class="poem">この春は<br>たれにか見せむ<br>亡き人の<br>かたみに摘める<br>峰の早蕨</div>
+<div class="trans-label">現代語訳</div>
+<div class="trans">この春は、いったい誰にお見せしたらよいのでしょうか。父も姉も亡くなった今、亡き人の形見として摘んでくださった、峰の早蕨を。</div>
+<div class="source">出典：早蕨巻（Wikipedia「早蕨」、james.3zoku.com「源氏物語を読む」で原文を実在確認。本帖の巻名の由来となった歌）</div>
+</div>
+</div>
+<p style="font-size:.78rem;color:#9a9280;margin-top:14px;">※上京前夜、紅梅を前に薫と中の君が「春や昔の」（在原業平の古歌を踏まえた言葉）を口にしながら昔を語り合う場面があるが、これは新たに詠まれた贈答歌ではなく、地の文における古歌の引用・示唆にとどまる。そのため独立した和歌としての掲載は見送った。</p>
+</section>
+
+<!-- 6. あらすじ -->
+<section class="block" id="story">
+<div class="block-head"><span class="idx">5</span><h2>あらすじ</h2></div>
+<div class="timeline">
+<div class="tl-item"><h3>宇治の新春、山の阿闍梨から早蕨・土筆が届く</h3><p>年が改まり、父も姉も亡くした宇治の中の君のもとに、生前の八の宮に長年仕えた宇治山の阿闍梨から、例年通り早蕨と土筆が贈られてくる。あたりに春の光が満ちるにつけても、中の君は「どうしてこれほどまでに生き永らえてしまったのだろう」と、夢のような心地でこれまでを振り返る。</p></div>
+<div class="tl-item"><h3>中の君、阿闍梨に返歌を書く（帖名由来の歌）</h3><p>阿闍梨の「君にとてあまたの春を摘みしかば常を忘れぬ初蕨なり」という歌に込められた心づかいに、中の君は深く心を動かされ涙を落とす。そして「この春はたれにか見せむ亡き人のかたみに摘める峰の早蕨」と返歌をしたためる。この歌が本帖の巻名の由来となる。</p></div>
+<div class="tl-item"><h3>正月下旬、薫が匂宮のもとを訪ね、胸中を語る</h3><p>内宴などで世間が慌ただしいころが過ぎたあと、薫は「この思いを、他の誰に語ればよいのか」と思いあぐね、匂宮のもとを訪れる。空のけしきもまた、あわれを知るかのように霞みわたる中、二人は語り合う。</p></div>
+<div class="tl-item"><h3>匂宮、中の君を京へ迎える決意を語る</h3><p>母后にも父帝にも外出が過ぎると忠告され、気軽に宇治へ通うことが難しくなっていた匂宮は、薫に対し、中の君を京の二条院へ迎える決意を語る。薫もこれに賛同し、宇治の山荘には髭の宿直人と弁の尼だけが残ることになる。</p></div>
+<div class="tl-item"><h3>大君の喪が明け、中の君の上京準備が進む一方で嘆きも尽きない</h3><p>宇治では、上京に備えてよい若人や童女などを求め、女房たちは心浮き立つ思いで支度を急ぐ。しかし中の君自身は、今はとばかりにこの住み慣れた伏見の邸を荒れるに任せることになるのを、たいそう心細く思い、嘆きは尽きない。匂宮からは「浅からぬ仲の契りも絶えてしまいそうなこの宇治住まいを、どうお考えなのか」と恨み言も届き、それも一応もっともなことなので、中の君の心は思い乱れる。</p></div>
+<div class="tl-item"><h3>上京前日、薫が宇治を訪問する</h3><p>中の君が二条院へ移るのはいよいよ明日という日、薫は朝早くから宇治を訪れる。上京の支度に細やかに心を配り、後見人としてこまごまと世話を焼く。</p></div>
+<div class="tl-item"><h3>紅梅を前に、薫と中の君が昔を語り合う</h3><p>御前近くの紅梅は色も香もなつかしく、鶯までもが見過ごしがたい様子で鳴き渡る。まして薫と中の君は「春や昔の」という古歌の言葉さながらに心を惑わせながら、亡き大君の思い出を語り合う。折しも吹き入る風に花の香と薫自身の芳香とが入り混じり、橘の花ならずとも昔が思い出される折となる。</p></div>
+<div class="tl-item"><h3>薫、出家した弁の尼と対面する</h3><p>弁の尼は「このようなお供にすら、思いがけず長生きしてしまった我が身をひどくつらく思っております。人にも不吉に見られましょうから、今はもう生きている者としては知られますまい」と述べ、容貌もすっかり変えてしまっていた。薫はそれを無理に呼び出し、いたわしく思いながら対面する。</p></div>
+<div class="tl-item"><h3>弁の尼、宇治に残る決心を中の君に語る</h3><p>弁の尼は薫の思い語ったさまを中の君に伝え、いよいよ慰めがたく涙にくれる。大君の死を機に出家した弁の尼は、中の君が京へ移った後も、この宇治の邸に残って留守を守る決心を固めている。</p></div>
+<div class="tl-item"><h3>中の君、京へ向けて宇治を出発する</h3><p>邸のものはすべて片付けられ、よろずとりまとめられて、御車が寄せられる。御前に供する人びとには四位・五位の者も多く、盛大な行列となる。薫自身も見送りに立ち会いたいと強く思うが、大がかりになりすぎてはかえってよくないため、ひそやかな様子を装い、もどかしい思いを抱えながら見送る。</p></div>
+<div class="tl-item"><h3>中の君、京の二条院に到着する</h3><p>宵をやや過ぎたころ、中の君は二条院に到着する。見たこともないほど目も輝くような、三棟四棟にもわたる立派な御殿の中へと導き入れられ、待ちかねていた匂宮自らが御車のもとに寄り、中の君を下ろす。</p></div>
+<div class="tl-item"><h3>夕霧、六の君の裳着を行い、縁組を思案する</h3><p>右大臣・夕霧は、今月にも六の君を匂宮に入れようと思い定めていたところへ、思いがけず中の君が先んじて大切に迎えられたと聞き、面白くなく思う。それでも夕霧は予定通り六の君の裳着を執り行い、匂宮が不快に思っていると人づてに聞いては気の毒にも思い、時々文を送る。</p></div>
+<div class="tl-item"><h3>桜の花盛り、薫が二条院を訪ね中の君と語る</h3><p>花盛りのころ、薫は二条院の桜を眺めやり、主のいない宇治の邸をまず思いやって「気楽なものだろうか」などとひとりごちつつ、我慢しきれずに匂宮のもとを訪れる。そこで中の君とも親しく語り合う。</p></div>
+<div class="tl-item"><h3>匂宮、薫と中の君の間柄に疑心を抱く</h3><p>女房たちは「世間並みに大げさにおもてなしなさいますな。この上ない御心のほどを、今こそお見せになるべきでしょう」などと申し上げるが、薫は人づてでなく直接自分から申し出ることをなおためらい、ぐずぐずしているうちに、匂宮が退出のあいさつに渡ってくる。宮は、薫と中の君の親しげな様子に、かすかな疑いの念を抱き始める。</p></div>
+</div>
+</section>
+
+<!-- 7. 考察と深層考察 -->
+<section class="block" id="thoughts">
+<div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 薫の後悔の一貫性</div>
+<h3>薫はなぜ、自ら取り持った縁を悔いるのか</h3>
+<p>薫は前帖「総角」の時点ですでに、大君と中の君の両方を妻にしてしまえばよかったという悔恨を抱いていました。本帖では、上京前夜に中の君と紅梅の下で語り合い、亡き大君の思い出に浸る中で、その未練がいっそう明確な形をとって描かれます。中の君を匂宮に譲ったことへの後悔は、一過性の感傷ではなく、大君の死以来一貫して薫の内面に流れ続けている感情として読み取れます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 中の君に大君を重ねる危うさ</div>
+<h3>薫が中の君に向ける思いは、誰への思いなのか</h3>
+<p>薫が中の君と語り合う場面で繰り返し思い出されるのは、中の君自身の人柄よりも、亡き大君との記憶です。薫の未練が中の君個人への恋情というより、大君の面影を中の君に重ねて見ようとする心の動きだとすれば、これは中の君にとって、姉の身代わりとして扱われる危うさをはらむ関係でもあります。この読み方は本文が明示的に断定しているものではなく、AIによる読み解きです。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 宇治という土地との別れが持つ意味</div>
+<h3>中の君の上京は、何を置き去りにするのか</h3>
+<p>中の君にとって宇治は、生まれ育ち、父と姉を見送った土地です。彼女がここを離れることは、単なる引っ越しではなく、亡き人々の記憶が積み重なった場所からの離脱を意味します。弁の尼がひとり宇治に残る決心をする描写は、中の君が過去を完全に断ち切れないまま新生活へ踏み出さざるを得ない事情を、対照的な形で浮かび上がらせているように読み取れます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 弁の尼の選択の意味</div>
+<h3>なぜ弁の尼は、中の君について京へ行かないのか</h3>
+<p>弁の尼は「長き命いとつらく」と述べ、自らを既に世にないものとして扱ってほしいとまで口にします。これは大君への深い哀悼の情の表れであると同時に、宇治という土地そのものに弔いの場としての意味を見出している姿とも読めます。中の君が新生活へ向かう一方で、弁の尼が過去に留まり続けるという対比は、本帖全体を貫く「宇治に残るもの」と「京へ向かうもの」という構図を象徴しているといえます（AIの読み解きであり、学術的に確定した解釈ではありません）。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 匂宮の疑念が示す伏線</div>
+<h3>桜の盛りの一場面が、なぜ疑いの種になるのか</h3>
+<p>薫が二条院を訪ねて中の君と親しく語り合う場面自体は、後見人としてはごく自然な振る舞いとして描かれます。それにもかかわらず匂宮がかすかな疑念を抱く展開は、薫の中の君への未練が、当人の意図を超えて周囲からも感じ取られるほどのものであることを示唆しています。この疑念は、次帖「宿木」以降の薫・中の君・浮舟をめぐる展開への伏線として機能していると考えられます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 夕霧の思惑との対比</div>
+<h3>六の君の裳着が示す、宇治の姉妹の特異な立場</h3>
+<p>夕霧が六の君を匂宮に入内させようとしていた矢先に、思いがけず中の君が先を越す形になった一件は、宇治の姉妹が身分の上では必ずしも有利でないにもかかわらず、薫・匂宮という当代随一の貴公子たちの心を占め続けていることを際立たせます。夕霧の不満げな態度は、宮廷の常識的な価値観と、薫・匂宮の宇治への執着との落差を映し出しているといえます。</p>
+</div>
+<p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+</section>
+
+<!-- 8. 特筆事項 -->
+<section class="block" id="notes">
+<div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+<div class="note-card">
+<h3>宇治十帖の転換点 ― 舞台が宇治から京へ</h3>
+<p>本帖は、前帖「総角」までの舞台であった宇治から、物語の中心が京へ移り始める転換点にあたります。中の君の上京により、以後の宇治十帖は二条院・三条院といった京の邸を主な舞台としながら、宇治は薫が過去を偲んで訪れる土地として位置づけを変えていくことになります。</p>
+</div>
+<div class="note-card">
+<h3>薫の未練が今後の物語を動かす</h3>
+<p>本帖で明確に描かれる薫の後悔と未練は、単なる感傷にとどまらず、次帖「宿木」以降、薫が新たな縁談（女二の宮との結婚）や、中の君に似た異母妹・浮舟の存在に関心を寄せていく展開の起点となります。大君を失った薫の心の空白が、以後の物語を動かす原動力のひとつになっているといえます。</p>
+</div>
+<div class="note-card">
+<h3>匂宮の疑念という小さな伏線</h3>
+<p>本帖末尾で描かれる匂宮のかすかな疑念は、この時点では大きな波乱には至りません。しかし薫と中の君の間柄をめぐる緊張は、以後の宇治十帖を通じて繰り返し形を変えて現れることになり、本帖はその最初の兆しを示す帖として位置づけられます。</p>
+</div>
+</section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+const el = document.getElementById('scenePopup');
+if(!el) return;
+el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+el.style.display = 'block';
+}
+
+const CURRENT = 48;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+chapters.forEach(c=>{
+const tab = document.createElement(c.done ? 'a' : 'span');
+tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+tab.textContent = c.n + '.' + c.t;
+if(c.done){ tab.href = c.f; }
+tabsEl.appendChild(tab);
+const opt = document.createElement('option');
+opt.value = c.done ? c.f : '';
+opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+opt.disabled = !c.done;
+if(c.n===CURRENT) opt.selected = true;
+jumpEl.appendChild(opt);
+});
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+const nodes = {
+kaoru: {x:450, y:260, label:'薫'},
+oigimi: {x:200, y:120, label:'大君', memory:true},
+nakanokimi: {x:700, y:120, label:'中の君'},
+nioumiya: {x:820, y:300, label:'匂宮'},
+ben: {x:100, y:300, label:'弁の尼'},
+akashi: {x:820, y:80, label:'明石の中宮'},
+rokunokimi: {x:820, y:460, label:'六の君'}
+};
+const edges = [
+{a:'kaoru', b:'nakanokimi', label:'未練・大君の面影を重ねる', type:'emotion'},
+{a:'kaoru', b:'oigimi', label:'忘れ得ぬ思慕（回想）', type:'emotion'},
+{a:'oigimi', b:'nakanokimi', label:'姉妹（回想）', type:'kinship'},
+{a:'nakanokimi', b:'nioumiya', label:'二条院で結婚生活始まる', type:'kinship'},
+{a:'ben', b:'oigimi', label:'仕えた大君を弔い宇治に残る', type:'loyalty'},
+{a:'ben', b:'nakanokimi', label:'京へ発つ中の君との別れ', type:'emotion'},
+{a:'akashi', b:'nioumiya', label:'宇治通いを問題視・制止', type:'conflict'},
+{a:'nioumiya', b:'rokunokimi', label:'夕霧が縁組を思案（未成立）', type:'alliance'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+edges.forEach(edge=>{
+const A=nodes[edge.a], B=nodes[edge.b];
+const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+const dx=B.x-A.x, dy=B.y-A.y;
+const len=Math.sqrt(dx*dx+dy*dy)||1;
+const nx=-dy/len, ny=dx/len;
+const offset = 15;
+const lx = mx + nx*offset, ly = my + ny*offset;
+const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+t.textContent = edge.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+const g = el('g',{class:'node'+(n.memory?' memory':'')});
+const w = Math.max(96, n.label.length*13);
+g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+t.textContent = n.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+document.querySelectorAll('.filters button').forEach(btn=>{
+btn.addEventListener('click', ()=>{
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+const f = btn.dataset.f;
+document.querySelectorAll('.edge').forEach(e=>{
+e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+});
+});
+});
+</script>
+</body>
+</html>
