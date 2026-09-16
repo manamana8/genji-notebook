@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第52帖 蜻蛉 | 源氏物語 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--paper:#f5f0e6;
+--paper-deep:#eee6d6;
+--paper-deeper:#e6dbc2;
+--ink:#2b241e;
+--ink-soft:#5a5044;
+--murasaki:#4b2e51;
+--murasaki-deep:#382039;
+--suou:#8b3a3a;
+--yamabuki:#c08a34;
+--koke:#5c6b47;
+--gray:#8c8579;
+--kon:#2c3a63;
+--line:#d8cdb8;
+--radius:2px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+margin:0;
+background:var(--paper);
+color:var(--ink);
+font-family:"Zen Kaku Gothic New", sans-serif;
+line-height:1.85;
+-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.mincho{font-family:"Shippori Mincho", serif;}
+a{color:inherit;}
+header.top{
+position:sticky; top:0; z-index:50;
+background:var(--murasaki);
+color:#f2ead8;
+box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+.top-row{
+display:flex; align-items:center; justify-content:space-between;
+padding:12px 18px 8px;
+gap:12px;
+}
+.brand{
+font-family:"Shippori Mincho", serif;
+font-weight:700;
+font-size:1rem;
+display:flex; align-items:center; gap:8px;
+text-decoration:none;
+}
+.brand .home-mark{color:var(--yamabuki); font-size:1.1rem;}
+select#jump{
+background:var(--murasaki-deep);
+color:#f2ead8;
+border:1px solid #6b4a70;
+border-radius:var(--radius);
+padding:6px 10px;
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+max-width:40vw;
+}
+nav.tabs{
+display:flex;
+overflow-x:auto;
+gap:2px;
+padding:0 10px 10px;
+scrollbar-width:thin;
+}
+nav.tabs::-webkit-scrollbar{height:4px;}
+.tab{
+flex:0 0 auto;
+padding:7px 12px;
+font-size:.8rem;
+color:#cdb8c9;
+background:transparent;
+border:none;
+border-bottom:2px solid transparent;
+white-space:nowrap;
+opacity:.55;
+text-decoration:none;
+}
+.tab.active{color:#fff; border-bottom-color:var(--yamabuki); opacity:1; font-weight:600;}
+.tab.enabled{opacity:.85; color:#f2ead8;}
+.tab.enabled:hover{opacity:1;}
+main{max-width:880px; margin:0 auto; padding:0 20px 100px;}
+.frontispiece{
+padding:40px 0 30px;
+border-bottom:1px solid var(--line);
+margin-bottom:44px;
+}
+.frontispiece .num{color:var(--suou); font-size:.85rem; letter-spacing:.06em; margin-bottom:8px;}
+.frontispiece h1{font-size:2.3rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.frontispiece .kana{color:var(--ink-soft); font-size:.95rem; margin-bottom:16px;}
+.frontispiece .lead{color:var(--ink-soft); font-size:.98rem;}
+section.block{margin-bottom:58px;}
+.block-head{
+display:flex; align-items:baseline; gap:12px;
+border-bottom:1px solid var(--line);
+padding-bottom:10px; margin-bottom:22px;
+}
+.block-head .idx{font-family:"Shippori Mincho", serif; color:var(--suou); font-size:1.05rem;}
+.block-head h2{font-size:1.25rem; margin:0; color:var(--murasaki-deep);}
+.people-grid{
+display:grid;
+grid-template-columns:repeat(2, minmax(0, 1fr));
+gap:14px;
+}
+@media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
+.person{
+background:var(--paper-deep);
+border-left:3px solid var(--suou);
+padding:16px 18px;
+min-width:0;
+}
+.person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
+.person .name{font-weight:700; font-size:1rem;}
+.person .age{font-size:.72rem; color:var(--murasaki); background:#e3d3c4; padding:2px 8px; border-radius:10px; white-space:nowrap;}
+.person p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+.person .unconfirmed-age{font-size:.68rem; color:var(--suou); margin-top:6px;}
+.filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+.filters button{
+font-family:"Zen Kaku Gothic New", sans-serif;
+font-size:.8rem;
+padding:7px 14px;
+border:1px solid var(--line);
+background:var(--paper);
+color:var(--ink-soft);
+border-radius:16px;
+cursor:pointer;
+}
+.filters button.active{background:var(--murasaki); color:#f2ead8; border-color:var(--murasaki);}
+.diagram-wrap{background:var(--paper-deep); padding:14px; overflow-x:auto;}
+.scene-room{cursor:pointer;}
+.scene-room rect{transition:opacity .15s ease;}
+.scene-room:hover rect{opacity:.75;}
+.scene-popup{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:16px 20px; margin-top:14px; font-size:.87rem; color:var(--ink-soft);}
+.scene-popup h4{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.scene-popup .close-x{float:right; cursor:pointer; color:var(--ink-soft); font-size:.78rem;}
+svg#relmap{width:100%; min-width:640px; height:auto; display:block;}
+.node rect{fill:#fbf8f1; stroke:var(--murasaki); stroke-width:1.4;}
+.node.memory rect{fill:#efe6da; stroke:var(--gray); stroke-width:1.4; stroke-dasharray:4,3; opacity:.85;}
+.node.newcomer rect{stroke:var(--suou); stroke-width:2;}
+.node text{font-family:"Shippori Mincho", serif; font-size:13px; fill:var(--ink);}
+.node.memory text{fill:var(--ink-soft);}
+.edge line{stroke-width:2px;}
+.edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:10.5px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
+.edge.kinship line{stroke:var(--gray);}
+.edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+.edge.conflict line{stroke:var(--kon);}
+.edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+.legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
+.legend span{display:inline-flex; align-items:center; gap:6px;}
+.legend i{width:18px; height:3px; display:inline-block;}
+.legend i.dashed{background:repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 10px);}
+.gloss{border-top:1px solid var(--line);}
+.gloss dt{
+font-weight:700; font-size:.95rem; padding:16px 0 4px; color:var(--murasaki-deep);
+border-bottom:1px solid var(--line);
+display:flex; align-items:baseline; gap:8px;
+}
+.gloss dt:first-of-type{border-top:none;}
+.gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
+.waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
+@media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+.waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
+.waka.solo{grid-column:1 / -1;}
+.waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+.waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+.waka .trans{font-size:.82rem; color:var(--ink-soft);}
+.waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+.waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.waka .unconfirmed{font-size:.7rem; color:var(--suou); margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
+.timeline{position:relative; padding-left:26px;}
+.timeline::before{content:'';position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line);}
+.tl-item{position:relative; margin-bottom:26px;}
+.tl-item::before{
+content:''; position:absolute; left:-26px; top:4px;
+width:9px; height:9px; border-radius:50%;
+background:var(--yamabuki); border:2px solid var(--paper);
+box-shadow:0 0 0 1px var(--yamabuki);
+}
+.tl-item h3{font-size:1rem; margin:0 0 6px; color:var(--murasaki-deep);}
+.tl-item p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.analysis-card{background:var(--paper-deep); padding:20px 22px; margin-bottom:14px;}
+.analysis-card .tag{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.03em;}
+.analysis-card h3{margin:0 0 10px; font-size:1.02rem; color:var(--murasaki-deep);}
+.analysis-card p{margin:0; font-size:.88rem; color:var(--ink-soft);}
+.note-card{background:#f4ead6; border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
+.note-card h3{margin:0 0 8px; font-size:.98rem; color:var(--murasaki-deep);}
+.note-card p{margin:0; font-size:.87rem; color:var(--ink-soft);}
+.disclaimer{font-size:.75rem; color:#9a9280; margin-top:8px;}
+#toTop{
+position:fixed; right:18px; bottom:18px; z-index:60;
+width:46px; height:46px; border-radius:50%;
+background:var(--murasaki); color:#f2ead8;
+border:none; box-shadow:0 3px 10px rgba(0,0,0,.25);
+font-size:1.1rem; cursor:pointer;
+display:flex; align-items:center; justify-content:center;
+}
+#toTop:hover{background:var(--murasaki-deep);}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="top-row">
+<a class="brand" href="index.html"><span class="home-mark">巻</span>源氏物語 学習ノート</a>
+<select id="jump" onchange="if(this.value)location.href=this.value;"></select>
+</div>
+<nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+<div class="frontispiece">
+<div class="num">第52帖　宇治十帖　第八帖</div>
+<h1>蜻蛉</h1>
+<div class="kana">かげろう</div>
+<p class="lead">薫二十七歳の三月末から秋頃までの物語。宇治の山荘では浮舟の姿が見えなくなり大騒ぎとなる。事情を知る右近・侍従は入水と思い至るが、世間体を繕うため遺骸のないまま急いで葬儀を営む。石山寺に参籠していた薫は、野辺送りの後にようやく事の次第を知り、浮舟を宇治に放置していたことを深く悔やむ。悲しみのあまり病と称して引きこもる匂宮を見舞った薫は、四十九日の法要を宇治山の寺で盛大に営み、浮舟の異父弟・小君を召し抱える。夏、匂宮は気晴らしに新しい恋をしはじめる一方、薫はある日、法華八講の後に垣間見た女一の宮（明石の中宮の娘）に強く心惹かれるようになる。そのころ、東宮妃候補だった宮の君も女一の宮に出仕しており、薫は同情まじりに関心を寄せはじめる。秋、薫は夕暮れに儚げに飛び交う蜻蛉をながめ、宇治で亡くした大君・中君・浮舟の三姉妹との縁を思い、帖名の由来となる歌を独り口ずさむ。</p>
+</div>
+
+<!-- 1. 主な登場人物 -->
+<section class="block" id="people">
+<div class="block-head"><span class="idx">1</span><h2>主な登場人物</h2></div>
+<div class="people-grid">
+<div class="person"><div class="row"><span class="name">薫（かおる）</span><span class="age">27歳</span></div><p>光源氏の子とされるが実の父は柏木。権大納言・右大将。浮舟を宇治に放置していたことを悔い、四十九日の法要を営んで弟の小君を召し抱えるなど誠実に振る舞う一方、夏には法華八講の場で垣間見た女一の宮に強く心惹かれ、秋には夕暮れの蜻蛉に三姉妹との縁を重ねて帖名由来の歌を詠む。年齢は本文冒頭に「二十七歳」と明記され、複数の解説サイトでも一致を確認した。</p></div>
+<div class="person"><div class="row"><span class="name">匂宮（におうのみや）</span><span class="age">確認できません</span></div><p>今上帝の第三皇子、明石の中宮腹。浮舟の訃報に接した直後は二、三日正気を失うほど嘆き、以後も病と称して自邸に引きこもる。薫の見舞いにも本心を隠せぬまま平静を装われて悔しさを覚えるが、夏には気晴らしとして新たな女性関係を持ちはじめる。前帖「浮舟」時点では単一情報源により28歳前後とされていたが、本帖内での年齢の明記は確認できません。</p></div>
+<div class="person"><div class="row"><span class="name">浮舟（うきふね、失踪・死と推定される存在として）</span><span class="age">確認できません</span></div><p>八の宮の三女。前帖末で入水を決意し、本帖冒頭で姿が見えなくなる。本文は浮舟の生死そのものを明言せず、右近・侍従ら事情を知る女房が「身を投げたまへるか」と思い至り、遺骸のないまま急いで葬儀が営まれる。前帖時点では単一情報源により22歳前後とされていたが、本帖では終始不在の存在として描かれる。</p></div>
+<div class="person"><div class="row"><span class="name">中将の君（ちゅうじょうのきみ、浮舟の母）</span><span class="age">確認できません</span></div><p>浮舟の実母。娘の失踪を聞いて駆けつけ、鬼や狐の仕業ではないかと取り乱すが、右近・侍従からこれまでの経緯を聞かされ、川に身を投げたのだろうと思い至る。せめて亡骸を探そうと言い張るが、二人の女房に思いとどまらされる。</p></div>
+<div class="person"><div class="row"><span class="name">女一の宮（おんないちのみや、新登場）</span><span class="age">確認できません</span></div><p>今上帝と明石の中宮との間の第一皇女。法華八講の後、氷を手に女房たちと戯れる場面を薫が偶然垣間見て、以後強く心惹かれる対象となる。本文中に確定年齢の明記は確認できません。母が明石の中宮であることは複数の解説サイトで一致を確認した。</p></div>
+</div>
+</section>
+
+<!-- 2. 人物系図 -->
+<section class="block" id="relations">
+<div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
+<div class="filters">
+<button data-f="all" class="active">すべて表示</button>
+<button data-f="kinship">血縁・婚姻</button>
+<button data-f="emotion">感情</button>
+</div>
+<div class="diagram-wrap">
+<svg id="relmap" viewBox="0 0 900 510" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+<div class="legend">
+<span><i style="background:var(--gray);"></i>血縁・婚姻</span>
+<span><i class="dashed" style="color:var(--suou);"></i>感情</span>
+</div>
+<p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※浮舟のノードは、本帖では姿を見せず失踪・死が推定されるのみの存在であることを示すため、点線枠（記憶・不在を表す様式）で表示した。「薫―匂宮」の線は、共に浮舟を悼み合いながらも互いに本心を隠す気まずさを便宜的に「感情」に分類したものであり、朝廷内の政争ではない。「薫―女一の宮」の線も、垣間見によって生じた一方的な思慕を示すものであり、両者の間に交流があったことを意味しない。</p>
+</section>
+
+<!-- 3. 空間・地理構造 -->
+<section class="block" id="scene">
+<div class="block-head"><span class="idx">3</span><h2>空間・地理構造 ― 宇治の山荘・女一の宮の御殿</h2></div>
+<div class="diagram-wrap">
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="900" height="420" fill="var(--paper)"/>
+
+<!-- ①宇治の山荘 -->
+<g class="scene-room" onclick="showScenePopup('①宇治の山荘 ― 浮舟失踪・捜索の場','浮舟の姿が見えなくなり、宇治の山荘は大騒ぎとなる。事情を知る右近・侍従は、日頃「身を失ひてばや」と漏らしていた浮舟の様子や、硯の下に書き置かれていた歌を見つけ、宇治川に身を投げたのだろうと思い至る。世間体を繕うため、遺骸もないままその夜のうちに葬儀を営み、駆けつけた母・中将の君には「鬼や物の怪の仕業ではないか」とだけ取り繕う。石山寺に参籠していた薫は、野辺送りの後にようやく事の次第を知り、深く悔やむ。')">
+<rect x="40" y="70" width="360" height="290" fill="#e8eef2" stroke="var(--murasaki)" stroke-width="1.6"/>
+<text x="60" y="102" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--murasaki)">①</text>
+<text x="220" y="140" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--ink)">宇治の山荘</text>
+<text x="220" y="164" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">浮舟失踪・捜索の場</text>
+<text x="220" y="200" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">・右近・侍従、入水を悟る</text>
+<text x="220" y="222" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">・遺骸なきまま急ぎ葬儀</text>
+<text x="220" y="244" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">・薫、野辺送りの後に事を知る</text>
+<circle cx="365" cy="95" r="12" fill="var(--murasaki)"/>
+<text x="365" y="100" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#f2ead8">①</text>
+</g>
+
+<!-- ②女一の宮の御殿 -->
+<g class="scene-room" onclick="showScenePopup('②女一の宮の御殿 ― 薫が新たに関心を抱く場','法華八講の法要が終わり片付けをする折、几帳の立ち違う隙間から西の渡殿にいた女一の宮の姿が薫の目に入る。氷を物の蓋に置いて割ろうと女房たちが戯れる中、白い薄物をまとった女一の宮が氷を手にしながら微笑む様子は「言はむ方なくうつくしげ」と描かれ、薫は雲の上の人として強く心惹かれる。以後、薫はこの姿を忘れられず、正妻・女二の宮に同じ装いを再現させようとするなど、執着を募らせていく。')">
+<rect x="500" y="70" width="360" height="290" fill="#f7ecd9" stroke="var(--yamabuki)" stroke-width="1.6"/>
+<text x="520" y="102" font-family="Zen Kaku Gothic New" font-size="10.5" fill="var(--yamabuki)">②</text>
+<text x="680" y="140" text-anchor="middle" font-family="Shippori Mincho" font-size="16" fill="var(--ink)">女一の宮の御殿</text>
+<text x="680" y="164" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">薫が新たに関心を抱く場</text>
+<text x="680" y="200" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">・法華八講の後、氷を手にする姿を垣間見る</text>
+<text x="680" y="222" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">・薫、強く心惹かれる</text>
+<text x="680" y="244" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9.5" fill="var(--ink-soft)">・後に妻・女二の宮に同じ装いを求める</text>
+<circle cx="835" cy="95" r="12" fill="var(--yamabuki)"/>
+<text x="835" y="100" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="700" font-size="13" fill="#3a2a10">②</text>
+</g>
+
+<defs>
+<marker id="arrowBetween" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/>
+</marker>
+</defs>
+<line x1="400" y1="215" x2="500" y2="215" stroke="var(--ink-soft)" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#arrowBetween)"/>
+<text x="450" y="203" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9">悲しみから新たな思慕へ</text>
+
+<text x="450" y="392" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">浮舟を悼む宇治の悲しみから、女一の宮への新たな執着へ ― 薫の心が移ろう軌跡</text>
+</svg>
+</div>
+<div class="scene-popup" id="scenePopup" style="display:none;"></div>
+<p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">本帖の空間は、前半が宇治、後半が京の御殿と大きく舞台を移す。宇治十帖を通じて緊張の中心だった宇治の悲劇が幕を閉じ、物語の重心が薫の新たな執着へと移っていく構造が、この二つの場所の対比に表れている。</p>
+</section>
+
+<!-- 4. 用語解説 -->
+<section class="block" id="glossary">
+<div class="block-head"><span class="idx">4</span><h2>用語解説</h2></div>
+<dl class="gloss">
+<dt>蜻蛉（かげろう）</dt>
+<dd>本帖の巻名の由来。秋、夕暮れに儚げに飛び交うかげろう（虫のカゲロウ、または陽炎とも解される）を薫が見て、手に取ろうとしても捉えられずすぐに行方が知れなくなる様子に、宇治で縁のあった大君・中君・浮舟の三姉妹のはかない運命を重ねて独詠したことに由来する（出典：Wikipedia「蜻蛉（源氏物語）」および「源氏物語 巻名歌」で実在確認）。</dd>
+<dt>参籠（さんろう）</dt>
+<dd>祈願のため寺社に一定期間籠って勤行すること。薫は浮舟が失踪した当時、母・女三の宮の病気平癒を願って石山寺に参籠しており、そのため事の次第を知るのが野辺送りの後になった。</dd>
+<dt>野辺送り・遺骸なき葬儀</dt>
+<dd>浮舟の失踪後、世間体を繕うため、右近・侍従らは遺骸のないまま急いでその夜のうちに葬儀（野辺送り）を営んだ。入水そのものが当時の貴族社会では極めて異例な死とされ、事実を隠す必要があったための措置とされる。</dd>
+<dt>四十九日（しじゅうくにち）</dt>
+<dd>人の死後49日目に営まれる法要。薫は浮舟の四十九日の法要を宇治山の寺で盛大に営み、中君からも供え物が届けられた。この法要を機に、浮舟の義父・常陸介は継娘の素性の高さを実感し、浮舟の異父弟・小君を薫に召し抱えさせることとなる。</dd>
+<dt>法華八講（ほっけはっこう）</dt>
+<dd>法華経八巻を朝夕四回、四日間に分けて講讃する法会。薫が女一の宮を垣間見たのは、この法要が終わり片付けをしている折であった。</dd>
+</dl>
+</section>
+
+<!-- 5. 和歌 -->
+<section class="block" id="waka">
+<div class="block-head"><span class="idx">4-2</span><h2>本帖の和歌</h2></div>
+<div class="waka-grid">
+<div class="waka solo">
+<div class="speaker">薫（独詠、秋の夕暮れに蜻蛉を見て、帖名由来の歌）</div>
+<div class="poem">ありと見て　手にはとられず　見ればまた　行方も知らず　消えし蜻蛉</div>
+<div class="trans-label">現代語訳</div>
+<div class="trans">いると見えて手に取ろうとすると取れず、見ればまた行方も分からなくなって消えてしまう蜻蛉であることよ。</div>
+<div class="source">出典：Wikipedia「蜻蛉（源氏物語）」および「源氏物語 巻名歌」（複数の解説サイトで本文該当箇所と歌意の一致を確認）。宇治で縁のあった大君・中君・浮舟の三姉妹の、はかなく消えていった運命を重ねた独詠とされる。</div>
+</div>
+</div>
+<p style="font-size:.78rem;color:#9a9280;margin-top:14px;">※本帖には他にも匂宮・小宰相の君・女房などの和歌が計11首あるとされるが（出典：「源氏物語 和歌一覧795首」等の分類による）、本文と歌意の対応を確実に確認できたのは上記の帖名由来歌のみであり、他の歌については出典・原文との対応を十分に確認できなかったため、無理に掲載せず割愛した。</p>
+</section>
+
+<!-- 6. あらすじ -->
+<section class="block" id="story">
+<div class="block-head"><span class="idx">5</span><h2>あらすじ</h2></div>
+<div class="timeline">
+<div class="tl-item"><h3>浮舟の姿が見えなくなり、宇治の山荘は大騒ぎとなる</h3><p>朝になっても浮舟の姿が見えず、宇治の山荘は大騒ぎとなる。物語の姫君が人に盗まれた翌朝のような有様で、女房たちは思いやる方もなくただ騒ぎ合う。</p></div>
+<div class="tl-item"><h3>右近・侍従、入水を悟る</h3><p>浮舟の内情を知る右近・侍従は、日頃「身を失ひてばや」と泣き入っていた様子や、硯の下に書き置かれていた歌を見つけ出し、宇治川に身を投げたのだろうと思い至る。</p></div>
+<div class="tl-item"><h3>母・中将の君、駆けつけて驚き悲しむ</h3><p>知らせを受けて駆けつけた母・中将の君は、鬼や狐の仕業ではないかと取り乱すが、右近・侍従からこれまでの経緯を含めて説明を受け、真相を悟って驚き悲しむ。</p></div>
+<div class="tl-item"><h3>世間体を繕うため、遺骸なきまま急ぎ葬儀を営む</h3><p>入水したことが世間に知れれば必ず疑いを招くと考えた右近・侍従は、母の願いにもかかわらず亡骸を探すことを思いとどまらせ、その夜のうちに遺骸のないまま葬儀（野辺送り）を済ませる。</p></div>
+<div class="tl-item"><h3>石山寺に参籠していた薫、事の次第を知る</h3><p>母・女三の宮の病気平癒を願って石山寺に参籠していた薫は、野辺送りの後にようやく浮舟の死を知らされる。浮舟を宇治に放置していたことを深く悔やみ、悲しみに沈む。</p></div>
+<div class="tl-item"><h3>匂宮、悲しみのあまり病と称して引きこもる</h3><p>訃報に接した匂宮は二、三日ほど正気を失うほど嘆き、その後も病と称して自邸に引きこもる。見舞いに訪れた薫は、匂宮が本心を隠して平静を装う様子に、互いに気まずさを覚える。</p></div>
+<div class="tl-item"><h3>薫、四十九日の法要を営み、小君を召し抱える</h3><p>薫は浮舟の四十九日の法要を宇治山の寺で盛大に営む。中君からも供え物が届き、義父・常陸介はこのとき初めて継娘の素性の高さを実感する。これを機に常陸介は浮舟の異父弟・小君を薫のもとへ出仕させることを決断し、薫はこれを喜んで召し抱える。</p></div>
+<div class="tl-item"><h3>夏、匂宮は気晴らしに新しい恋をしはじめる</h3><p>悲しみが徐々に薄れるにつれ、もともと恋多き匂宮は気晴らしとして新たな女性関係を持ちはじめる。</p></div>
+<div class="tl-item"><h3>薫、法華八講の場で女一の宮を垣間見る</h3><p>法華八講の法要が終わり片付けをする折、几帳の隙間から西の渡殿にいた女一の宮の姿が薫の目に入る。氷を手に女房たちと戯れる女一の宮の美しさに、薫は強く心を奪われる。</p></div>
+<div class="tl-item"><h3>薫、妻・女二の宮に同じ装いを求める</h3><p>女一の宮の面影が忘れられない薫は、正妻である女二の宮（女一の宮の異母妹）に、あの日見た装いを再現させようとするなど、執着を募らせていく。</p></div>
+<div class="tl-item"><h3>宮の君にも関心を寄せはじめる</h3><p>そのころ、故式部卿宮の姫君で東宮妃候補として育てられ、かつては薫との縁談もあった宮の君が、女房として女一の宮に出仕していた。薫はその境遇に同情しつつ、関心を持ちはじめる。</p></div>
+<div class="tl-item"><h3>秋、薫は宇治の姉妹たちを追想し、帖名由来の歌を詠む</h3><p>秋になり、薫は夕暮れに儚げに飛び交う蜻蛉をながめながら、宇治で縁のあった大君・中君・浮舟の三姉妹との因縁を思い、「ありと見て手にはとられず見ればまた行方も知らず消えし蜻蛉」と独り口ずさむ。本帖はここで筆をとどめる。</p></div>
+</div>
+</section>
+
+<!-- 7. 考察と深層考察 -->
+<section class="block" id="thoughts">
+<div class="block-head"><span class="idx">6</span><h2>考察と深層考察</h2></div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 遺骸なき葬儀という空虚さ</div>
+<h3>「弔われた」のに「弔われていない」浮舟</h3>
+<p>浮舟の葬儀は、世間体のために遺骸なきまま急いで営まれます。彼女は形の上では弔われながら、実際には誰にも見送られておらず、この空虚な儀式そのものが、帖名「蜻蛉」が象徴する「あるように見えて実体をつかめない」はかなさを、物語の構造として先取りしているとも読めます。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 薫の心変わりの速さ</div>
+<h3>「誠実さ」の裏にある淡白さ</h3>
+<p>薫は浮舟の死を深く悔やみ、四十九日の法要を盛大に営むなど誠実に振る舞う一方、同じ帖の中で早くも新たな女性（女一の宮、宮の君）へと関心を移していきます。対照的に匂宮は、一時とはいえ正気を失うほどの激しい嘆きを見せており、この対比から、薫の悲しみが匂宮ほど深くはなかったのではないか、という読み方も可能です。これはAIによる一つの解釈であり、本文が明示的に断定しているものではありません。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 女一の宮への執着に見える倒錯性</div>
+<h3>「垣間見た一瞬」を再現しようとする心理</h3>
+<p>薫は女一の宮を一度垣間見ただけであるにもかかわらず、正妻・女二の宮に同じ装いを求めてまでその面影を再現しようとします。実在の人物との交流ではなく、一度きりの映像的な記憶に執着するこの態度は、宇治の姉妹たちへの思いの持ち方（横笛・御法などで繰り返された「面影を求める」薫の性癖）と地続きであるとも解釈できます（AIの読み解きです）。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">深層考察 ｜ 帖名「蜻蛉」が象徴するはかなさ</div>
+<h3>三姉妹のみならず、物語全体のはかなさ</h3>
+<p>薫の帖名由来歌は、直接には大君・中君・浮舟という三姉妹の運命を指していますが、「あるように見えてすぐに消える」という蜻蛉のイメージは、浮舟の生死そのものが本帖で明言されない曖昧さや、薫の心が対象を次々と移していく様子にも重なります。宇治十帖全体を貫く「つかみきれないもの」への憧れと喪失というテーマが、この一首に凝縮されているとも言えます（AIの読み解きです）。</p>
+</div>
+<div class="analysis-card">
+<div class="tag">考察 ｜ 匂宮と薫、並行する「新たな女性」への関心</div>
+<h3>悲しみの後に繰り返される同じパターン</h3>
+<p>匂宮が夏に新しい恋をはじめ、薫が女一の宮・宮の君へと関心を移していく展開は、二人がともに浮舟という一人の女性を巡って争いながらも、彼女を喪った後は驚くほど早く同じパターン（新たな女性への関心）を繰り返す点で共通しています。この並行性は、浮舟という個人の悲劇が、二人の貴公子の人生においては一つの通過点に過ぎなかったことを浮き彫りにしているとも読めます。</p>
+</div>
+<p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
+</section>
+
+<!-- 8. 特筆事項 -->
+<section class="block" id="notes">
+<div class="block-head"><span class="idx">7</span><h2>特筆事項</h2></div>
+<div class="note-card">
+<h3>宇治十帖の緊張が緩み、次の展開への橋渡しとなる帖</h3>
+<p>薫と匂宮という対照的な二人の貴公子の間で浮舟が追いつめられていく緊張は、前帖「浮舟」でクライマックスを迎えました。本帖ではその緊張が一度収束し、薫の関心が女一の宮・宮の君という新たな対象へと移っていくことで、物語は次の局面（浮舟が実は生きていたことが判明する「手習」以降）への橋渡しとなっています。</p>
+</div>
+<div class="note-card">
+<h3>浮舟の生死は本帖では明言されない</h3>
+<p>本帖は右近・侍従ら女房たちが「入水したのだろう」と思い至り、遺骸なきまま葬儀を営む様子を描くのみで、浮舟が実際に死んだかどうかは明言されません。この空白は、次々帖「手習」で浮舟が横川の僧都に助けられていたことが明かされることで、後から埋められることになります。</p>
+</div>
+<div class="note-card">
+<h3>女一の宮・宮の君という、後の展開に関わる新登場人物</h3>
+<p>本帖で新たに登場する女一の宮と宮の君は、いずれも薫の以後の関心の対象として描かれ、宇治の姫君たちへの執着から、京の宮廷の女性たちへと薫の視線が移っていく転換点を示しています。もっとも、物語はこの後も薫の心が浮舟から完全には離れないことを描いていく点に注意が必要です。</p>
+</div>
+</section>
+
+</main>
+
+<button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="chapters-data.js"></script>
+<script>
+function showScenePopup(title, desc){
+const el = document.getElementById('scenePopup');
+if(!el) return;
+el.innerHTML = '<span class="close-x" onclick="document.getElementById(\'scenePopup\').style.display=\'none\'">✕ 閉じる</span><h4>'+title+'</h4><p style="margin:0;">'+desc+'</p>';
+el.style.display = 'block';
+}
+
+const CURRENT = 52;
+const tabsEl = document.getElementById('tabs');
+const jumpEl = document.getElementById('jump');
+chapters.forEach(c=>{
+const tab = document.createElement(c.done ? 'a' : 'span');
+tab.className = 'tab' + (c.done ? ' enabled' : '') + (c.n===CURRENT ? ' active' : '');
+tab.textContent = c.n + '.' + c.t;
+if(c.done){ tab.href = c.f; }
+tabsEl.appendChild(tab);
+const opt = document.createElement('option');
+opt.value = c.done ? c.f : '';
+opt.textContent = '第' + c.n + '帖 ' + c.t + (c.done ? '' : '（準備中）');
+opt.disabled = !c.done;
+if(c.n===CURRENT) opt.selected = true;
+jumpEl.appendChild(opt);
+});
+const activeTab = tabsEl.querySelector('.tab.active');
+if(activeTab) activeTab.scrollIntoView({inline:'center', block:'nearest'});
+
+const nodes = {
+kaoru: {x:250, y:90, label:'薫'},
+niou: {x:650, y:90, label:'匂宮'},
+onnaichi: {x:250, y:300, label:'女一の宮', newcomer:true},
+ukifune: {x:450, y:470, label:'浮舟', memory:true},
+chujonokimi: {x:650, y:470, label:'中将の君'}
+};
+const edges = [
+{a:'kaoru', b:'niou', label:'共に浮舟を悼むが気まずさも残る（AIの便宜的分類）', type:'emotion'},
+{a:'kaoru', b:'onnaichi', label:'法華八講の場で垣間見て強く心惹かれる', type:'emotion'},
+{a:'kaoru', b:'ukifune', label:'愛人として庇護、死を深く悲しむ', type:'emotion'},
+{a:'niou', b:'ukifune', label:'契りを結んだ相手、悲嘆のあまり病と称し引きこもる', type:'emotion'},
+{a:'ukifune', b:'chujonokimi', label:'実の母娘', type:'kinship'}
+];
+const svg = document.getElementById('relmap');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+edges.forEach(edge=>{
+const A=nodes[edge.a], B=nodes[edge.b];
+const g = el('g',{class:'edge '+edge.type, 'data-type':edge.type});
+g.appendChild(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));
+const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+const dx=B.x-A.x, dy=B.y-A.y;
+const len=Math.sqrt(dx*dx+dy*dy)||1;
+const nx=-dy/len, ny=dx/len;
+const offset = 15;
+const lx = mx + nx*offset, ly = my + ny*offset;
+const t = el('text',{x:lx,y:ly,'text-anchor':'middle'});
+t.textContent = edge.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+Object.values(nodes).forEach(n=>{
+const g = el('g',{class:'node'+(n.memory?' memory':'')+(n.newcomer?' newcomer':'')});
+const w = Math.max(96, n.label.length*13);
+g.appendChild(el('rect',{x:n.x-w/2,y:n.y-18,width:w,height:36,rx:8}));
+const t = el('text',{x:n.x,y:n.y+5,'text-anchor':'middle'});
+t.textContent = n.label;
+g.appendChild(t);
+svg.appendChild(g);
+});
+document.querySelectorAll('.filters button').forEach(btn=>{
+btn.addEventListener('click', ()=>{
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+const f = btn.dataset.f;
+document.querySelectorAll('.edge').forEach(e=>{
+e.style.display = (f==='all' || e.dataset.type===f) ? '' : 'none';
+});
+});
+});
+</script>
+</body>
+</html>
