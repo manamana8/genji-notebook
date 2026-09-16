@@ -116,7 +116,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -124,6 +124,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -175,9 +176,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka.solo{grid-column:1 / -1;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
@@ -405,6 +406,16 @@
       <div class="tag">深層考察 ｜ 貴種流離譚の完結</div>
       <h3>須磨との対構造 ― 挫折から再生へ</h3>
       <p>栄華の絶頂から一転して蟄居を強いられた「須磨」に対し、「明石」では新たな出会いと政治的復権への道が開かれていきます。試練を経てより大きな栄光を手にするという貴種流離譚の型が、この二帖を通じて完結する構成になっていると読めるでしょう。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ モチーフとしての琴</div>
+      <h3>形見の琴に込められた、言葉によらない絆</h3>
+      <p>源氏が明石の君に琴を形見として贈り、和歌とともに「調べが変わらないように」と願う場面は、身分差ゆえに言葉を尽くしきれない二人の間で、音楽が代わりに絆を保証する役割を担っていると読むことができます。琴という具体的な形見が残ることで、別れの後も関係が単なる一夜の縁ではなく、継続していくものとして印象づけられているとも考えられます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 不在の描き方</div>
+      <h3>「都で待つ紫の上」という不在の存在感</h3>
+      <p>この帖で紫の上は一度も現地には登場せず、源氏が絶やさず送る文の中にのみ存在します。直接姿を見せないことで、かえって源氏の心の中に占める紫の上の重さが際立つ構成になっていると読めます。同時に、この不在の間に明石の君との縁が生まれたという事実は、後の帖で紫の上を苦しめる伏線として、静かに仕込まれているとも言えるでしょう。</p>
     </div>
     <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
   </section>

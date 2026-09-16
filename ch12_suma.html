@@ -116,7 +116,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -124,6 +124,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -175,9 +176,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka.solo{grid-column:1 / -1;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
@@ -427,6 +428,16 @@
       <div class="tag">深層考察 ｜ 頭中将との絆</div>
       <h3>身分や政治を超える友情というテーマ</h3>
       <p>頭中将の来訪は、政治的な立場を超えて個人的な絆を優先する行動として描かれます。この「身分や政治を超えた結びつき」というテーマは、後の夕霧と柏木の関係など、次世代の物語にも形を変えて受け継がれていく源氏物語全体に通じる主題の一つと見ることができるでしょう。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 紫の上の立場の変化</div>
+      <h3>財産の委託に見る、紫の上の「正妻」への実質的な格上げ</h3>
+      <p>紫の上はこの時点でも正式に婚儀を経た「北の方」ではありませんが、源氏が二条院そのものと領地・財産のすべてを託したという事実は、身分上の手続きを超えて、紫の上を実質的な正妻として遇していることを示していると読むことができます。都落ちという非常時に誰を頼るかという選択が、紫の上の物語内での地位を静かに確定させている場面と見ることもできるでしょう。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 反復するモチーフ</div>
+      <h3>亡き父の幻という「導き」の予兆</h3>
+      <p>桐壺院の御陵参拝で現れる亡き父の幻は、単なる悲嘆の場面にとどまらず、次帖「明石」で住吉の神からの霊的な導きが源氏の運命を転換させていく展開の先触れとして機能していると読むこともできます。亡き父という個人的な喪失の記憶が、やがて神仏という超越的な導きへと接続されていく構成に、物語の周到さが表れているという見方ができるでしょう。</p>
     </div>
     <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
   </section>

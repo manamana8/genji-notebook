@@ -116,7 +116,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -124,6 +124,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -175,9 +176,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka.solo{grid-column:1 / -1;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
@@ -383,6 +384,16 @@
       <div class="tag">深層考察 ｜ 明石の姫君という「起点」</div>
       <h3>誕生したばかりの姫君が担う、物語後半への布石</h3>
       <p>この帖で誕生した明石の姫君は、後に紫の上の養女となり、さらに後の帖では今上帝の中宮となって源氏の血筋を皇統に連ねていく存在です。身分の低い明石の君を母に持つ姫君が、物語の後半で最も高い地位に昇っていくという構図の起点が、すでにこの帖に置かれていると見ることができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 紫の上の心情</div>
+      <h3>「子のない正妻」という影の萌芽</h3>
+      <p>明石の姫君誕生の知らせに源氏が喜び、惜しみなく祝いを送る様子を見て、紫の上が密かに嫉妬を抱くこの場面は、物語後半で紫の上を苦しめ続ける「子を持たない正妻」という立場の翳りが初めて明確な形で現れる場面と読むことができます。ここではまだ静かな心の揺れにとどまっていますが、後の帖で繰り返し描かれる紫の上の苦悩の萌芽が、すでにこの澪標の一場面に仕込まれていると見ることもできるでしょう。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 和歌の技巧と主題の一致</div>
+      <h3>「澪標」の掛詞が体現する、身分を越えた献身のかたち</h3>
+      <p>帖名の由来となった贈答歌は「澪標」に「身を尽くし」を掛けており、単なる言葉遊びにとどまらず、身分差を越えてなお相手を思い続けるという、この帖全体のテーマそのものを一首に凝縮した表現になっていると読めます。技巧としての掛詞が、そのまま物語内容の要約として機能している点に、この贈答歌の完成度の高さが表れていると言えるでしょう。</p>
     </div>
     <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
   </section>

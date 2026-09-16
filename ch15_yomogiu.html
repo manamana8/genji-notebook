@@ -116,7 +116,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -124,6 +124,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -175,9 +176,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka.solo{grid-column:1 / -1;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
@@ -384,6 +385,16 @@
       <div class="tag">深層考察 ｜ 侍従の選択という対照</div>
       <h3>去っていく者と、留まり続ける者</h3>
       <p>乳母子でありながら叔母に伴われて筑紫へ去っていく侍従の選択は、末摘花の「留まる」選択と好対照をなしています。どちらが正しいというものではなく、身分も後ろ盾も持たない女性たちがそれぞれの状況で下さねばならなかった、生き方の選択の重さを浮かび上がらせる対照として読むことができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 景物の象徴性</div>
+      <h3>松と藤の景に見る、待ち続けた歳月の可視化</h3>
+      <p>源氏が目をとめる「松にかかる藤の花」という景は、「松」に「待つ」を掛けるだけでなく、藤という花そのものが幹の低い松に長い年月をかけて絡みつき咲くという性質を持つ点でも、末摘花が寡黙に待ち続けた歳月の長さを視覚的に表す景物になっていると読めます。荒廃した邸の中で唯一美しく咲き匂うこの藤の花が、末摘花の変わらぬ心そのものの象徴として置かれているとも考えられるでしょう。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 対照的な人物造形</div>
+      <h3>叔母という人物が体現する、もう一つの生存戦略</h3>
+      <p>叔母は末摘花を見下しながらも、受領の妻として現実的に家族の生活を守る道を選び続けてきた人物です。宮家の誇りを保つために貧窮を選ぶ末摘花と、実利を優先して身分にこだわらない叔母という対比は、単純な善悪では割り切れない、当時の女性が置かれた生き方の選択肢の幅広さを浮かび上がらせていると見ることができます。</p>
     </div>
     <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
   </section>
