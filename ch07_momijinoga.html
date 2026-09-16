@@ -114,7 +114,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -122,6 +122,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -153,12 +154,15 @@
   .node text{font-family:"Shippori Mincho", serif; font-size:14px; fill:var(--ink);}
   .edge line{stroke-width:2px;}
   .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:11px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
-  .edge.love line{stroke:var(--suou);}
-  .edge.blood line{stroke:var(--koke);}
-  .edge.pol line{stroke:var(--murasaki);}
+  .edge.kinship line{stroke:#8a8378;}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:#243a5e;}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
   .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
   .legend span{display:inline-flex; align-items:center; gap:6px;}
   .legend i{width:14px; height:3px; display:inline-block;}
+  .legend i.dashed{height:0; border-top:3px dashed; background:none;}
 
   /* ---- 4. glossary ---- */
   .gloss{border-top:1px solid var(--line);}
@@ -170,9 +174,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
   .waka .trans{font-size:.82rem; color:var(--ink-soft);}
@@ -252,17 +256,21 @@
     <div class="block-head"><span class="idx">2</span><h2>登場人物の関係性</h2></div>
     <div class="filters">
       <button data-f="all" class="active">すべて表示</button>
-      <button data-f="love">恋愛・秘密の絆</button>
-      <button data-f="blood">親子・姻戚（表向き）</button>
-      <button data-f="pol">友誼・張り合い</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
     </div>
     <div class="diagram-wrap">
       <svg id="relmap" viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div class="legend">
-      <span><i style="background:var(--suou)"></i>恋愛・秘密の絆</span>
-      <span><i style="background:var(--koke)"></i>親子・姻戚（表向き）</span>
-      <span><i style="background:var(--murasaki)"></i>友誼・張り合い</span>
+      <span><i style="background:#8a8378"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="border-top-color:var(--suou)"></i>感情</span>
+      <span><i style="background:#243a5e"></i>政争・対立</span>
+      <span><i class="dashed" style="border-top-color:var(--yamabuki)"></i>政略同盟</span>
+      <span><i class="dashed" style="border-top-color:var(--yamabuki)"></i>主従・忠誠</span>
     </div>
   </section>
 
@@ -362,6 +370,26 @@
       <h3>源典侍のおかしみが、物語の重さを中和する装置になっている</h3>
       <p>藤壺の出産という緊張感の高い秘密の筋と並行して、老いてなお恋に積極的な源典侍をめぐる頭中将との笑劇的ないたずらが描かれます。この対比は、単なる息抜きというより、光源氏という人物が「深く思い悩む恋」と「軽やかで遊び心のある恋」の両方を生きる人物であることを読者に印象づける構成上の工夫である、という見方ができます。</p>
     </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 本文から素直に読み取れる解釈</div>
+      <h3>桐壺帝の「溺愛」に宿る、読者だけが知る劇的アイロニー</h3>
+      <p>桐壺帝が若宮を我が子として無邪気に可愛がる場面は、真相を知る藤壺・源氏・王命婦、そして読者にとっては、喜びどころか痛切な緊張を孕む描写として読めます。事情を知らない帝の無邪気さと、知る者たちの沈黙が対比される構図は、物語のなかでもとりわけ強いドラマティック・アイロニー（劇的皮肉）を生み出している、という見方ができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 本文から素直に読み取れる解釈</div>
+      <h3>藤壺の返歌に見る「言わずに伝える」美学</h3>
+      <p>源氏の直接的な恋の歌に対し、藤壺は唐土の故事を引きながら、はっきりとは応えずに深い余韻だけを残す返歌をします。想いを率直に言葉にする源氏と、古典的な教養に思いを託して間接的に伝える藤壺との対比は、二人の性格の違いだけでなく、当時の宮廷女性が置かれていた、本心を直接口にできない立場をも映し出している、と解釈できます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 物語全体・研究的視点からの読み解き</div>
+      <h3>頭中将との「並んで舞う」構図が示す、生涯続く対の関係</h3>
+      <p>青海波を二人並んで舞うという場面設定は、光源氏と頭中将が終始「並び立つ者」として描かれる関係性を象徴的に表していると見ることができます。この二人一組の構図は、のちの帖で娘や息子の世代（玉鬘をめぐる求婚争い、柏木と夕霧の関係）にも形を変えて反復されていく、物語全体を貫くモチーフの原型として位置づけられる、という見方があります。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 物語全体・研究的視点からの読み解き</div>
+      <h3>若宮の誕生が仕込む、後年の「因果応報」への伏線</h3>
+      <p>この帖で源氏が犯す「父の妻を寝取り、その子を父に育てさせる」という罪は、物語後半（柏木・若菜下以降）で、今度は源氏自身が同じ構図の被害者となって繰り返される因果応報の始点として読むことができます。紅葉賀の時点ではまだ栄光に包まれている源氏の罪が、物語全体の長い時間軸のなかで彼自身に返ってくるという構成は、作品の因果的な設計の巧みさを示している、という見方ができます。</p>
+    </div>
     <p class="disclaimer">※このセクションは物語解釈にもとづくAIの考察・見解であり、学術的に確定した通説ではありません。</p>
   </section>
 
@@ -425,14 +453,14 @@ const nodes = {
   gennaishi: {x:600, y:270, label:'源典侍'}
 };
 const edges = [
-  {a:'genji', b:'fujitsubo', label:'禁じられた恋（続く）', type:'love'},
-  {a:'genji', b:'wakamiya', label:'実の父（秘密）', type:'love'},
-  {a:'kiritsubo', b:'fujitsubo', label:'帝の妃', type:'blood'},
-  {a:'kiritsubo', b:'wakamiya', label:'我が子として溺愛（実は…）', type:'blood'},
-  {a:'fujitsubo', b:'wakamiya', label:'母として出産', type:'blood'},
-  {a:'genji', b:'tounochujo', label:'親友であり張り合う仲', type:'pol'},
-  {a:'genji', b:'gennaishi', label:'戯れの恋', type:'love'},
-  {a:'tounochujo', b:'gennaishi', label:'同じ相手をめぐる張り合い', type:'pol'}
+  {a:'genji', b:'fujitsubo', label:'禁じられた恋（続く）', type:'emotion'},
+  {a:'genji', b:'wakamiya', label:'実の父（秘密）', type:'kinship'},
+  {a:'kiritsubo', b:'fujitsubo', label:'帝の妃', type:'kinship'},
+  {a:'kiritsubo', b:'wakamiya', label:'我が子として溺愛（実は…、AIによる分類）', type:'kinship'},
+  {a:'fujitsubo', b:'wakamiya', label:'母として出産', type:'kinship'},
+  {a:'genji', b:'tounochujo', label:'親友であり張り合う仲（AIによる分類）', type:'conflict'},
+  {a:'genji', b:'gennaishi', label:'戯れの恋', type:'emotion'},
+  {a:'tounochujo', b:'gennaishi', label:'同じ相手をめぐる張り合い', type:'conflict'}
 ];
 const svg = document.getElementById('relmap');
 const NS = 'http://www.w3.org/2000/svg';

@@ -115,7 +115,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -123,6 +123,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -154,13 +155,15 @@
   .node text{font-family:"Shippori Mincho", serif; font-size:14px; fill:var(--ink);}
   .edge line{stroke-width:2px;}
   .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:11px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
-  .edge.love line{stroke:var(--suou);}
-  .edge.blood line{stroke:var(--koke);}
-  .edge.pol line{stroke:var(--murasaki);}
-  .edge.coop line{stroke:var(--yamabuki);}
+  .edge.kinship line{stroke:#8a8378;}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:#243a5e;}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
   .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
   .legend span{display:inline-flex; align-items:center; gap:6px;}
   .legend i{width:14px; height:3px; display:inline-block;}
+  .legend i.dashed{height:0; border-top:3px dashed; background:none;}
 
   /* ---- 3. reaction stages ---- */
   .stage-note{font-size:.86rem; color:var(--ink-soft); margin-top:14px;}
@@ -176,13 +179,14 @@
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
   /* ---- 4. waka (和歌) ---- */
-  .waka-block{margin-top:22px;}
-  .waka-block h3{font-size:1rem; color:var(--murasaki-deep); margin:0 0 14px; padding-top:18px; border-top:1px solid var(--line);}
-  .waka-card{background:var(--paper-deep); border-left:3px solid var(--yamabuki); padding:18px 20px; margin-bottom:14px;}
-  .waka-card .meta{font-size:.72rem; color:var(--suou); margin-bottom:8px; letter-spacing:.02em;}
-  .waka-card .text{font-family:"Shippori Mincho", serif; font-size:1.02rem; line-height:1.9; color:var(--ink); margin:0 0 10px;}
-  .waka-card .note{font-size:.85rem; color:var(--ink-soft); margin:0 0 8px;}
-  .waka-card .source{font-size:.72rem; color:#9a9280; margin:0;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
+  @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
+  .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
+  .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
+  .waka .trans{font-size:.82rem; color:var(--ink-soft);}
+  .waka .trans-label{font-size:.7rem; color:#9a9280; margin-bottom:3px;}
+  .waka .source{font-size:.7rem; color:#9a9280; margin-top:8px; border-top:1px dashed var(--line); padding-top:6px;}
 
   /* ---- 5. timeline ---- */
   .timeline{position:relative; padding-left:26px;}
@@ -257,19 +261,21 @@
     <div class="block-head"><span class="idx">2</span><h2>登場人物の関係性</h2></div>
     <div class="filters">
       <button data-f="all" class="active">すべて表示</button>
-      <button data-f="love">感情のつながり</button>
-      <button data-f="blood">血縁・婚姻</button>
-      <button data-f="pol">対立・障壁</button>
-      <button data-f="coop">協力・手引き</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
     </div>
     <div class="diagram-wrap">
       <svg id="relmap" viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div class="legend">
-      <span><i style="background:var(--suou)"></i>感情のつながり</span>
-      <span><i style="background:var(--koke)"></i>血縁・婚姻</span>
-      <span><i style="background:var(--murasaki)"></i>対立・障壁</span>
-      <span><i style="background:var(--yamabuki)"></i>協力・手引き</span>
+      <span><i style="background:#8a8378"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="border-top-color:var(--suou)"></i>感情</span>
+      <span><i style="background:#243a5e"></i>政争・対立</span>
+      <span><i class="dashed" style="border-top-color:var(--yamabuki)"></i>政略同盟</span>
+      <span><i class="dashed" style="border-top-color:var(--yamabuki)"></i>主従・忠誠</span>
     </div>
   </section>
 
@@ -322,22 +328,24 @@
       <dt>二条東院（にじょうのとういん）</dt>
       <dd>光る君が後年造営する、複数の女性を住まわせる邸。末摘花が後に迎え入れられることになる住まい。</dd>
     </dl>
-    <div class="waka-block">
-      <h3>本帖の和歌</h3>
-      <div class="waka-card">
-        <div class="meta">光源氏 ｜ 雪の朝、末摘花の素顔を初めて目にした後に</div>
-        <p class="text">なつかしき色ともなしに何にこの<br>すえつむ花を袖にふれけむ</p>
-        <p class="note">現代語訳：心惹かれる色というわけでもなかったのに、どうしてこの紅い花（鼻）に袖を触れてしまったのだろう。――理想との落差への戸惑いと自嘲がにじむ一首。この歌が「末摘花」という呼び名・帖名そのものの由来になっている。</p>
-        <p class="source">出典：『源氏物語』第6帖本文（帖名の典拠歌として、Wikipedia「末摘花（源氏物語）」「源氏物語巻名歌」ほか複数の解説サイトで一致して紹介されている）</p>
+    <h3 style="font-family:'Shippori Mincho',serif;font-size:1rem;color:var(--murasaki-deep);margin:30px 0 14px;padding-top:22px;border-top:1px solid var(--line);">本帖の和歌</h3>
+    <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">光源氏 ｜ 雪の朝、末摘花の素顔を初めて目にした後に</div>
+        <div class="poem">なつかしき色ともなしに何にこの<br>すえつむ花を袖にふれけむ</div>
+        <div class="trans-label">現代語訳</div>
+        <div class="trans">心惹かれる色というわけでもなかったのに、どうしてこの紅い花（鼻）に袖を触れてしまったのだろう。――理想との落差への戸惑いと自嘲がにじむ一首。この歌が「末摘花」という呼び名・帖名そのものの由来になっている。</div>
+        <div class="source">出典：『源氏物語』第6帖本文（帖名の典拠歌として、Wikipedia「末摘花（源氏物語）」「源氏物語巻名歌」ほか複数の解説サイトで一致して紹介されている）</div>
       </div>
-      <div class="waka-card">
-        <div class="meta">末摘花（女房・侍従の代作） ⇒ 光源氏（返歌） ｜ 契りを結んだ翌朝、光る君からの後朝（きぬぎぬ）の文への返事として</div>
-        <p class="text">晴れぬ夜の月待つ里を思ひやれ<br>同じ心に眺めせずとも</p>
-        <p class="note">現代語訳：雲の晴れない夜に月を待つように、あなたを待っているこの里の心をお察しください。たとえあなたが同じ気持ちで眺めていらっしゃらなくとも。――末摘花自身は返歌を詠む力がなく、女房の侍従が代わって詠んだとされる一首。</p>
-        <p class="source">出典：『源氏物語』第6帖本文（複数の和歌解説サイトで「侍従の代作」という説明も含め一致して紹介されている）</p>
+      <div class="waka">
+        <div class="speaker">末摘花（女房・侍従の代作） ⇒ 光源氏（返歌） ｜ 契りを結んだ翌朝、光る君からの後朝（きぬぎぬ）の文への返事として</div>
+        <div class="poem">晴れぬ夜の月待つ里を思ひやれ<br>同じ心に眺めせずとも</div>
+        <div class="trans-label">現代語訳</div>
+        <div class="trans">雲の晴れない夜に月を待つように、あなたを待っているこの里の心をお察しください。たとえあなたが同じ気持ちで眺めていらっしゃらなくとも。――末摘花自身は返歌を詠む力がなく、女房の侍従が代わって詠んだとされる一首。</div>
+        <div class="source">出典：『源氏物語』第6帖本文（複数の和歌解説サイトで「侍従の代作」という説明も含め一致して紹介されている）</div>
       </div>
-      <p class="disclaimer">※現代語訳は本ノート作成にあたっての意訳であり、確定した公式訳ではありません。</p>
     </div>
+    <p class="disclaimer">※現代語訳は本ノート作成にあたっての意訳であり、確定した公式訳ではありません。</p>
   </section>
 
   <!-- 5. あらすじ -->
@@ -423,6 +431,26 @@
       <h3>緊張と弛緩のリズム、そして「後見人」の萌芽</h3>
       <p>直前の「若紫」で藤壺との密通という物語最大の重い秘密を描いた直後に、この喜劇的な帖を配置する構成は、緊張と弛緩を意図的に織り交ぜる物語全体のリズム作りと見ることができます。また、外見での失望にもかかわらず生涯にわたり支援を続けるという展開は、後年に光る君が経済的な庇護者として複数の女性たちを二条東院に住まわせていく「後見人」としての側面の、早い例として位置づけられる、という見方があります。</p>
     </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 本文から素直に読み取れる解釈</div>
+      <h3>頭中将との「知らぬ恋敵」に見る、友情と競争の反復</h3>
+      <p>光る君と頭中将は、この帖以前から公私にわたり張り合う間柄として描かれてきましたが（帚木の「雨夜の品定め」など）、本帖ではその対抗心が、互いに正体を隠したまま同じ姫君に言い寄るという滑稽な形で表面化しています。友情と競争心が表裏一体となったこの二人の関係性は、単発の笑い話ではなく、物語を通じて繰り返し現れるパターンの一つの表れと見ることができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 物語全体・研究的視点からの読み解き</div>
+      <h3>大輔命婦という「媒介者」の役割の構造的反復</h3>
+      <p>噂を伝えて光る君を女君のもとへ導く女房の存在は、夕顔帖の右近、空蝉帖の小君などと同じ機能を担う、物語に繰り返し現れる装置と見ることができます。恋の発端に必ず誰かの「取り次ぎ」が介在するという構造は、当時の男女交際の作法（垣間見・文のやりとりを女房が仲立ちする）を反映すると同時に、光る君の恋がつねに他者の語りを経由して始まるという、この物語特有の語りの様式を示している、という見方もできます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 本文から素直に読み取れる解釈</div>
+      <h3>自嘲の和歌に見る、理想化された光る君像からの逸脱</h3>
+      <p>「なつかしき色ともなしに何にこのすえつむ花を袖にふれけむ」という歌は、光る君自身が自らの見込み違いをそのまま歌に詠み、失敗を隠さず表出している点で、これまでの帖で描かれてきた完璧で優雅な貴公子像とは異なる一面を見せています。恋の理想と現実のずれを笑いに転じるこのユーモアは、光る君という人物造形に、人間的な弱さと親しみやすさを添える役割を果たしている、と解釈できます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 物語全体・研究的視点からの読み解き</div>
+      <h3>末摘花の「沈黙」が映す、宮廷文化における機知という規範</h3>
+      <p>末摘花が文にも対面にもほとんど言葉を返せない様子は、単なる人物の欠点としてだけでなく、当時の宮廷社会が女性に和歌や当意即妙な受け答えという「機知」を求めていたことの裏返しとして読むこともできます。侍従が代わりに歌を詠まねば体裁が保てないという描写は、机上の教養が乏しいまま孤立して育った女性が、いかに恋愛市場で不利な立場に置かれたかを、喜劇の奥でそれとなく示している、という見方もできるでしょう。</p>
+    </div>
     <p class="disclaimer">※このセクションは物語解釈にもとづくAIの考察・見解であり、学術的に確定した通説ではありません。</p>
   </section>
 
@@ -497,12 +525,12 @@ const nodes = {
   jiju:     {x:600, y:270, label:'侍従（侍女）'}
 };
 const edges = [
-  {a:'genji', b:'sue', label:'期待から哀憐へ', type:'love'},
-  {a:'tono', b:'sue', label:'知らぬ間の求愛', type:'love'},
-  {a:'genji', b:'tono', label:'知らぬ恋敵同士', type:'pol'},
-  {a:'taifu', b:'genji', label:'噂を伝える', type:'coop'},
-  {a:'koremitsu', b:'genji', label:'乳母子・訪問を支える', type:'blood'},
-  {a:'jiju', b:'sue', label:'仕える侍女', type:'coop'}
+  {a:'genji', b:'sue', label:'期待から哀憐へ', type:'emotion'},
+  {a:'tono', b:'sue', label:'知らぬ間の求愛', type:'emotion'},
+  {a:'genji', b:'tono', label:'知らぬ恋敵同士（AIによる分類）', type:'conflict'},
+  {a:'taifu', b:'genji', label:'噂を伝える（AIによる分類）', type:'loyalty'},
+  {a:'koremitsu', b:'genji', label:'乳母子・訪問を支える（AIによる分類）', type:'kinship'},
+  {a:'jiju', b:'sue', label:'仕える侍女', type:'loyalty'}
 ];
 const svg = document.getElementById('relmap');
 const NS = 'http://www.w3.org/2000/svg';
