@@ -19,6 +19,8 @@
     --suou:#8b3a3a;
     --yamabuki:#c08a34;
     --koke:#5c6b47;
+    --gray:#8f8874;
+    --navy:#33415c;
     --line:#d8cdb8;
     --radius:2px;
   }
@@ -114,7 +116,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -122,6 +124,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -155,13 +158,15 @@
   .node text{font-family:"Shippori Mincho", serif; font-size:14px; fill:var(--ink);}
   .edge line{stroke-width:2px;}
   .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:11px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
-  .edge.love line{stroke:var(--suou);}
-  .edge.blood line{stroke:var(--koke);}
-  .edge.pol line{stroke:var(--murasaki);}
-  .edge.coop line{stroke:var(--yamabuki);}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:6,4;}
+  .edge.conflict line{stroke:var(--navy);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:6,4;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:2,3;}
   .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
   .legend span{display:inline-flex; align-items:center; gap:6px;}
-  .legend i{width:14px; height:3px; display:inline-block;}
+  .legend i{width:16px; height:3px; display:inline-block; background:var(--c);}
+  .legend i.dashed{background:none; border-top:3px dashed var(--c); height:0;}
 
   /* ---- 4. glossary ---- */
   .gloss{border-top:1px solid var(--line);}
@@ -173,9 +178,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
   .waka .poem.unknown{font-family:"Zen Kaku Gothic New", sans-serif; font-size:.85rem; font-style:italic; color:var(--ink-soft);}
@@ -274,19 +279,21 @@
     <div class="block-head"><span class="idx">2</span><h2>人物系図</h2></div>
     <div class="filters">
       <button data-f="all" class="active">すべて表示</button>
-      <button data-f="love">感情のつながり・執着</button>
-      <button data-f="blood">血縁・婚姻</button>
-      <button data-f="pol">対立・すれ違い</button>
-      <button data-f="coop">協力・手引き</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
     </div>
     <div class="diagram-wrap">
       <svg id="relmap" viewBox="0 0 800 340" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div class="legend">
-      <span><i style="background:var(--suou)"></i>感情のつながり・執着</span>
-      <span><i style="background:var(--koke)"></i>血縁・婚姻</span>
-      <span><i style="background:var(--murasaki)"></i>対立・すれ違い</span>
-      <span><i style="background:var(--yamabuki)"></i>協力・手引き</span>
+      <span><i class="dashed" style="--c:var(--gray); border-top-style:solid;"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="--c:var(--suou)"></i>感情</span>
+      <span><i class="dashed" style="--c:var(--navy); border-top-style:solid;"></i>政争・対立</span>
+      <span><i class="dashed" style="--c:var(--yamabuki)"></i>政略同盟</span>
+      <span><i class="dashed" style="--c:var(--yamabuki); border-top-style:dotted;"></i>主従・忠誠</span>
     </div>
     <p style="font-size:.86rem;color:var(--ink-soft);margin-top:14px;">軒端荻は本文上「継娘」と明記される。空蟬・光る君・軒端荻の三者の関係は、垣間見の場から一夜の人違いへと展開する。</p>
   </section>
@@ -373,11 +380,12 @@
       </div>
       <div class="waka">
         <div class="speaker">空蟬 → 光源氏（返歌）</div>
-        <div class="poem unknown">原文は本資料には記載されておらず、確認できません。</div>
-        <div class="trans-label">内容の要旨（原文未確認）</div>
-        <div class="trans">身の置き所のなさと人妻としての辛さを詠んだ歌とされる。ただし具体的な字句は本資料の出典範囲では確認できていません。</div>
+        <div class="poem">空蟬の　羽に置く露の　木隠れて　忍び忍びに　濡るる袖かな</div>
+        <div class="trans-label">現代語訳（要旨）</div>
+        <div class="trans">蝉の抜け殻の羽に置く露が木に隠れて見えないように、私もひっそりと涙で袖を濡らしております、という意。伊勢集にある和歌に由来するとされる。</div>
       </div>
     </div>
+    <p class="disclaimer">※空蟬の返歌は当初「原文未確認」として割愛していましたが、今回改めてWeb検索を行ったところ、複数の情報源で原文が確認できたため追記しました。</p>
   </section>
 
   <!-- 5. あらすじ -->
@@ -405,6 +413,21 @@
       <div class="tag">深層考察 ｜ 物語全体・研究的視点</div>
       <h3>理論と現実の落差、そして「空蝉」という比喩の始まり</h3>
       <p>帚木で語られた「中の品こそ興あり」という理論に触発された光る君が、実際には理想の相手に拒まれ、代わりに別の女性と結ばれてしまう本帖の展開は、理論と現実の落差を早々に示す構成として読めます。また「空蝉」という語がこの後も繰り返し光る君の歌に登場し、この世のはかなさ・脱ぎ捨てられる身という仏教的無常観と結びつく点は、研究者の間でしばしば指摘されます。光る君に応じない女性という前例をこの早い段階に置くことで、後の藤壺・朧月夜など様々な女性関係の対比軸を用意しているとの見方もあります。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 軒端荻という対照的な人物造形</div>
+      <h3>「拒む女」と「拒まない女」を一夜のうちに並べる構成</h3>
+      <p>空蟬が身をもって拒絶を示す一方、継娘の軒端荻は人違いと知らぬまま屈託なく契りを受け入れます。同じ場面・同じ一夜のうちに対照的な二人の女性の反応を並置する構成は、光る君の恋が相手の性格によってまったく異なる結末をたどることを際立たせる仕掛けとして読める、という見方ができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 小君という「共犯者」の造形</div>
+      <h3>無邪気さゆえに姉を裏切る少年</h3>
+      <p>小君は姉・空蟬への裏切りという自覚をほとんど持たないまま、光る君への純粋な慕情から手引き役を務め続けます。この「悪意なき共犯」という造形は、光る君の恋がしばしば周囲の善意や無邪気さを巻き込みながら進んでいくという、物語全体に通じるパターンの初期の一例として捉えることができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 「垣間見」という物語装置の反復</div>
+      <h3>のちの若紫との出会いに先立つ手法</h3>
+      <p>几帳の隙間から女性の様子をひそかに覗き見る「垣間見」の手法は、この帖で光る君が空蟬・軒端荻の姿を目にする場面に用いられていますが、同じ手法は第5帖「若紫」で若紫と出会う場面でも繰り返し使われます。垣間見によって恋が始まるという構図がこの帖で早くも確立されている、という見方ができます。</p>
     </div>
     <p class="disclaimer">※このセクションは物語解釈にもとづくAIの考察・見解であり、学術的に確定した通説ではありません。</p>
   </section>
@@ -473,11 +496,11 @@ const nodes = {
   kiinokami: {x:660, y:280, label:'紀伊守'}
 };
 const edges = [
-  {a:'iyonosuke', b:'utsusemi', label:'婚姻（地方赴任中）', type:'blood'},
-  {a:'kiinokami', b:'nokiba', label:'兄妹', type:'blood'},
-  {a:'kogimi', b:'genji', label:'手引き役', type:'coop'},
-  {a:'genji', b:'utsusemi', label:'拒み逃れる・執着', type:'love'},
-  {a:'genji', b:'nokiba', label:'人違いの契り', type:'pol'}
+  {a:'iyonosuke', b:'utsusemi', label:'婚姻（地方赴任中）', type:'kinship'},
+  {a:'kiinokami', b:'nokiba', label:'兄妹', type:'kinship'},
+  {a:'kogimi', b:'genji', label:'手引き役（AIによる分類）', type:'loyalty'},
+  {a:'genji', b:'utsusemi', label:'拒み逃れる・執着', type:'emotion'},
+  {a:'genji', b:'nokiba', label:'人違いの契り', type:'emotion'}
 ];
 const svg = document.getElementById('relmap');
 const NS = 'http://www.w3.org/2000/svg';

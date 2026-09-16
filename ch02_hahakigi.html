@@ -19,6 +19,8 @@
     --suou:#8b3a3a;
     --yamabuki:#c08a34;
     --koke:#5c6b47;
+    --gray:#8f8874;
+    --navy:#33415c;
     --line:#d8cdb8;
     --radius:2px;
   }
@@ -114,7 +116,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -122,6 +124,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -153,12 +156,15 @@
   .node text{font-family:"Shippori Mincho", serif; font-size:14px; fill:var(--ink);}
   .edge line{stroke-width:2px;}
   .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:11px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
-  .edge.love line{stroke:var(--suou);}
-  .edge.blood line{stroke:var(--koke);}
-  .edge.pol line{stroke:var(--murasaki);}
+  .edge.kinship line{stroke:var(--gray);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:6,4;}
+  .edge.conflict line{stroke:var(--navy);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:6,4;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:2,3;}
   .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
   .legend span{display:inline-flex; align-items:center; gap:6px;}
-  .legend i{width:14px; height:3px; display:inline-block;}
+  .legend i{width:16px; height:3px; display:inline-block; background:var(--c);}
+  .legend i.dashed{background:none; border-top:3px dashed var(--c); height:0;}
 
   /* ---- 4. glossary ---- */
   .gloss{border-top:1px solid var(--line);}
@@ -170,9 +176,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
   .waka .trans{font-size:.82rem; color:var(--ink-soft);}
@@ -251,17 +257,21 @@
     <div class="block-head"><span class="idx">2</span><h2>登場人物の関係性</h2></div>
     <div class="filters">
       <button data-f="all" class="active">すべて表示</button>
-      <button data-f="love">恋愛・求愛</button>
-      <button data-f="blood">友誼・姻戚</button>
-      <button data-f="pol">政治・対立</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
     </div>
     <div class="diagram-wrap">
       <svg id="relmap" viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div class="legend">
-      <span><i style="background:var(--suou)"></i>恋愛・求愛</span>
-      <span><i style="background:var(--koke)"></i>友誼・姻戚</span>
-      <span><i style="background:var(--murasaki)"></i>政治・対立</span>
+      <span><i class="dashed" style="--c:var(--gray); border-top-style:solid;"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="--c:var(--suou)"></i>感情</span>
+      <span><i class="dashed" style="--c:var(--navy); border-top-style:solid;"></i>政争・対立</span>
+      <span><i class="dashed" style="--c:var(--yamabuki)"></i>政略同盟</span>
+      <span><i class="dashed" style="--c:var(--yamabuki); border-top-style:dotted;"></i>主従・忠誠</span>
     </div>
   </section>
 
@@ -307,7 +317,23 @@
       <dt>後朝の文（きぬぎぬのふみ）</dt>
       <dd>男女が一夜を共にした翌朝、男から女へ送る文（手紙）。届く早さや文面の丁寧さが、相手への誠意のあらわれとされた。</dd>
     </dl>
-    <p class="disclaimer">※この帖では、これといえる象徴的な和歌の贈答は伝わっていないため、今回は割愛しています。</p>
+
+    <h3 style="font-family:'Shippori Mincho',serif;font-size:1rem;color:var(--murasaki-deep);margin:30px 0 14px;padding-top:22px;border-top:1px solid var(--line);">作中の和歌解説</h3>
+    <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">光源氏 → 空蝉</div>
+        <div class="poem">帚木の　心を知らで　その原の　道にあやなく　まどひぬるかな</div>
+        <div class="trans-label">現代語訳（要旨）</div>
+        <div class="trans">近づけば消えるという帚木のような、つれないあなたの心も知らずに、園原への道に空しく迷ってしまったことです。この歌が帖名「帚木」の由来となっている。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">空蝉 → 光源氏（返歌）</div>
+        <div class="poem">数ならぬ　伏屋に生ふる　名のうさに　あるにもあらず　消ゆる帚木</div>
+        <div class="trans-label">現代語訳（要旨）</div>
+        <div class="trans">数にも入らない身分の伏屋に生えているという評判がつらいので、存在しても存在しないもののように、あなたの前から姿を消してしまう帚木なのです、という意。</div>
+      </div>
+    </div>
+    <p class="disclaimer">※この和歌は「割愛」としていましたが、今回改めてWeb検索を行ったところ、複数の情報源（『源氏物語』各帖のあらすじ Wikipedia「帚木」の項、他）で実在と原文が確認できたため、追記しました。なお本帖にはこの他にも「雨夜の品定め」の場面などで詠まれた和歌が複数確認できますが、本ノートでは帖名の由来となったこの贈答歌のみを代表として掲載しています。</p>
   </section>
 
   <!-- 5. あらすじ -->
@@ -337,6 +363,26 @@
       <div class="tag">考察 ｜ 深層考察・心理構造</div>
       <h3>藤壺への思慕が生む「代償的な恋」の始まり</h3>
       <p>桐壺帖で植え付けられた藤壺への絶対に叶わない思慕が、光源氏を「手の届く中の品の女性」へと向かわせる動機になっている、という見方があります。空蝉への強引な行為も、単なる好色というより、満たされない思いのはけ口を別の対象に求める行動パターンの最初の現れと捉えることができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 空蝉という「拒む女性」の先駆け</div>
+      <h3>物語で数少ない「拒絶する女性」の原型がここに置かれる</h3>
+      <p>強引に契りを結ばれてなお文を送り続ける光源氏に対し、空蝉が最後まで心を動かされながらも応じようとしない姿勢は、この後の展開（第3帖「空蝉」での再度の拒絶）へとまっすぐにつながっています。物語全体を通じて光源氏の求愛が実らない例は決して多くありませんが、その数少ない一例の出発点がこの帖に置かれている、という見方ができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 頭中将との対比構造</div>
+      <h3>語り手としての頭中将と、当事者となる光源氏</h3>
+      <p>雨夜の品定めで頭中将が体験談として語る「常夏の女」（のちの夕顔）のエピソードは、聞き役だった光源氏自身が、この帖の終盤で空蝉という「もう一人の女性」の当事者になっていく展開と鏡合わせの構造を持っている、という解釈ができます。頭中将は語ることで過去の恋を整理し、光源氏は聞くことで新しい恋に踏み出す。二人の親友の対照的な立ち位置が、この一夜の中で入れ替わっていくように読めます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 「聞き役」に徹する光源氏という語りの装置</div>
+      <h3>光源氏がほとんど発言しないことの意味</h3>
+      <p>雨夜の品定めの場面で、光源氏はほぼ一貫して他の男たちの体験談を聞く側に回り、自らの恋愛観を積極的には語りません。この「寡黙な聞き役」という位置づけは、読者に光源氏の内面を直接説明させず、代わりに彼がその後どのような行動を取るか（＝中の品の女性である空蝉に接近する）によって、間接的に彼の関心のありかを示す語りの手法になっている、と読むことができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 「方違え」という偶然と必然の装置</div>
+      <h3>制度としての偶然が物語を動かす</h3>
+      <p>光源氏と空蝉の出会いは、本来なら無関係な二人を「方違え」という当時の陰陽道の習わしが引き合わせる形で生じています。個人の意志ではなく社会制度上の偶然によって重要な出会いが生まれるという構図は、源氏物語全体で繰り返される「宿世（すくせ）」（前世からの因縁）というテーマと重ね合わせて論じられることがあります。</p>
     </div>
     <p class="disclaimer">※このセクションは物語解釈にもとづくAIの考察・見解であり、学術的に確定した通説ではありません。</p>
   </section>
@@ -401,11 +447,11 @@ const nodes = {
   tokonatsu:{x:600, y:270, label:'常夏の女'}
 };
 const edges = [
-  {a:'genji', b:'fujitsubo', label:'密かな慕情（変わらず）', type:'love'},
-  {a:'genji', b:'toonoc', label:'親友・妻の兄', type:'blood'},
-  {a:'genji', b:'samanokami', label:'女性論の聞き役', type:'blood'},
-  {a:'genji', b:'utsusemi', label:'強引な契り', type:'love'},
-  {a:'toonoc', b:'tokonatsu', label:'隠れた愛人関係', type:'love'}
+  {a:'genji', b:'fujitsubo', label:'密かな慕情（変わらず）', type:'emotion'},
+  {a:'genji', b:'toonoc', label:'親友・妻の兄（AIによる分類）', type:'kinship'},
+  {a:'genji', b:'samanokami', label:'女性論の聞き役（AIによる分類）', type:'emotion'},
+  {a:'genji', b:'utsusemi', label:'強引な契り', type:'emotion'},
+  {a:'toonoc', b:'tokonatsu', label:'隠れた愛人関係', type:'emotion'}
 ];
 const svg = document.getElementById('relmap');
 const NS = 'http://www.w3.org/2000/svg';
