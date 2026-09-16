@@ -114,7 +114,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -122,6 +122,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -153,12 +154,15 @@
   .node text{font-family:"Shippori Mincho", serif; font-size:14px; fill:var(--ink);}
   .edge line{stroke-width:2px;}
   .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:11px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
-  .edge.love line{stroke:var(--suou);}
-  .edge.blood line{stroke:var(--koke);}
-  .edge.pol line{stroke:var(--murasaki);}
+  .edge.kinship line{stroke:#8a8378;}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:#243a5e;}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
   .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
   .legend span{display:inline-flex; align-items:center; gap:6px;}
   .legend i{width:14px; height:3px; display:inline-block;}
+  .legend i.dashed{height:0; border-top:3px dashed; background:none;}
 
   /* ---- 4. glossary ---- */
   .gloss{border-top:1px solid var(--line);}
@@ -170,9 +174,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
   .waka .trans{font-size:.82rem; color:var(--ink-soft);}
@@ -256,17 +260,21 @@
     <div class="block-head"><span class="idx">2</span><h2>登場人物の関係性</h2></div>
     <div class="filters">
       <button data-f="all" class="active">すべて表示</button>
-      <button data-f="love">恋愛・訣別</button>
-      <button data-f="blood">血縁</button>
-      <button data-f="pol">政治・対立</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
     </div>
     <div class="diagram-wrap">
       <svg id="relmap" viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div class="legend">
-      <span><i style="background:var(--suou);"></i>恋愛・訣別</span>
-      <span><i style="background:var(--koke);"></i>血縁</span>
-      <span><i style="background:var(--murasaki);"></i>政治・対立</span>
+      <span><i style="background:#8a8378;"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="border-top-color:var(--suou)"></i>感情</span>
+      <span><i style="background:#243a5e;"></i>政争・対立</span>
+      <span><i class="dashed" style="border-top-color:var(--yamabuki)"></i>政略同盟</span>
+      <span><i class="dashed" style="border-top-color:var(--yamabuki)"></i>主従・忠誠</span>
     </div>
   </section>
 
@@ -368,6 +376,26 @@
       <h3>藤壺の出家は「母」としての政治的決断でもある</h3>
       <p>藤壺の出家は、源氏への恋情を断つという個人的な決断であると同時に、実子である東宮を守るための極めて政治的な選択でもある、という見方ができます。出家して源氏との関係の噂を根から絶つことで、東宮の出自に対する疑念が政争の材料にされることを未然に防ごうとした、と読むこともできるでしょう。</p>
     </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 本文から素直に読み取れる解釈</div>
+      <h3>榊の贈答歌に見る、六条御息所の意地と誇り</h3>
+      <p>「神垣はしるしの杉もなきものを」と婉曲に源氏をあしらう御息所の歌は、未練を素直に見せることを潔しとしない、彼女の誇り高い性分をよく表していると読めます。車争いの屈辱や生霊化という深い傷を負いながらも、最後まで気位の高さを崩さない態度が、この別れの場面に静かな緊張感を与えている、という見方ができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 物語全体・研究的視点からの読み解き</div>
+      <h3>紫の上の裳着に見る、源氏をめぐる女性関係の「世代交代」</h3>
+      <p>六条御息所の伊勢下向、藤壺の出家という、源氏より年長・格上の女性たちの退場と、紫の上の裳着（成人の儀）が同じ帖の中で並行して描かれる構成は、源氏の人生における女性関係の重心が、年上の庇護者的存在から、自ら育て上げた若い妻へと移り変わっていくことを、構造的に示している、という見方ができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 本文から素直に読み取れる解釈</div>
+      <h3>桐壺院の崩御が招く、物語の政治的な転轍点</h3>
+      <p>桐壺院という後ろ盾を失ったことで、源氏はそれまでの「帝に愛される皇子」という安泰な立場から、一転して政敵にとって攻撃しやすい存在へと変わります。この帖で描かれる崩御は、単なる肉親の死にとどまらず、源氏の政治的立場そのものを根本から揺るがす転轍点として機能している、という見方ができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 物語全体・研究的視点からの読み解き</div>
+      <h3>朧月夜との密会継続に見える、源氏の「危うい情熱」の反復性</h3>
+      <p>花宴の帖ですでに政敵の娘という危うさを自覚していたはずの源氏が、それでもなお朧月夜との関係を続け、結果として密会を右大臣に押さえられてしまう展開は、藤壺への叶わぬ思いをはじめとする、危険と知りながら惹かれずにいられない源氏の恋愛傾向が、繰り返しこの人物の運命を左右していることを示している、という見方ができます。</p>
+    </div>
     <p class="disclaimer">※このセクションは物語解釈にもとづくAIの考察・見解であり、学術的に確定した通説ではありません。</p>
   </section>
 
@@ -437,16 +465,16 @@ const nodes = {
   udaijin:    {x:110, y:170, label:'右大臣'}
 };
 const edges = [
-  {a:'genji', b:'rokujo', label:'訣別へ向かう恋', type:'love'},
-  {a:'genji', b:'fujitsubo', label:'断てぬ恋慕・拒絶される', type:'love'},
-  {a:'genji', b:'murasaki', label:'二条院で結ばれた若妻', type:'love'},
-  {a:'genji', b:'oborozukiyo', label:'密会が発覚', type:'love'},
-  {a:'genji', b:'kiritsuboin', label:'実の親子・崩御', type:'blood'},
-  {a:'fujitsubo', b:'kiritsuboin', label:'中宮（表向きの夫婦）', type:'blood'},
-  {a:'kokiden', b:'udaijin', label:'父娘', type:'blood'},
-  {a:'kokiden', b:'oborozukiyo', label:'姉妹', type:'blood'},
-  {a:'kokiden', b:'genji', label:'政敵', type:'pol'},
-  {a:'udaijin', b:'genji', label:'密会発覚で対立', type:'pol'}
+  {a:'genji', b:'rokujo', label:'訣別へ向かう恋', type:'emotion'},
+  {a:'genji', b:'fujitsubo', label:'断てぬ恋慕・拒絶される', type:'emotion'},
+  {a:'genji', b:'murasaki', label:'二条院で結ばれた若妻（AIによる分類）', type:'kinship'},
+  {a:'genji', b:'oborozukiyo', label:'密会が発覚', type:'emotion'},
+  {a:'genji', b:'kiritsuboin', label:'実の親子・崩御', type:'kinship'},
+  {a:'fujitsubo', b:'kiritsuboin', label:'中宮（表向きの夫婦）', type:'kinship'},
+  {a:'kokiden', b:'udaijin', label:'父娘', type:'kinship'},
+  {a:'kokiden', b:'oborozukiyo', label:'姉妹', type:'kinship'},
+  {a:'kokiden', b:'genji', label:'政敵', type:'conflict'},
+  {a:'udaijin', b:'genji', label:'密会発覚で対立', type:'conflict'}
 ];
 const svg = document.getElementById('relmap');
 const NS = 'http://www.w3.org/2000/svg';
