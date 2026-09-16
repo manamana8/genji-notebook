@@ -114,7 +114,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -122,6 +122,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -153,12 +154,15 @@
   .node text{font-family:"Shippori Mincho", serif; font-size:14px; fill:var(--ink);}
   .edge line{stroke-width:2px;}
   .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:11px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
-  .edge.love line{stroke:var(--suou);}
-  .edge.blood line{stroke:var(--koke);}
-  .edge.pol line{stroke:var(--murasaki);}
+  .edge.kinship line{stroke:#8a8378;}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:#243a5e;}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
   .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
   .legend span{display:inline-flex; align-items:center; gap:6px;}
   .legend i{width:14px; height:3px; display:inline-block;}
+  .legend i.dashed{height:0; border-top:3px dashed; background:none;}
 
   /* ---- 4. glossary ---- */
   .gloss{border-top:1px solid var(--line);}
@@ -170,9 +174,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
   .waka .trans{font-size:.82rem; color:var(--ink-soft);}
@@ -252,17 +256,21 @@
     <div class="block-head"><span class="idx">2</span><h2>登場人物の関係性</h2></div>
     <div class="filters">
       <button data-f="all" class="active">すべて表示</button>
-      <button data-f="love">恋愛・情念</button>
-      <button data-f="blood">血縁・姻戚</button>
-      <button data-f="pol">政治・対立</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
     </div>
     <div class="diagram-wrap">
       <svg id="relmap" viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div class="legend">
-      <span><i style="background:var(--suou)"></i>恋愛・情念</span>
-      <span><i style="background:var(--koke)"></i>血縁・姻戚</span>
-      <span><i style="background:var(--murasaki)"></i>政治・対立</span>
+      <span><i style="background:#8a8378"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="border-top-color:var(--suou)"></i>感情</span>
+      <span><i style="background:#243a5e"></i>政争・対立</span>
+      <span><i class="dashed" style="border-top-color:var(--yamabuki)"></i>政略同盟</span>
+      <span><i class="dashed" style="border-top-color:var(--yamabuki)"></i>主従・忠誠</span>
     </div>
   </section>
 
@@ -360,6 +368,21 @@
       <h3>紫の上との新枕は「庇護」から「夫婦」への質的転換</h3>
       <p>それまで源氏が父・後見人のような立場で育ててきた紫の上との関係が、この帖で初めて夫婦としての実質を持つことになります。葵の上の死という悲劇と隣り合わせでこの転換が描かれることで、源氏の人生における「喪失と獲得」が対になって進んでいく物語構造が見て取れる、という考察ができます。</p>
     </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 本文から素直に読み取れる解釈</div>
+      <h3>六条御息所の沈黙に見る、感情を律することを強いられた高貴な女性の苦しさ</h3>
+      <p>車争いで公然と屈辱を受けながらも、御息所はその場で声を荒げることも、公然と抗議することもできません。身分や教養が高いがゆえに、感情をそのまま表に出すことが許されない立場に置かれていたことが、屈辱をより深く内側に沈めさせ、結果として制御しきれない生霊化という形で噴き出す遠因になっている、という見方ができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 物語全体・研究的視点からの読み解き</div>
+      <h3>夕霧の誕生に見る、「母を持たない子」というモチーフの反復</h3>
+      <p>生まれてすぐに母を失う夕霧の境遇は、実父を知らぬまま育つ若宮（後の冷泉帝）とは異なる形でありながら、「実の親の一方が欠けたまま育つ子」という、この物語に繰り返し現れるモチーフの一例として読むことができます。祖父母のもとで育てられるという設定も含め、この帖が後の帖（特に「夕霧」）への長い伏線を仕込んでいる、という見方ができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 物語全体・研究的視点からの読み解き</div>
+      <h3>葵の上の死という「喪失」が、源氏の人生の一区切りを画す構造的機能</h3>
+      <p>葵の上の死は、単に一人の登場人物の退場にとどまらず、源氏がそれまでの「青年期の恋愛遍歴」から「紫の上を正妻格として迎える新たな段階」へと移行する、物語構造上の節目として機能している、という見方ができます。喪失をきっかけに人間関係が大きく組み替わるという構図は、この後の帖でも繰り返し描かれていく、源氏物語全体を貫くパターンの一つとして位置づけられます。</p>
+    </div>
     <p class="disclaimer">※このセクションは物語解釈にもとづくAIの考察・見解であり、学術的に確定した通説ではありません。</p>
   </section>
 
@@ -427,12 +450,12 @@ const nodes = {
   yugiri:  {x:600, y:270, label:'夕霧（新生児）'}
 };
 const edges = [
-  {a:'genji', b:'aoi', label:'正妻（次第に和解の兆し）', type:'pol'},
-  {a:'genji', b:'rokujo', label:'恐れと哀れみが残る関係', type:'love'},
-  {a:'rokujo', b:'aoi', label:'生霊による祟り（嫉妬の情念）', type:'love'},
-  {a:'genji', b:'murasaki', label:'新枕・正式な夫婦へ', type:'love'},
-  {a:'aoi', b:'toonoc', label:'兄妹', type:'blood'},
-  {a:'aoi', b:'yugiri', label:'出産直後に死去', type:'blood'}
+  {a:'genji', b:'aoi', label:'正妻（次第に和解の兆し、AIによる分類）', type:'kinship'},
+  {a:'genji', b:'rokujo', label:'恐れと哀れみが残る関係', type:'emotion'},
+  {a:'rokujo', b:'aoi', label:'生霊による祟り（嫉妬の情念、AIによる分類）', type:'conflict'},
+  {a:'genji', b:'murasaki', label:'新枕・正式な夫婦へ（AIによる分類）', type:'kinship'},
+  {a:'aoi', b:'toonoc', label:'兄妹', type:'kinship'},
+  {a:'aoi', b:'yugiri', label:'出産直後に死去', type:'kinship'}
 ];
 const svg = document.getElementById('relmap');
 const NS = 'http://www.w3.org/2000/svg';

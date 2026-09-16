@@ -114,7 +114,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -122,6 +122,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -153,13 +154,15 @@
   .node text{font-family:"Shippori Mincho", serif; font-size:14px; fill:var(--ink);}
   .edge line{stroke-width:2px;}
   .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:11px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
-  .edge.love line{stroke:var(--suou);}
-  .edge.blood line{stroke:var(--koke);}
-  .edge.pol line{stroke:var(--murasaki);}
-  .edge.riv line{stroke:#a35c2b; stroke-dasharray:5,3;}
+  .edge.kinship line{stroke:#8a8378;}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:7,5;}
+  .edge.conflict line{stroke:#243a5e;}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:7,5;}
   .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
   .legend span{display:inline-flex; align-items:center; gap:6px;}
   .legend i{width:14px; height:3px; display:inline-block;}
+  .legend i.dashed{height:0; border-top:3px dashed; background:none;}
 
   /* ---- 4. glossary ---- */
   .gloss{border-top:1px solid var(--line);}
@@ -171,9 +174,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
   .waka .trans{font-size:.82rem; color:var(--ink-soft);}
@@ -267,19 +270,21 @@
     <div class="block-head"><span class="idx">2</span><h2>人物系図・関係図</h2></div>
     <div class="filters">
       <button class="active" data-f="all" onclick="">すべて</button>
-      <button data-f="love">恋愛・契り</button>
-      <button data-f="blood">血縁</button>
-      <button data-f="pol">政治的立場</button>
-      <button data-f="riv">対立・警戒</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
+      <button data-f="alliance">政略同盟</button>
+      <button data-f="loyalty">主従・忠誠</button>
     </div>
     <div class="diagram-wrap">
       <svg id="relmap" viewBox="0 0 720 340"></svg>
     </div>
     <div class="legend">
-      <span><i style="background:var(--suou);"></i>恋愛・契り</span>
-      <span><i style="background:var(--koke);"></i>血縁</span>
-      <span><i style="background:var(--murasaki);"></i>政治的立場</span>
-      <span><i style="background:#a35c2b;"></i>対立・警戒</span>
+      <span><i style="background:#8a8378;"></i>血縁・婚姻</span>
+      <span><i class="dashed" style="border-top-color:var(--suou)"></i>感情</span>
+      <span><i style="background:#243a5e;"></i>政争・対立</span>
+      <span><i class="dashed" style="border-top-color:var(--yamabuki)"></i>政略同盟</span>
+      <span><i class="dashed" style="border-top-color:var(--yamabuki)"></i>主従・忠誠</span>
     </div>
   </section>
 
@@ -349,8 +354,26 @@
         <div class="trans-label">現代語訳（意訳）</div>
         <div class="trans">くっきりと照るのでもなく、すっかり曇りきるのでもない、春の夜のおぼろな月に及ぶものはない。</div>
       </div>
+      <div class="waka">
+        <div class="speaker">光源氏 → 女君（後の朧月夜）｜弘徽殿の細殿で袖をとらえた直後に</div>
+        <div class="poem">深き夜の<br>あはれを知るも<br>入る月の<br>おぼろけならぬ<br>契りとぞ思ふ</div>
+        <div class="trans-label">現代語訳（意訳）</div>
+        <div class="trans">夜更けの風情をご存じでいらっしゃるのも、山の端に入る月のせいでしょう。あなたと私のこの巡り合わせは、並々ならぬ深い縁によるものと思います。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">光源氏 → 朧月夜｜藤の宴での再会の場面で</div>
+        <div class="poem">梓弓<br>いるさの山に<br>惑ふかな<br>ほの見し月の<br>影や見ゆると</div>
+        <div class="trans-label">現代語訳（意訳）</div>
+        <div class="trans">梓弓の「いる」ではないが、あなたを見失って山道に迷うように途方に暮れています。あの夜ほのかに見えたあなたの面影が、また見えはしないかと。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">朧月夜 → 光源氏（返歌）｜藤の宴での再会の場面で</div>
+        <div class="poem">心いる<br>方ならませば<br>ゆみはりの<br>つきなき空に<br>迷はましやは</div>
+        <div class="trans-label">現代語訳（意訳）</div>
+        <div class="trans">もし本当に心を込めて探してくださっているのなら、弓張月の出ていない空であっても、迷ったりなさらないでしょうに。</div>
+      </div>
     </div>
-    <p class="disclaimer">※これは大江千里の歌（『新古今和歌集』などに収録）として伝わる、女君が自ら作った歌ではなく口ずさんだ古歌です。源氏がこの声に呼び止められたことが二人の出会いの発端になります。なお、この後に二人が実際に交わしたとされる贈答歌の正確な原文については確認できないため、ここでは割愛しています。</p>
+    <p class="disclaimer">※「照りもせず」の歌は大江千里の歌（『新古今和歌集』などに収録）として伝わる、女君が自ら作った歌ではなく口ずさんだ古歌です。「深き夜の」「梓弓」「心いる方」の3首は、再度のWeb検索により、原文（与謝野晶子訳・角川ソフィア文庫版などの現代語訳・注釈サイト）で実在が複数確認できたため、今回の改修で追加しました。現代語訳はいずれも本ノート作成にあたっての意訳であり、確定した公式訳ではありません。</p>
   </section>
 
   <!-- 5. あらすじ -->
@@ -378,6 +401,26 @@
       <div class="tag">考察 ｜ 深層考察・伏線としての機能</div>
       <h3>藤壺への叶わぬ思いが、より危険な恋への引き金になる</h3>
       <p>源氏が藤壺の御殿に近づけず引き返した直後に、朧月夜と出会っている点は、桐壺・帚木の帖から続く「満たされない思いが、別の対象への行動を引き起こす」というパターンの延長線上にある、という見方ができます。ただし、空蟬や夕顔のときと違い、今回の相手は政敵である右大臣家の、しかも東宮の妃候補という、政治的にきわめて危険な相手であった点が、以降の展開（朱雀帝の代替わり後の須磨への退去）に直結する伏線になっている、という考察が可能です。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 本文から素直に読み取れる解釈</div>
+      <h3>素性を明かさぬ一夜の逢瀬という、平安の恋の様式美</h3>
+      <p>名乗り合わぬまま声と気配だけで惹かれ合い、契りを結んでしまうという展開は、夕顔や空蟬の帖とも通じる「素性の不確かさそのものが恋を駆り立てる」というこの物語特有のロマンスの型を、より凝縮した形で示していると読めます。相手が誰かを知らないからこそ生まれる緊張と甘美さが、この場面の魅力を支えている、という見方ができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 物語全体・研究的視点からの読み解き</div>
+      <h3>「扇」という形見のモチーフの反復</h3>
+      <p>素性を明かさぬまま扇だけを取り交わし、後日それを手がかりに相手を特定するという展開は、平安文学に広く見られる「物（形見）による本人確認」の型の一例です。源氏物語自体においても、のちの帖で交わされる文や品々が人間関係の証・手がかりとして機能する場面が繰り返し描かれており、この帖の扇はその早い例として位置づけられる、という見方ができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 本文から素直に読み取れる解釈</div>
+      <h3>朧月夜の大胆さに見える、のちの生き方の萌芽</h3>
+      <p>「后がね」という立場にありながら、見知らぬ相手との一夜の契りをためらわずに受け入れる朧月夜の振る舞いは、この帖の時点ですでに、彼女が周囲の思惑に完全には縛られない性質の持ち主であることを示唆している、と読むことができます。この大胆さは、後の帖で源氏との関係を人目を忍びつつも続けていく彼女の生き方に、一貫して引き継がれていく、という見方もできます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 物語全体・研究的視点からの読み解き</div>
+      <h3>藤壺への挫折が、朧月夜への急接近を呼び込む心理の連続性</h3>
+      <p>藤壺の御殿の戸が閉ざされていたその足で、すぐに別の女君との契りへと向かうという流れは、満たされない思いがそのまま別の対象への行動に置き換わるという、光源氏に繰り返し見られる心理的パターンの一例として読むことができます。藤壺という手の届かぬ理想への渇望が、より現実的な、しかしより危険な相手への接近というかたちで噴き出している、という解釈が可能です。</p>
     </div>
     <p class="disclaimer">※このセクションは物語解釈にもとづくAIの考察・見解であり、学術的に確定した通説ではありません。</p>
   </section>
@@ -446,14 +489,14 @@ const nodes = {
   udaijin:   {x:120, y:290, label:'右大臣'}
 };
 const edges = [
-  {a:'genji', b:'fujitsubo', label:'断ちがたい思慕', type:'love'},
-  {a:'genji', b:'toonoc', label:'親友・義兄弟', type:'blood'},
-  {a:'genji', b:'oborozukiyo', label:'名も知らぬ一夜の契り', type:'love'},
-  {a:'oborozukiyo', b:'kokiden', label:'姉妹', type:'blood'},
-  {a:'oborozukiyo', b:'udaijin', label:'父娘', type:'blood'},
-  {a:'kokiden', b:'udaijin', label:'父娘', type:'blood'},
-  {a:'genji', b:'kokiden', label:'警戒・敵対', type:'riv'},
-  {a:'toonoc', b:'udaijin', label:'左右両家の緊張', type:'pol'}
+  {a:'genji', b:'fujitsubo', label:'断ちがたい思慕', type:'emotion'},
+  {a:'genji', b:'toonoc', label:'親友・義兄弟（AIによる分類）', type:'kinship'},
+  {a:'genji', b:'oborozukiyo', label:'名も知らぬ一夜の契り', type:'emotion'},
+  {a:'oborozukiyo', b:'kokiden', label:'姉妹', type:'kinship'},
+  {a:'oborozukiyo', b:'udaijin', label:'父娘', type:'kinship'},
+  {a:'kokiden', b:'udaijin', label:'父娘', type:'kinship'},
+  {a:'genji', b:'kokiden', label:'警戒・敵対', type:'conflict'},
+  {a:'toonoc', b:'udaijin', label:'左右両家の緊張', type:'conflict'}
 ];
 const svg = document.getElementById('relmap');
 const NS = 'http://www.w3.org/2000/svg';
