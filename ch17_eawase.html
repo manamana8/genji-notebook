@@ -116,7 +116,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -124,6 +124,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -175,9 +176,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka.solo{grid-column:1 / -1;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
@@ -428,6 +429,16 @@
       <div class="tag">深層考察 ｜ 藤壺だけが知る絵の重み</div>
       <h3>判定の裏にある、二人だけの秘密</h3>
       <p>須磨・明石の絵日記が中宮（藤壺）にだけ特別に見せられるべきものとされているのは、源氏の須磨下向が、突き詰めれば藤壺との密通とその結果生まれた冷泉帝を守るための犠牲であったという、二人だけが知る事情によるものです。表向きは芸術をめぐる公正な絵合として進行するこの場面の底に、当事者しか知りえない重い秘密が流れていることは、留意しておいてよい点でしょう。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 物語論としての絵合</div>
+      <h3>『竹取物語』対『宇津保物語』論争に透ける、作者の自負</h3>
+      <p>藤壺の御前の内々の絵合で交わされる『竹取物語』と『宇津保物語』、『伊勢物語』と『正三位』の優劣論は、単なる余興の域を超え、当時まだ低く見られがちだった「物語」というジャンルそのものの価値を、作中人物の口を借りて論じているようにも読めます。自らも物語の書き手である紫式部が、この場面を通じて物語文学の地位を静かに擁護しているとすれば、この帖には芸術論・後宮政治に加えて、もう一つ「物語とは何か」という自己言及的な層が重ねられていることになります。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 幼い当事者と、大人たちの思惑</div>
+      <h3>13歳の帝、14歳と22歳の女御 ― 動いているのは誰の意志か</h3>
+      <p>この後宮争いの当事者である冷泉帝は13歳、弘徽殿女御は14歳、梅壺女御は22歳という年齢構成に目を向けると、事の本質がいっそう見えてきます。実際に絵合の勝敗を左右する意志を持つのは、源氏・権中納言・朱雀院という大人たちであり、帝や若い女御たちはむしろその思惑の受け皿として配置されているにすぎません。雅な文化的競技という表の顔の裏で、幼い当事者たちを動かす大人の政治という、この物語に繰り返し現れる非対称な権力構造が、ここでも静かに反復されています。</p>
     </div>
     <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
   </section>

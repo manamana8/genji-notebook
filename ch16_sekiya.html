@@ -116,7 +116,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -124,6 +124,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -175,9 +176,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka.solo{grid-column:1 / -1;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
@@ -385,6 +386,16 @@
       <div class="tag">深層考察 ｜ 出家という選択の反復</div>
       <h3>「自らの意志での退場」というもう一つの答え</h3>
       <p>空蝉が最終的に選ぶ出家という道は、前帖「蓬生」で末摘花が荒れ果てた邸にとどまり続けたのとは対照的な、女性による「自らの意志での退場」の一形態と見ることができます。物語全体を通じて、後に女三の宮や浮舟らが出家という手段で困難な状況を断ち切っていく系譜の、一つの先駆けとしてこの場面を位置づけることも可能でしょう。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 十二年越しの「取次役」</div>
+      <h3>小君から右衛門佐へ ― 変わらぬ役回りに宿る歳月</h3>
+      <p>帚木・空蝉の帖で幼い小君として姉と源氏の間を取り持ったこの人物は、十二年後の本帖でもなお、成長した右衛門佐として同じ「歌の取次役」を務め続けています。役割そのものは変わらないまま、当人だけが少年から一人前の官人へと年を重ねているという対比が、直接には描かれない十二年という歳月の重みを、静かに読者に感じさせる仕掛けになっているように読めます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 河内守という因縁</div>
+      <h3>物語の始まりに立ち会った男が、終わりをも招く</h3>
+      <p>空蝉に出家を決意させる河内守は、かつて帚木巻で紀伊守として、源氏を自邸に招き、その夜に空蝉との出会いの場を図らずも用意した人物その人です。物語の発端に居合わせた人物が、姿を変えて再び現れ、今度は空蝉の人生の幕引きを促す側に回るという巡り合わせには、紫式部が張った伏線というより、宮仕えの世界の狭さ・因縁の反復そのものが人の運命を左右していく、という物語全体に通じる構造が透けて見えるように思われます。</p>
     </div>
     <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
   </section>

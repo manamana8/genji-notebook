@@ -116,7 +116,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -124,6 +124,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -176,9 +177,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka.solo{grid-column:1 / -1;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
@@ -268,7 +269,7 @@
       <button data-f="loyalty">主従・忠誠</button>
     </div>
     <div class="diagram-wrap">
-      <svg id="relmap" viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg"></svg>
+      <svg id="relmap" viewBox="0 0 900 440" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div class="legend">
       <span><i style="background:var(--gray);"></i>血縁・婚姻</span>
@@ -392,6 +393,16 @@
       <div class="tag">深層考察 ｜ 母娘二代の「松風」</div>
       <h3>尼君と明石の君に共通する心境の重なり</h3>
       <p>巻名の由来となる歌を詠むのは明石の君自身ではなく、その母・尼君です。しかし「身を変へて一人帰れる山里に」という心境は、俗世を捨てた尼君だけのものではなく、住み慣れた明石を離れ、都でどう生きるべきかを模索する明石の君自身の心境とも響き合います。母娘二代にわたる「変わらざるを得ない身の上」が、一つの歌に重ねて描かれている点は、注目してよい深読みでしょう。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 「松風」に響く「待つ」の掛詞</div>
+      <h3>帖名そのものに込められた、待ち続ける女の物語</h3>
+      <p>「松」に「待つ」を掛ける言葉遊びは古来の和歌の伝統に連なるもので、帖名「松風」そのものが、明石一家の物語の本質を暗示しているように読めます。明石の浦で源氏の便りをひたすら待ち続けた明石の君、俗世を離れてなお娘と孫の行く末を待つ尼君――この帖に登場する女性たちは、いずれも誰か・何かを「待つ」存在として描かれており、松風という自然の音がその心情の通奏低音として響いている、と見ることもできるでしょう。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 明石入道の悲願、静かに動き出す</div>
+      <h3>須磨・明石で語られた予言の、最初の具体的な一歩</h3>
+      <p>須磨・明石の帖で明石入道が語った「娘の子が国母となる」という壮大な予言は、この帖ではまだ表立って語られません。しかし、姫君が初めて実の父・源氏と対面し、源氏がその引き取りを紫の上に相談するという展開は、入道の悲願が現実の政治的な道筋として動き出す最初の具体的な一歩と見ることができます。入道自身は浦にひとり残されたまま姿を消していきますが、彼が仕込んだ長期的な構想は、この帖を境に彼の手を離れ、源氏と紫の上という都の側の人間関係の中で進んでいくことになります。</p>
     </div>
     <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
   </section>
