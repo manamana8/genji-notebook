@@ -19,6 +19,8 @@
     --suou:#8b3a3a;
     --yamabuki:#c08a34;
     --koke:#5c6b47;
+    --hai:#8a8478;
+    --kon:#2f3e5c;
     --line:#d8cdb8;
     --radius:2px;
   }
@@ -114,7 +116,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -122,6 +124,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -153,9 +156,11 @@
   .node text{font-family:"Shippori Mincho", serif; font-size:14px; fill:var(--ink);}
   .edge line{stroke-width:2px;}
   .edge text{font-family:"Zen Kaku Gothic New", sans-serif; font-size:11px; fill:var(--ink-soft); paint-order:stroke; stroke:var(--paper-deep); stroke-width:5px; stroke-linejoin:round;}
-  .edge.love line{stroke:var(--suou);}
-  .edge.blood line{stroke:var(--koke);}
-  .edge.pol line{stroke:var(--murasaki);}
+  .edge.kinship line{stroke:var(--hai);}
+  .edge.emotion line{stroke:var(--suou); stroke-dasharray:6,4;}
+  .edge.conflict line{stroke:var(--kon);}
+  .edge.alliance line{stroke:var(--yamabuki); stroke-dasharray:8,4;}
+  .edge.loyalty line{stroke:var(--yamabuki); stroke-dasharray:2,3;}
   .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:.78rem; color:var(--ink-soft);}
   .legend span{display:inline-flex; align-items:center; gap:6px;}
   .legend i{width:14px; height:3px; display:inline-block;}
@@ -170,9 +175,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
   .waka .trans{font-size:.82rem; color:var(--ink-soft);}
@@ -254,18 +259,19 @@
     <div class="block-head"><span class="idx">2</span><h2>登場人物の関係性</h2></div>
     <div class="filters">
       <button data-f="all" class="active">すべて表示</button>
-      <button data-f="love">恋愛・求愛</button>
-      <button data-f="blood">血縁・親子</button>
-      <button data-f="pol">政治・対立</button>
+      <button data-f="kinship">血縁・婚姻</button>
+      <button data-f="emotion">感情</button>
+      <button data-f="conflict">政争・対立</button>
     </div>
     <div class="diagram-wrap">
       <svg id="relmap" viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div class="legend">
-      <span><i style="background:var(--suou)"></i>恋愛・求愛</span>
-      <span><i style="background:var(--koke)"></i>血縁・親子</span>
-      <span><i style="background:var(--murasaki)"></i>政治・対立</span>
+      <span><i style="background:var(--hai)"></i>血縁・婚姻</span>
+      <span><i style="background:var(--suou)"></i>感情</span>
+      <span><i style="background:var(--kon)"></i>政争・対立</span>
     </div>
+    <p class="disclaimer">※本帖の関係図では、現行5凡例（血縁・婚姻／感情／政争・対立／政略同盟／主従・忠誠）のうち、実際に該当する関係が存在する3種類のみを使用しています。判断が分かれ得るエッジには「（AIによる分類）」と付記しています。</p>
   </section>
 
   <!-- 3. 空間・地理構造 -->
@@ -371,6 +377,26 @@
       <h3>母性飢餓とトラウマの原点</h3>
       <p>光源氏という人物を解読する鍵が、この第1帖に存在するという見方があります。3歳で母を失った源氏は、父帝から「亡き母にそっくりな女性」として提示された藤壺の宮に対し、母への憧憬と恋愛感情が未分離なまま強い葛藤を抱くことになります。この「理想の母の面影を追い求める衝動」が、後の『若紫』や『葵の上』との関係、ひいては全54帖にわたる女性遍歴の根本的な原動力になっている、という解釈です。</p>
     </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 政治構造・後宮秩序</div>
+      <h3>「後見（うしろだて）」なき寵愛の構造的脆弱性</h3>
+      <p>桐壺更衣の悲劇は、単なる嫉妬劇としてだけでなく、当時の後宮秩序を支えていた「実家の政治力＝地位の正当性」という原則を逆説的に照らし出している、という見方ができます。帝個人の感情がどれほど強くとも、実家の後ろ盾を欠く寵愛は制度的に不安定であり、周囲の反発を制御する力を持ちません。この構造的脆弱性は、後ろ盾を持たぬまま臣籍に降される光源氏自身の政治的立場にもそのまま引き継がれていきます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 人物対比・伏線</div>
+      <h3>藤壺と葵の上、対照的な「妻」の二類型</h3>
+      <p>本帖で提示される藤壺の宮（憧憬・慕情の対象）と葵の上（形式的だが心の通わない正妻）は、光源氏がその後生涯にわたって求め続ける女性関係の二つの原型を先取りしている、という解釈が可能です。「手の届かない理想像」と「制度上は正しいが心が通わない結婚」という対比構造は、後の紫の上や六条御息所などとの関係にも形を変えて反復されていく、という見方ができます。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 物語構造論</div>
+      <h3>全54帖の縮図としての『桐壺』</h3>
+      <p>寵愛と嫉妬、血のつながりが生む因果、実家の政治力による地位の決定、臣籍降下という政治的処遇——これら『源氏物語』全体を貫くテーマの多くが、この第1帖の中にすでに凝縮された形で提示されている、という見方ができます。『桐壺』は単なる導入部ではなく、以後53帖にわたって変奏されていく主題の縮図として機能している、という解釈です。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">考察 ｜ 深層考察・予言のモチーフ</div>
+      <h3>相人の予言が担う二重の物語機能</h3>
+      <p>高麗の相人による「帝にすれば国が乱れ、臣下にすれば柱石となる」という予言は、光源氏の非凡さを読者に保証すると同時に、彼が皇位という頂点には決して立てないことをあらかじめ確定づける機能を持っている、という見方ができます。すなわちこの予言は、光源氏の栄華が「皇位に就けないからこそ許される」という物語全体を貫く政治的パラドックスの起点になっている、という解釈です。</p>
+    </div>
     <p class="disclaimer">※このセクションは物語解釈にもとづくAIの考察・見解であり、学術的に確定した通説ではありません。</p>
   </section>
 
@@ -390,7 +416,6 @@
 </main>
 
 <button id="toTop" title="先頭へ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
-<script src="chapters-data.js"></script>
 
 <script>
 function showScenePopup(title, desc){
@@ -401,6 +426,21 @@ function showScenePopup(title, desc){
 }
 
 /* ===== header nav (shared) ===== */
+const chapters = [
+ {n:1,t:"桐壺",f:"ch01_kiritsubo.html",done:true},
+ {n:2,t:"帚木",f:"ch02_hahakigi.html",done:true},
+ {n:3,t:"空蝉"},{n:4,t:"夕顔"},{n:5,t:"若紫"},{n:6,t:"末摘花"},
+ {n:7,t:"紅葉賀"},{n:8,t:"花宴"},{n:9,t:"葵"},{n:10,t:"賢木"},{n:11,t:"花散里"},
+ {n:12,t:"須磨"},{n:13,t:"明石"},{n:14,t:"澪標"},{n:15,t:"蓬生"},{n:16,t:"関屋"},
+ {n:17,t:"絵合"},{n:18,t:"松風"},{n:19,t:"薄雲"},{n:20,t:"朝顔"},{n:21,t:"少女"},
+ {n:22,t:"玉鬘"},{n:23,t:"初音"},{n:24,t:"胡蝶"},{n:25,t:"蛍"},{n:26,t:"常夏"},
+ {n:27,t:"篝火"},{n:28,t:"野分"},{n:29,t:"行幸"},{n:30,t:"藤袴"},{n:31,t:"真木柱"},
+ {n:32,t:"梅枝"},{n:33,t:"藤裏葉"},{n:34,t:"若菜上"},{n:35,t:"若菜下"},{n:36,t:"柏木"},
+ {n:37,t:"横笛"},{n:38,t:"鈴虫"},{n:39,t:"夕霧"},{n:40,t:"御法"},{n:41,t:"幻"},
+ {n:42,t:"匂宮"},{n:43,t:"紅梅"},{n:44,t:"竹河"},{n:45,t:"橋姫"},{n:46,t:"椎本"},
+ {n:47,t:"総角"},{n:48,t:"早蕨"},{n:49,t:"宿木"},{n:50,t:"東屋"},{n:51,t:"浮舟"},
+ {n:52,t:"蜻蛉"},{n:53,t:"手習"},{n:54,t:"夢浮橋"}
+];
 const CURRENT = 1;
 const tabsEl = document.getElementById('tabs');
 const jumpEl = document.getElementById('jump');
@@ -434,13 +474,13 @@ const nodes = {
   aoi:     {x:600, y:270, label:'葵の上'}
 };
 const edges = [
-  {a:'teitei', b:'koui', label:'深い寵愛', type:'love'},
-  {a:'koui', b:'kokiden', label:'激しい嫉妬・対立', type:'pol'},
-  {a:'teitei', b:'fujitsubo', label:'寵愛（更衣の面影）', type:'love'},
-  {a:'teitei', b:'genji', label:'父と子（溺愛）', type:'blood'},
-  {a:'koui', b:'genji', label:'母と子', type:'blood'},
-  {a:'fujitsubo', b:'genji', label:'密かな慕情', type:'love'},
-  {a:'genji', b:'aoi', label:'夫婦（距離あり）', type:'love'}
+  {a:'teitei', b:'koui', label:'深い寵愛（AIによる分類）', type:'emotion'},
+  {a:'koui', b:'kokiden', label:'激しい嫉妬・対立', type:'conflict'},
+  {a:'teitei', b:'fujitsubo', label:'寵愛（更衣の面影・AIによる分類）', type:'emotion'},
+  {a:'teitei', b:'genji', label:'父と子（溺愛）', type:'kinship'},
+  {a:'koui', b:'genji', label:'母と子', type:'kinship'},
+  {a:'fujitsubo', b:'genji', label:'密かな慕情', type:'emotion'},
+  {a:'genji', b:'aoi', label:'夫婦（距離あり）', type:'kinship'}
 ];
 const svg = document.getElementById('relmap');
 const NS = 'http://www.w3.org/2000/svg';
