@@ -113,7 +113,7 @@
 
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -121,6 +121,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -171,9 +172,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka.solo{grid-column:1 / -1;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
@@ -351,7 +352,7 @@
         <div class="source">出典：『源氏物語』梅枝巻。弁少将が歌った催馬楽「梅が枝」の歌詞にある「鶯」を受けて蛍兵部卿宮が詠んだ和歌とされ、解説サイト「源氏びより」で原文を確認。</div>
       </div>
     </div>
-    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※上記3首（朝顔の君の歌、催馬楽「梅が枝」、蛍兵部卿宮の返歌）は、いずれもWeb検索により原文の実在を確認できたものです。夕霧と雲居雁の間で交わされたとされる贈答歌については、今回のWeb検索では字句まで確認できる出典を見つけられず、掲載を見送りました。確認できません。</p>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※上記3首（朝顔の君の歌、催馬楽「梅が枝」、蛍兵部卿宮の返歌）は、いずれもWeb検索により原文の実在を確認できたものです。梅枝巻には和歌が計11首含まれるとする資料（古典文学サイト「古典の改め」の逐語分析）がありますが、夕霧と雲居雁の間で交わされたとされる贈答歌をはじめ、上記以外の和歌について、原文の字句まで確認できる出典は改めての再検索でも見つけられませんでした。確認できません。</p>
   </section>
 
   <!-- 5. あらすじ -->
@@ -406,6 +407,11 @@
       <div class="tag">深層考察 ｜ 催馬楽「梅が枝」が示す季節の比喩</div>
       <h3>「まだ雪は降りつつ」に重なる夕霧の恋</h3>
       <p>宴で歌われる催馬楽「梅が枝」は、春を待ちながらまだ雪が降り続く鶯の姿を歌う。この歌詞は、栄華の頂点にある六条院の華やぎとは裏腹に、夕霧と雲居雁の恋がいまだ「春」を迎えられずにいる状況と重ね合わせて読むことができる。これは歌詞の内容から連想されるAIの読み解きであり、本文がそのような対応関係を明示しているわけではありません。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 女性たちの「書」を語る源氏の総括</div>
+      <h3>恋愛遍歴の追憶としての書評</h3>
+      <p>入内の支度の中、源氏は紫の上を前に、これまで見てきた女性たちの書きぶりを一人ひとり思い出とともに語る。朧月夜、朝顔の姫君、そして紫の上自身の筆跡が並べて評されるこの場面は、単なる書道談義であると同時に、源氏がこれまでの恋愛遍歴を静かに振り返り、総括しているようにも読める。玉鬘十帖の終わりに続くこの帖で、源氏が過去の女性たちを思い出の中に位置づけ直す様子は、物語がこれから新しい局面（明石の姫君の入内、夕霧の結婚）へと移っていく前の、一区切りの回想として機能しているとも解釈できる。これは場面構成から読み取れるAIの見立てであり、原典が明示的にそう位置づけているわけではありません。</p>
     </div>
     <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
   </section>

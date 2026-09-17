@@ -113,7 +113,7 @@
 
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -121,6 +121,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -171,9 +172,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka.solo{grid-column:1 / -1;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
@@ -328,6 +329,20 @@
       <dd>律令制における最高の官職。本帖で源氏が准太上天皇の待遇を受けるのと同じ年、内大臣（かつての頭中将）がこの地位に昇任する。</dd>
     </dl>
     <div class="waka-grid">
+      <div class="waka">
+        <div class="speaker">内大臣（藤の宴へ夕霧を誘う歌）</div>
+        <div class="poem">我が宿の藤の色濃き黄昏に 訪ねやはこぬ春の名残を</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">わが家の藤の花が色濃く見える夕暮れに、お訪ねくださいませんか。過ぎゆく春の名残を惜しみに。</div>
+        <div class="source">出典：『源氏物語』藤裏葉巻（原典）。内大臣が藤の花に結び付けて夕霧に贈った招待の歌で、藤は雲居雁を暗示するとされる。原文はwakogenji.o.oo7.jpの現代語訳付き紹介ページ、および源氏物語評釈にもとづく解説サイト（keisukes18.la.coocan.jp）の双方で一致を確認。</div>
+      </div>
+      <div class="waka">
+        <div class="speaker">夕霧（内大臣への返歌）</div>
+        <div class="poem">なかなかに折りや惑はむ藤の花 黄昏時のたどたどしくは</div>
+        <div class="trans-label">大意</div>
+        <div class="trans">かえって藤の花の枝を手折るのに心惑うのではないでしょうか、夕暮れ時の頼りない光の中では。</div>
+        <div class="source">出典：『源氏物語』藤裏葉巻（原典）。内大臣の誘いの歌への返歌として、同じくwakogenji.o.oo7.jpおよびkeisukes18.la.coocan.jpの双方で原文の一致を確認。</div>
+      </div>
       <div class="waka solo">
         <div class="speaker">内大臣（藤の宴で口ずさむ古歌）</div>
         <div class="poem">春日さす藤の裏葉のうらとけて 君し思はば我も頼まむ</div>
@@ -336,7 +351,7 @@
         <div class="source">出典：『後撰和歌集』読み人知らずの古歌。内大臣が藤の宴の席で酔ったふりをしながら口ずさみ、夕霧に雲居雁を託す意を伝えたとされる場面で、本帖の巻名「藤裏葉」の由来となった。ゴー宣DOJOの源氏物語解説記事で、出典が『後撰集』であることを含めて原文を実在確認しました。内大臣自身が新たに詠んだ歌ではなく、既存の古歌を引いたものである点に注意してください。</div>
       </div>
     </div>
-    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※夕霧と雲居雁の間で、結婚が許された前後に交わされたとされる和歌については、今回のWeb検索では原文の字句まで確認できる出典を見つけられず、掲載を見送りました。確認できません。</p>
+    <p style="font-size:.78rem;color:#9a9280;margin-top:10px;">※上記3首のうち、内大臣↔夕霧の藤の宴への招待・返歌2首は今回の再検索で新たに実在を確認し追加しました。内大臣が口ずさんだ古歌1首は前回までに確認済みです。夕霧と雲居雁の間で、結婚が許された前後に直接交わされたとされる和歌については、今回のWeb検索でも原文の字句まで確認できる出典を見つけられませんでした。確認できません。</p>
   </section>
 
   <!-- 5. あらすじ -->
