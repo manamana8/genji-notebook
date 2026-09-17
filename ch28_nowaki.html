@@ -116,7 +116,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -124,6 +124,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -176,9 +177,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka.solo{grid-column:1 / -1;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
@@ -410,6 +411,11 @@
       <div class="tag">深層考察 ｜ 野分という自然現象の物語上の役割</div>
       <h3>六条院の秩序を一時的に乱す装置</h3>
       <p>光源氏が四季になぞらえて造営した六条院は、女君たちがそれぞれの町に整然と住み分ける、源氏の意志によって作られた秩序だった空間である。野分という制御不能な自然の力が吹き荒れることで、屏風や御格子といった「隔て」が乱れ、隠されていたはずの紫の上の姿や、源氏と玉鬘の危うい親密さが図らずも露わになる。野分は単なる天候描写ではなく、六条院の秩序に生じる綻びを可視化する装置として読むことができるが、これはAIによる物語構造上の解釈であり、原典が明示的にそう述べているわけではありません。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 動揺の中でも崩れない「まめ人」気質</div>
+      <h3>心を乱されても、律義さの核は保たれる</h3>
+      <p>第21帖「少女」以来、夕霧は色好みの父・源氏とは対照的な実直な人物として描かれてきました。本帖で紫の上・玉鬘・明石の姫君という美しい女性たちに次々と心を動かされながらも、最終的には律義に恋人・雲居雁へ見舞いの和歌を書き送る行動に落ち着く点は、この「まめ人」気質が一時の動揺の中でも人物の核として揺るがずに保たれていることを示していると読めます。</p>
     </div>
     <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
   </section>

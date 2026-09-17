@@ -116,7 +116,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -124,6 +124,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -176,9 +177,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka.solo{grid-column:1 / -1;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
@@ -392,6 +393,11 @@
       <div class="tag">深層考察 ｜ 夕霧の立ち位置について</div>
       <h3>血縁も恋愛感情もない第三者として居合わせる</h3>
       <p>本文で「名乗り合わない兄弟」として特筆されるのは柏木とその弟・弁少将であり、夕霧は玉鬘と血縁関係になく、本帖にも恋愛感情を示す記述は確認できません。ただし夕霧は、この後の「野分」帖で源氏と玉鬘の親密な様子を目撃し疑念を抱く役回りを担うことになります。本帖で柏木らとともに合奏の場に居合わせたことが、その後の夕霧の視点を準備する布石になっている、という見方も可能ですが、これは物語全体の構成を踏まえたAIの推測であり、本帖の本文自体が夕霧の心情を描いているわけではない点にはご留意ください。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜「蛍」から「篝火」へ、光のモチーフの反転</div>
+      <h3>光で見せる恋、灯りはあっても見えない恋</h3>
+      <p>2帖前の「蛍」では、源氏が几帳の内に蛍の光を放ち、その光によって玉鬘の姿を蛍兵部卿宮にあえて垣間見せていました。対して本帖「篝火」では、御簾に隔てられて姿の見えない玉鬘を、柏木がただ気配だけで意識するという対照的な描かれ方をしています。「光で見せる」蛍の場面と「灯りはあっても姿は見えない」篝火の場面という対比を通じて、玉鬘という女性が置かれた「見る／見られる」立場の複雑さを、物語が光という共通のモチーフで繰り返し描いている、という読み解きも可能です。</p>
     </div>
     <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
   </section>

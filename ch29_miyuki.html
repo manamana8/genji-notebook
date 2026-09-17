@@ -116,7 +116,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -124,6 +124,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -176,9 +177,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka.solo{grid-column:1 / -1;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
@@ -408,6 +409,11 @@
       <div class="tag">深層考察 ｜ 内大臣の態度の変わりよう</div>
       <h3>「娘」という肩書きが変える態度</h3>
       <p>母の病を口実に腰結役を一旦辞退した内大臣が、真相を知った途端に喜んで役を引き受ける様子は、当時の父娘関係が血縁の確認によっていかに大きく左右されるものであったかを浮き彫りにする。これは本文の展開から読み取れるAIの解釈であり、内大臣の内心の動機そのものが本文に詳しく説明されているわけではありません。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜「常夏」からの対比が続く近江の君の羨望</div>
+      <h3>育ちと教養をめぐるテーマの反復</h3>
+      <p>第26帖「常夏」で描かれた玉鬘と近江の君の明暗の対比は、本帖末尾でも継続しています。玉鬘の出自公表が世間に伝わり、近江の君がそれを羨む様子は、単なる嫉妬の描写にとどまらず、「同じ内大臣の娘でありながら、育ちと教養によって扱いがこれほど違う」という常夏帖以来のテーマが、玉鬘の運命が大きく動くこの節目でも一貫して繰り返されていることを示していると読めます。</p>
     </div>
     <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
   </section>

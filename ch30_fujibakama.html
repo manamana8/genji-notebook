@@ -116,7 +116,7 @@
   /* ---- 1. people ---- */
   .people-grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:14px;
   }
   @media(max-width:600px){.people-grid{grid-template-columns:1fr;}}
@@ -124,6 +124,7 @@
     background:var(--paper-deep);
     border-left:3px solid var(--suou);
     padding:16px 18px;
+    min-width:0;
   }
   .person .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:8px;}
   .person .name{font-weight:700; font-size:1rem;}
@@ -176,9 +177,9 @@
   .gloss dt:first-of-type{border-top:none;}
   .gloss dd{margin:0 0 6px; font-size:.86rem; color:var(--ink-soft); border-bottom:1px solid var(--line); padding-bottom:14px;}
 
-  .waka-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px;}
+  .waka-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin-top:26px;}
   @media(max-width:600px){.waka-grid{grid-template-columns:1fr;}}
-  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki);}
+  .waka{background:var(--paper-deep); padding:18px 20px; border-top:2px solid var(--yamabuki); min-width:0;}
   .waka.solo{grid-column:1 / -1;}
   .waka .speaker{font-size:.75rem; color:var(--suou); margin-bottom:8px;}
   .waka .poem{font-family:"Shippori Mincho", serif; font-size:1rem; line-height:1.9; margin-bottom:12px; color:var(--murasaki-deep);}
@@ -404,6 +405,11 @@
       <div class="tag">深層考察 ｜ 内大臣の思惑</div>
       <h3>噂を流すことで探る、源氏の本心</h3>
       <p>内大臣が「源氏は玉鬘を側室にするつもりでは」との噂をあえて内々に流す行動は、実の娘の処遇を案じる親心であると同時に、源氏の本心を探ろうとする政治的な駆け引きとしても読める。これは本文の展開から読み取れるAIの解釈であり、内大臣の意図そのものが本文に詳しく説明されているわけではありません。</p>
+    </div>
+    <div class="analysis-card">
+      <div class="tag">深層考察 ｜ 血縁の有無が生む対称的な結末 ― 夕霧と柏木</div>
+      <h3>同じ帖で分かれる二人の若者の行方</h3>
+      <p>本帖では、玉鬘との血縁関係の有無が判明したことで、夕霧と柏木という二人の若者がまったく逆の行動を取ります。血のつながりがないと知った夕霧は姉弟の情から一歩踏み出して告白に及び、逆に血のつながりがあると知った柏木は、それまでの恋心を静かに引っ込めます。この対称的な展開は、「玉鬘十帖」全体を通じて繰り返されてきた「血縁の有無が人間関係を決定づける」というテーマを、本帖でひとつの対比構造として結晶化させていると読めます。</p>
     </div>
     <p class="disclaimer">※「考察」「深層考察」は物語解釈にもとづくAIの読み解きであり、原典の記述そのものではありません。学術的に確定した通説を示すものでもありません。</p>
   </section>
