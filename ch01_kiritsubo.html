@@ -281,10 +281,10 @@
     <div class="diagram-wrap">
       <svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
         <text x="320" y="18" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--ink-soft)">北</text>
-        <g class="scene-room" onclick="showScenePopup('淑景舎（きこうしゃ）― 桐壺更衣','清涼殿から最も遠い北東の一角にある局。桐壺更衣の住まい。帝のもとへ向かうには他の妃たちの局の前を通らねばならず、その「物理的な通り道」が嫉妬を招く一因になったとされる。')">
-        <rect x="40" y="34" width="140" height="60" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.2" rx="4"/>
-        <text x="110" y="58" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">淑景舎</text>
-        <text x="110" y="76" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（桐壺更衣）</text>
+        <g class="scene-room" onclick="showScenePopup('弘徽殿（こきでん）― 弘徽殿女御','清涼殿のすぐ北西に位置する格調高い殿舎。帝の動きを監視しやすい立地にあり、後宮において最も強い権力基盤を持つ弘徽殿女御の住まいとされる。')">
+        <rect x="40" y="34" width="140" height="60" fill="#fbf8f1" stroke="var(--suou)" stroke-width="1.4" rx="4"/>
+        <text x="110" y="58" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">弘徽殿</text>
+        <text x="110" y="76" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（弘徽殿女御）</text>
         </g>
 
         <g class="scene-room" onclick="showScenePopup('飛香舎（ひぎょうしゃ）― 藤壺','清涼殿に近い位置にある局。桐壺更衣の死後、その面影を宿す藤壺の宮に与えられた。清涼殿への近さゆえ、他妃たちの政争から距離を置ける立地とされる。')">
@@ -293,10 +293,10 @@
         <text x="320" y="76" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（藤壺）</text>
         </g>
 
-        <g class="scene-room" onclick="showScenePopup('弘徽殿（こきでん）― 弘徽殿女御','清涼殿のすぐ北西に位置する格調高い殿舎。帝の動きを監視しやすい立地にあり、後宮において最も強い権力基盤を持つ弘徽殿女御の住まいとされる。')">
-        <rect x="460" y="34" width="140" height="60" fill="#fbf8f1" stroke="var(--suou)" stroke-width="1.4" rx="4"/>
-        <text x="530" y="58" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">弘徽殿</text>
-        <text x="530" y="76" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（弘徽殿女御）</text>
+        <g class="scene-room" onclick="showScenePopup('淑景舎（きこうしゃ）― 桐壺更衣','清涼殿から最も遠い北東の一角にある局。桐壺更衣の住まい。帝のもとへ向かうには他の妃たちの局の前を通らねばならず、その「物理的な通り道」が嫉妬を招く一因になったとされる。')">
+        <rect x="460" y="34" width="140" height="60" fill="#fbf8f1" stroke="var(--murasaki)" stroke-width="1.2" rx="4"/>
+        <text x="530" y="58" text-anchor="middle" font-family="Shippori Mincho" font-size="14" fill="var(--ink)">淑景舎</text>
+        <text x="530" y="76" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" fill="var(--ink-soft)">（桐壺更衣）</text>
         </g>
 
         <g class="scene-room" onclick="showScenePopup('清涼殿（せいりょうでん）― 帝の日常の居所','天皇が日常を過ごす殿舎。ここからの距離・位置関係が、後宮内での妃たちの発言力や帝との近さを象徴すると考えられている。')">
@@ -466,7 +466,8 @@ const edges = [
   {a:'teitei', b:'genji', label:'父と子（溺愛）', type:'kinship'},
   {a:'koui', b:'genji', label:'母と子', type:'kinship'},
   {a:'fujitsubo', b:'genji', label:'密かな慕情', type:'emotion'},
-  {a:'genji', b:'aoi', label:'夫婦（距離あり）', type:'kinship'}
+  {a:'genji', b:'aoi', label:'夫婦（距離あり）', type:'kinship'},
+  {a:'genji', b:'kokiden', label:'東宮の地位を脅かす存在として敵視', type:'conflict'}
 ];
 const svg = document.getElementById('relmap');
 const NS = 'http://www.w3.org/2000/svg';
